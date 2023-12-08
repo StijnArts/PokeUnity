@@ -1,0 +1,28 @@
+.dialogText {
+    font-size: 19px;
+    -unity-font-style: bold;
+    -unity-text-outline-width: 1px;
+    -unity-text-outline-color: rgb(21, 80, 176);
+    text-shadow: 2px 2px 0 rgb(83, 143, 255);
+    letter-spacing: 1px;
+    -unity-paragraph-spacing: 2px;
+    -unity-text-align: upper-left;
+    background-color: rgba(255, 251, 194, 0.53);
+}
+
+.dialogContainer {
+    display: none;
+}
+
+.PartyView {
+    position: absolute;
+    background-color: rgb(0, 0, 0);
+    width: 8%;
+    height: 72%;
+    min-width: 8%;
+    min-height: 72%;
+    max-width: 8%;
+    max-height: 72%;
+    left: 0;
+    top: 3%;
+}

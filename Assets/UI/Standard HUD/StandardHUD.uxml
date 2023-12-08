@@ -1,0 +1,4 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI/BaseUI.uss?fileID=7433441132597879392&amp;guid=74651805207b64542bd8cb62a1789a29&amp;type=3#BaseUI" />
+    <ui:ListView focusable="true" reorderable="false" name="PartyView" class="PartyView" />
+</ui:UXML>

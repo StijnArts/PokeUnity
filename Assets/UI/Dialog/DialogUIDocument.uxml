@@ -1,0 +1,8 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI/BaseUI.uss?fileID=7433441132597879392&amp;guid=74651805207b64542bd8cb62a1789a29&amp;type=3#BaseUI" />
+    <ui:VisualElement name="DailogBox" focusable="false" class="dialogContainer" style="flex-grow: 1; justify-content: center; align-self: center; width: 60%; height: 15%; flex-direction: column; align-items: stretch; position: absolute; top: 83%; left: 20%; background-color: rgb(180, 180, 180);">
+        <ui:Button parse-escape-sequences="true" display-tooltip-when-elided="true" name="DialogTextButton" style="background-color: rgba(127, 127, 127, 0); width: 99%; height: 99px; left: 0.5px; top: 0.5px; max-width: 99%; min-width: 99%; min-height: 99%; max-height: 99%; border-top-width: 0; border-right-width: 0; border-bottom-width: 0; border-left-width: 0;">
+            <ui:Label tabindex="-1" text="Dialog Test&#10;line 2&#10;line 3" parse-escape-sequences="true" display-tooltip-when-elided="true" name="DialogText" class="dialogText" style="-unity-text-align: middle-left;" />
+        </ui:Button>
+    </ui:VisualElement>
+</ui:UXML>
