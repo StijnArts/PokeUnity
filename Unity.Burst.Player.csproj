@@ -9,7 +9,7 @@
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace></RootNamespace>
-    <ProjectGuid>{1DC58727-FF4D-BCC3-ECBB-D1F641312AA8}</ProjectGuid>
+    <ProjectGuid>{DE855A0F-D61D-C5D0-AD46-0B83B69687CB}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <AssemblyName>Unity.Burst</AssemblyName>
@@ -689,7 +689,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="UnityEngine.UI.Player.csproj">
-      <Project>{7DF5F207-C280-CF8B-F9B3-EB34610D45D3}</Project>
+      <Project>{06D4695E-4ABD-5F92-CDA6-83A9468624DD}</Project>
       <Name>UnityEngine.UI.Player</Name>
     </ProjectReference>
   </ItemGroup>

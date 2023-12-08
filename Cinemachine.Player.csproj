@@ -9,7 +9,7 @@
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace></RootNamespace>
-    <ProjectGuid>{9106640A-F134-89C9-EF7D-B250E08F0A75}</ProjectGuid>
+    <ProjectGuid>{E202AA2E-6FC4-5B8A-2002-CBE760F5D2E7}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <AssemblyName>Cinemachine</AssemblyName>
@@ -719,15 +719,15 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="Unity.Timeline.Player.csproj">
-      <Project>{3DBAF9D5-592E-2696-CAC0-0699D9C107C5}</Project>
+      <Project>{92FA2BD7-A03B-77E4-4253-523AD7A1DB63}</Project>
       <Name>Unity.Timeline.Player</Name>
     </ProjectReference>
     <ProjectReference Include="Unity.2D.PixelPerfect.Player.csproj">
-      <Project>{187ECBD0-DE60-6F23-BB51-B6B828B777D0}</Project>
+      <Project>{1FC041BE-628B-280B-F741-927E40BCA6FA}</Project>
       <Name>Unity.2D.PixelPerfect.Player</Name>
     </ProjectReference>
     <ProjectReference Include="UnityEngine.UI.Player.csproj">
-      <Project>{7DF5F207-C280-CF8B-F9B3-EB34610D45D3}</Project>
+      <Project>{06D4695E-4ABD-5F92-CDA6-83A9468624DD}</Project>
       <Name>UnityEngine.UI.Player</Name>
     </ProjectReference>
   </ItemGroup>
