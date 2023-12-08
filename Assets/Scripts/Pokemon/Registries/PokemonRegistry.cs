@@ -29,10 +29,10 @@ public static class PokemonRegistry
         foreach (string id in PokemonDictionary.Keys)
         {
             list += "\n" + id;
-            if (PokemonDictionary[id].forms.Count > 0)
+            if (PokemonDictionary[id].Forms.Count > 0)
             {
                 list += "{ ";
-                foreach (string formId in PokemonDictionary[id].forms.Keys)
+                foreach (string formId in PokemonDictionary[id].Forms.Keys)
                 {
                     list += "\n" + formId+",";
                 }
@@ -43,7 +43,7 @@ public static class PokemonRegistry
         return list;
     }
 
-    internal static void RegisterPokemon()
+    public static void RegisterPokemon()
     {
         var pokemonDataStore = Registry<PokemonData>.FindRegistryChildClasses();
         foreach (var pokemonData in pokemonDataStore)

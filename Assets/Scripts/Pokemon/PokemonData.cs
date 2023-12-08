@@ -7,7 +7,7 @@ using UnityEditor.Playables;
 [Serializable]
 public class PokemonData
 {
-    public Dictionary<string, PokemonData> forms = new Dictionary<string, PokemonData>();
+    public Dictionary<string, PokemonData> Forms = new Dictionary<string, PokemonData>();
     public string PokemonName;
     public string PokemonId;
     public int NationalPokedexNumber;

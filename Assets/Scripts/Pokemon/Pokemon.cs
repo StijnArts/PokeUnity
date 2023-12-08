@@ -87,7 +87,7 @@ public class Pokemon : MonoBehaviour
     {
         if (pokemonHasForm(pokemonId, formId))
         {
-            return PokemonRegistry.GetPokemon(pokemonId).forms[formId].HasGenderDifferences;
+            return PokemonRegistry.GetPokemon(pokemonId).Forms[formId].HasGenderDifferences;
         }
         else
         {
@@ -97,6 +97,6 @@ public class Pokemon : MonoBehaviour
 
     private static bool pokemonHasForm(string pokemonId, string formId)
     {
-        return PokemonRegistry.GetPokemon(pokemonId).forms.ContainsKey(formId);
+        return PokemonRegistry.GetPokemon(pokemonId).Forms.ContainsKey(formId);
     }
 }

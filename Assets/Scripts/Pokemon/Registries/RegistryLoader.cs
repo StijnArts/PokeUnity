@@ -53,7 +53,11 @@ public class RegistryLoader : MonoBehaviour
                 string fileName = Path.GetFileName(path).Replace(".json", "");
                 string pokemonId = fileName.Split('-')[0];
                 string formId = fileName.Replace(pokemonId+"-","");
-                PokemonRegistry.GetPokemon(pokemonId).forms.Add(formId, pokemonForm);
+                var pokemon = PokemonRegistry.GetPokemon(pokemonId);
+                if(pokemon != null)
+                {
+                    pokemon.Forms.Add(formId, pokemonForm);
+                }
             }
         }
         Debug.Log(PokemonRegistry.registryToString());
