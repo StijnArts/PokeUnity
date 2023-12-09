@@ -96,7 +96,7 @@ public class DialogManager : MonoBehaviour
         dialogUIManager.hideTitleAndPortrait();
         dialogUIManager.setDialogText(flavorText);
         dialogUIManager.showDialogBox();
-        PlayerController.party.AddPokemonToParty(PokemonCreator.InstantiatePokemonForSpawn(pokemonGiftEntry, pokemonGiftEntry.spawnConditions));
+        PlayerController.Party.AddPokemonToParty(PokemonCreator.InstantiatePokemonForSpawn(pokemonGiftEntry, pokemonGiftEntry.spawnConditions));
     }
 
     private void executeDialogAction(Dialog dialog)

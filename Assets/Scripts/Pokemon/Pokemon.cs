@@ -41,16 +41,16 @@ public class Pokemon : MonoBehaviour
 
     public void initializeSelf()
     {
-        PokemonIndividualData.natureData = PokemonNatureRegistry.GetNature((int)PokemonIndividualData.nature);
-        PokemonIndividualData.abilityData = AbilityRegistry.GetAbility(PokemonIndividualData.Ability);
-        PokemonIndividualData.primaryType = PokemonTypeRegistry.GetType(PokemonRegistry.GetPokemon(PokemonIndividualData.pokemonId).PrimaryType);
-        string secondaryTypeName = PokemonRegistry.GetPokemon(PokemonIndividualData.pokemonId).SecondaryType;
-        if (secondaryTypeName != null)
-        {
-            PokemonIndividualData.secondaryType = PokemonTypeRegistry.GetType(secondaryTypeName);
-        }
+        //PokemonIndividualData.natureData = PokemonNatureRegistry.GetNature((int)PokemonIndividualData.nature);
+        //PokemonIndividualData.abilityData = AbilityRegistry.GetAbility(PokemonIndividualData.Ability);
+        //PokemonIndividualData.primaryType = PokemonTypeRegistry.GetType(PokemonRegistry.GetPokemon(PokemonIndividualData.pokemonId).PrimaryType);
+        //string secondaryTypeName = PokemonRegistry.GetPokemon(PokemonIndividualData.pokemonId).SecondaryType;
+        //if (secondaryTypeName != null)
+        //{
+        //    PokemonIndividualData.secondaryType = PokemonTypeRegistry.GetType(secondaryTypeName);
+        //}
 
-        PokemonIndividualData.stats = PokemonIndividualData.calculateStats();
+        //PokemonIndividualData.stats = PokemonIndividualData.calculateStats();
         InitializeSprite(PokemonIndividualData.pokemonId, PokemonIndividualData.formId);
     }
 
@@ -75,16 +75,17 @@ public class Pokemon : MonoBehaviour
         {
             spriteLocation += "_shiny";
         }
-        Debug.Log(spriteLocation);
+        
         if (gameObject != null)
         {
-            gameObject.GetComponentInChildren<SpriteRenderer>().sprite = Resources.Load(spriteLocation, typeof(Sprite)) as Sprite;
+            gameObject.GetComponentInChildren<SpriteRenderer>().sprite = Resources.Load(spriteLocation+"_animated", typeof(Sprite)) as Sprite;
             gameObject.GetComponentInChildren<SpriteRenderer>().enabled = true;
         }
     }
 
     private bool pokemonOrFormHasGenderDifferences(string pokemonId, string formId)
     {
+        return false;
         if (pokemonHasForm(pokemonId, formId))
         {
             return PokemonRegistry.GetPokemon(pokemonId).Forms[formId].HasGenderDifferences;
@@ -97,6 +98,6 @@ public class Pokemon : MonoBehaviour
 
     private static bool pokemonHasForm(string pokemonId, string formId)
     {
-        return PokemonRegistry.GetPokemon(pokemonId).Forms.ContainsKey(formId);
+        return false;//PokemonRegistry.GetPokemon(pokemonId).Forms.ContainsKey(formId);
     }
 }
