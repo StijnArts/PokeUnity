@@ -23,7 +23,7 @@ public class CameraFacingSprite : MonoBehaviour
     public int CurrentFrame = 0;
     private float LastFrameUpdateTimeStamp = 0;
     public Direction.Directions Facing = Direction.Directions.South;
-    public Direction.Directions _lastFacing = (Direction.Directions)1000;
+    private Direction.Directions _lastFacing = (Direction.Directions)1000;
     public SpriteType TypeOfSprite;
     [HideInInspector]
     public string TextureLocation;
@@ -57,16 +57,17 @@ public class CameraFacingSprite : MonoBehaviour
         if(SpriteSheet.FrameCounts[Facing] > 1)
         {
             Animate();
+            if (LastFrameUpdateTimeStamp >= MillisecondPerFrame)
+            {
+                CurrentFrame++;
+                LastFrameUpdateTimeStamp = 0;
+            }
         } else
         {
             UpdateDirection();
         }
 
-        if (LastFrameUpdateTimeStamp >= MillisecondPerFrame)
-        {
-            CurrentFrame++;
-            LastFrameUpdateTimeStamp = 0;
-        }
+
     }
 
     private void UpdateDirection()

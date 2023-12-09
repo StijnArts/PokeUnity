@@ -179,22 +179,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: CameraFacingSprite
       objectReference: {fileID: 0}
-    - target: {fileID: 7469980616769715961, guid: 03e3bbabefd7e4744bb4238f3a699325, type: 3}
-      propertyPath: TypeOfSprite
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8543396206547117070, guid: 03e3bbabefd7e4744bb4238f3a699325, type: 3}
-      propertyPath: m_FlipX
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8543396206547117070, guid: 03e3bbabefd7e4744bb4238f3a699325, type: 3}
-      propertyPath: m_FlipY
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8543396206547117070, guid: 03e3bbabefd7e4744bb4238f3a699325, type: 3}
-      propertyPath: m_Sprite
-      value: 
-      objectReference: {fileID: 21300000, guid: f5a964b98f297dd48a171896fd822dd2, type: 3}
     - target: {fileID: 8839406879150462338, guid: 03e3bbabefd7e4744bb4238f3a699325, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0

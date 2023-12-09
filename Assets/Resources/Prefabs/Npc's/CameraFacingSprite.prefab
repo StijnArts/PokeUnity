@@ -47,15 +47,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SpriteRenderer: {fileID: 0}
   SpriteSuffix: 
-  SpriteGroup: red
-  MillisecondPerFrame: 50
+  SpriteGroup: 
+  MillisecondPerFrame: 25
   yOffset: 0
   SpriteWidth: 16
   PixelsPerUnit: 16
   CurrentFrame: 0
   Facing: 180
-  _lastFacing: 1000
-  TypeOfSprite: 2
+  TypeOfSprite: 0
   TextureLocation: 
 --- !u!212 &6803074519525398171
 SpriteRenderer:
