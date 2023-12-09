@@ -1574,7 +1574,7 @@ CharacterController:
   m_Radius: 0.5
   m_SlopeLimit: 45
   m_StepOffset: 0.4
-  m_SkinWidth: 0.08
+  m_SkinWidth: 0.1
   m_MinMoveDistance: 0
   m_Center: {x: 0, y: 1, z: 0}
 --- !u!1 &1238532225
@@ -1976,7 +1976,7 @@ Transform:
   m_GameObject: {fileID: 1618929354}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 4.16, y: 4.96, z: -14.56}
+  m_LocalPosition: {x: 4.16, y: 8.89, z: -14.56}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2504,6 +2504,18 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 797580363494285518, guid: bdcc977cb6aed5d4b8d3a210dfb5d883, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 797580363494285518, guid: bdcc977cb6aed5d4b8d3a210dfb5d883, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 797580363494285518, guid: bdcc977cb6aed5d4b8d3a210dfb5d883, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 797580363494285518, guid: bdcc977cb6aed5d4b8d3a210dfb5d883, type: 3}
       propertyPath: m_LocalPosition.x
       value: -5.3410187
       objectReference: {fileID: 0}
@@ -2543,6 +2555,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 797580363494285518, guid: bdcc977cb6aed5d4b8d3a210dfb5d883, type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2711744434322497900, guid: bdcc977cb6aed5d4b8d3a210dfb5d883, type: 3}
       propertyPath: isSavedPokemon
       value: 1
@@ -2566,6 +2582,22 @@ PrefabInstance:
     - target: {fileID: 3056576095717730666, guid: bdcc977cb6aed5d4b8d3a210dfb5d883, type: 3}
       propertyPath: SpriteGroup
       value: pikachu
+      objectReference: {fileID: 0}
+    - target: {fileID: 3056576095717730666, guid: bdcc977cb6aed5d4b8d3a210dfb5d883, type: 3}
+      propertyPath: SpriteWidth
+      value: 48
+      objectReference: {fileID: 0}
+    - target: {fileID: 3056576095717730666, guid: bdcc977cb6aed5d4b8d3a210dfb5d883, type: 3}
+      propertyPath: TypeOfSprite
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3056576095717730666, guid: bdcc977cb6aed5d4b8d3a210dfb5d883, type: 3}
+      propertyPath: PixelsPerUnit
+      value: 48
+      objectReference: {fileID: 0}
+    - target: {fileID: 3056576095717730666, guid: bdcc977cb6aed5d4b8d3a210dfb5d883, type: 3}
+      propertyPath: MillisecondPerFrame
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 3993129027245195793, guid: bdcc977cb6aed5d4b8d3a210dfb5d883, type: 3}
       propertyPath: m_LocalPosition.y

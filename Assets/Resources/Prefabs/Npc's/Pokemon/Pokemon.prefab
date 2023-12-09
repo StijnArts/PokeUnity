@@ -49,6 +49,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   PokemonIndividualData:
+    possibleAbilities: []
     nationalPokedexNumber: 0
     pokemonName: 
     pokemonId: 
@@ -62,8 +63,10 @@ MonoBehaviour:
     - {fileID: 0}
     - {fileID: 0}
     - {fileID: 0}
-    ability: {fileID: 0}
-    nature:
+    Ability: 
+    abilityData: {fileID: 0}
+    nature: 0
+    natureData:
       positiveStat: 0
       negativeStat: 0
       favoriteFlavor: 0
@@ -73,6 +76,13 @@ MonoBehaviour:
     hitboxWidth: 0
     isShiny: 0
     gender: 0
+    EVs:
+      hpEVs: 0
+      attackEVs: 0
+      defenceEVs: 0
+      specialAttackEVs: 0
+      specialdefenceEVs: 0
+      speedEVs: 0
     IVs:
       hpIVs: 0
       attackIVs: 0
@@ -168,6 +178,10 @@ PrefabInstance:
     - target: {fileID: 484137899678175811, guid: 03e3bbabefd7e4744bb4238f3a699325, type: 3}
       propertyPath: m_Name
       value: CameraFacingSprite
+      objectReference: {fileID: 0}
+    - target: {fileID: 7469980616769715961, guid: 03e3bbabefd7e4744bb4238f3a699325, type: 3}
+      propertyPath: TypeOfSprite
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8543396206547117070, guid: 03e3bbabefd7e4744bb4238f3a699325, type: 3}
       propertyPath: m_FlipX

@@ -10,15 +10,13 @@ public class CameraFacingSpriteSheet
 {
     [HideInInspector]
     public Dictionary<Direction.Directions, Texture2D> Textures = new Dictionary<Direction.Directions, Texture2D>();
-    public float MillisecondsPerFrame;
     [HideInInspector]
     public Dictionary<Direction.Directions, int> FrameCounts = new Dictionary<Direction.Directions, int>();
     public int SpriteWidth = 0;
     public bool FlipSpriteForWest = false;
     public bool FlipSpriteForEast = false;
-    public CameraFacingSpriteSheet(float msPerFrame, int width)
+    public CameraFacingSpriteSheet(int width)
     {
-        MillisecondsPerFrame = msPerFrame;
         SpriteWidth = width;
     }
 
@@ -31,23 +29,24 @@ public class CameraFacingSpriteSheet
             var texture = Resources.Load<Texture2D>(textureLocation + "_" + directionName);
             if (directionName.Contains("west") && texture == null)
             {
-                directionName = directionName.Replace("west", "east");
-                texture = Resources.Load<Texture2D>(textureLocation + "_" + directionName);
+                var newDirection = directionName.Replace("west", "east");
+                texture = Resources.Load<Texture2D>(textureLocation + "_" + newDirection);
                 FlipSpriteForWest = true;
             } else if (directionName.Contains("east") && texture == null)
             {
-                directionName = directionName.Replace("east", "west");
-                texture = Resources.Load<Texture2D>(textureLocation + "_" + directionName);
+                var newDirection = directionName.Replace("east", "west");
+                texture = Resources.Load<Texture2D>(textureLocation + "_" + newDirection);
                 FlipSpriteForEast = true;
             }
             if (texture == null)
             {
                 texture = Resources.Load<Texture2D>("Sprites/missingsprite");
-                Debug.Log("Couldnt find Texture2D at location: " + textureLocation);
+                Debug.Log("Couldnt find Texture2D at location: " + textureLocation + "_" + directionName);
             }
 
             texture.filterMode = FilterMode.Point;
             var frameCount = texture.width / SpriteWidth;
+            texture.wrapMode = TextureWrapMode.Clamp;
             Textures.Add(direction, texture);
             FrameCounts.Add(direction, frameCount);
         }
@@ -55,8 +54,14 @@ public class CameraFacingSpriteSheet
 
     public Sprite GetFrame(int frameNumber, int pixelsPerUnit, Direction.Directions facing)
     {
-        var sprite = Sprite.Create(Textures[facing], new Rect(new Vector2(frameNumber * SpriteWidth, 
-            frameNumber * Textures[facing].height), new Vector2(SpriteWidth, Textures[facing].height)), new Vector2(0.5f, 0), pixelsPerUnit);
+        var sprite = Sprite.Create(Textures[facing],
+            new Rect(
+                new Vector2(frameNumber * SpriteWidth, 0),
+                new Vector2(SpriteWidth, Textures[facing].height)),
+            new Vector2(0.5f, 0),
+            pixelsPerUnit, 0,
+            SpriteMeshType.Tight,
+            Vector4.zero);
         return sprite;
     }
 
