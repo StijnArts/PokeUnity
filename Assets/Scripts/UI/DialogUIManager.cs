@@ -8,8 +8,8 @@ using UnityEngine.UIElements;
 public class DialogUIManager : MonoBehaviour
 {
     UIDocument dialogUIDocument;
-    Label dialogTextLabel;
-    VisualElement dialogContainer;
+    Label DialogTextLabel;
+    VisualElement DialogContainer;
     private void OnEnable()
     {
         dialogUIDocument = GetComponentInChildren<UIDocument>();
@@ -18,22 +18,22 @@ public class DialogUIManager : MonoBehaviour
             Debug.Log("No Dialog UIDocument was found.");
         }
 
-        dialogTextLabel = dialogUIDocument.rootVisualElement.Q("DialogText") as Label;
-        dialogContainer = dialogUIDocument.rootVisualElement.Q("DailogBox") as VisualElement;
+        DialogTextLabel = dialogUIDocument.rootVisualElement.Q("DialogText") as Label;
+        DialogContainer = dialogUIDocument.rootVisualElement.Q("DailogBox") as VisualElement;
     }
-    public void showDialogBox()
+    public void ShowDialogBox()
     {
-        dialogContainer.style.display = DisplayStyle.Flex;
+        DialogContainer.style.display = DisplayStyle.Flex;
     }
 
     public void setDialogText(String text)
     {
-        dialogTextLabel.text = text;
+        DialogTextLabel.text = text;
     }
 
-    internal void hideDialogBox()
+    internal void HideDialogBox()
     {
-        dialogContainer.style.display = DisplayStyle.None;
+        DialogContainer.style.display = DisplayStyle.None;
     }
 
     internal void hideTitleAndPortrait()

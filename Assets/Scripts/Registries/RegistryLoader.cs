@@ -1,3 +1,4 @@
+using Assets.Scripts.Pokemon.Data;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -11,9 +12,9 @@ public class RegistryLoader : MonoBehaviour
     void Start()
     {
         RegisterPokemon();
-        RegisterPokemonForms();
-        RegisterPokemonTypes();
-        RegisterPokemonNatures();
+        //RegisterPokemonForms();
+        //RegisterPokemonTypes();
+        //RegisterPokemonNatures();
         RegisterPokemonAbilities();
         RegisterPokemonExperienceGroups();
         GameStateManager.SetState(GameStateManager.GameStates.ROAMING);
@@ -44,16 +45,16 @@ public class RegistryLoader : MonoBehaviour
 
     private void RegisterPokemonForms()
     {
-        string pokemonFormJsonDirectory = Path.GetFullPath("./") + "PokemonData/Forms";
+        string pokemonFormJsonDirectory = Path.GetFullPath("./") + "PokemonSpecies/Forms";
         foreach (string path in Directory.GetFiles(pokemonFormJsonDirectory))
         {
-            PokemonData pokemonForm = PokemonJsonReader.getPokemonData<PokemonData>(path);
+            PokemonForm pokemonForm = PokemonJsonReader.getPokemonData<PokemonForm>(path);
             if (pokemonForm != null)
             {
                 string fileName = Path.GetFileName(path).Replace(".json", "");
                 string pokemonId = fileName.Split('-')[0];
                 string formId = fileName.Replace(pokemonId+"-","");
-                var pokemon = PokemonRegistry.GetPokemon(pokemonId);
+                var pokemon = PokemonRegistry.GetPokemonSpecies(pokemonId);
                 if(pokemon != null)
                 {
                     pokemon.Forms.Add(formId, pokemonForm);
@@ -65,6 +66,6 @@ public class RegistryLoader : MonoBehaviour
 
     private void RegisterPokemon()
     {
-        PokemonRegistry.RegisterPokemon();
+        PokemonRegistry.RegisterPokemonSpecies();
     }
 }

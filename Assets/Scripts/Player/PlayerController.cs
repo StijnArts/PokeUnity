@@ -22,6 +22,8 @@ public class PlayerController : MonoBehaviour
     public float WalkSpeed = 10;
     public float RunSpeed = 20;
     private float _facing = 180.0f;
+    [SerializeField] private float smoothTime = 0.05f;
+    private float _currentVelocity;
     [HideInInspector]
     public bool IsRunning = false;
     [HideInInspector]
@@ -29,7 +31,7 @@ public class PlayerController : MonoBehaviour
     public ObservableClasses.ObservableBoolean SubmitPressedAndReleased = new ObservableClasses.ObservableBoolean() { Value = false };
     public List<Flag> Flags = new List<Flag>();
     public static Party Party = new Party();
-
+    
     // Start is called before the first frame update
     void Start()
     {
@@ -145,8 +147,10 @@ public class PlayerController : MonoBehaviour
             return;
         }
 
-        _facing = Mathf.Atan2(_direction.x, _direction.z) * Mathf.Rad2Deg;
-        _cameraFacingSprite.ApplyRotation(_facing);
+        var targetAngle = Mathf.Atan2(_direction.x, _direction.z) * Mathf.Rad2Deg;
+        var angle = Mathf.SmoothDampAngle(targetAngle, _facing, ref _currentVelocity, smoothTime);
+        _facing = targetAngle;
+        _cameraFacingSprite.ApplyRotation(angle);
     }
 
     private void TrackMovement()

@@ -5,11 +5,11 @@ using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 using UnityEngine;
-public static class Registry<T>
+public static class SubTypeReflector<T>
 {
-    public static List<T> FindRegistryChildClasses()
+    public static List<T> FindSubTypeClasses()
     {
-        var types = Assembly.GetExecutingAssembly().ManifestModule.GetTypes().Where(type => type.BaseType == typeof(T)).ToArray();
+        var types = Assembly.GetExecutingAssembly().ManifestModule.GetTypes().Where(type => type.BaseType == typeof(T) && !type.IsAbstract).ToArray();
 
        return types.Select(abilityType => (T)Activator.CreateInstance(abilityType)).Where(abilityInstance => abilityInstance is T).ToList();
     }

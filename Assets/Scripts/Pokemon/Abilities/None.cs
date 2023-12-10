@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class None : Ability
 {
-    public None() : base(Abilities.None, "none", "")
+    public None() : base("none", "")
     {
         
     }

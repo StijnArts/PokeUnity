@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Windows;
-
-public class PokemonType
+[CreateAssetMenu(menuName = "Pokemon/Species Data")]
+public class PokemonType : ScriptableObject
 {
     //Interactions are stored one way to make it easier to edit types.
     public enum TypeInteraction {STRONG_AGAINST, RESISTED_BY, HAS_IMMUNITY, NEUTRAL};

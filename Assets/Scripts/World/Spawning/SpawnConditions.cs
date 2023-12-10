@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
-[CreateAssetMenu(menuName = "Scriptable Objects/Spawn Conditions")]
+[CreateAssetMenu(menuName = "Encounter Data/Spawn Conditions")]
 [Serializable]
 public class SpawnConditions : ScriptableObject
 {//Contains information on spawning (Shiny odds, if pokemon can have hidden ability and if the pokemon can be shiny

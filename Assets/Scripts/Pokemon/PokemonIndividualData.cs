@@ -48,7 +48,7 @@ public class PokemonIndividualData
 
     public PokemonStats calculateStats(int level, PokemonEVs pokemonEVs, PokemonIVs pokemonIVs, Nature nature)
     {
-        BaseStats baseStats = PokemonRegistry.GetPokemon(pokemonId).BaseStats;
+        BaseStats baseStats = PokemonRegistry.GetPokemonSpecies(pokemonId).BaseStats;
         int hp = PokemonStats.calculateHp(level, baseStats.Hp, pokemonEVs.hpEVs, pokemonIVs.hpIVs);
         int attack = PokemonStats.calculateOtherStat(level, baseStats.Attack, pokemonEVs.attackEVs,
             pokemonIVs.attackIVs, nature, Nature.AffectedStats.ATTACK);
@@ -66,7 +66,7 @@ public class PokemonIndividualData
 
     public PokemonStats calculateStats()
     {
-        BaseStats baseStats = PokemonRegistry.GetPokemon(pokemonId).BaseStats;
+        BaseStats baseStats = PokemonRegistry.GetPokemonSpecies(pokemonId).BaseStats;
         int hp = PokemonStats.calculateHp(level.Value, baseStats.Hp, EVs.hpEVs, IVs.hpIVs);
         int attack = PokemonStats.calculateOtherStat(level.Value, baseStats.Attack, EVs.attackEVs,
             IVs.attackIVs, natureData, Nature.AffectedStats.ATTACK);
