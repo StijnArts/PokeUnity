@@ -32,11 +32,11 @@ public class CameraFacingSprite : MonoBehaviour
     {
         gameObject.transform.localScale = new Vector3(1, 1, 0.00001f);
         SpriteSheet = new CameraFacingSpriteSheet(SpriteWidth);
+        SpriteRenderer = GetComponent<SpriteRenderer>();
         DetermineTextireLocation();
-        SpriteRenderer = gameObject.AddComponent<SpriteRenderer>();
         if(SpriteRenderer == null)
         {
-            SpriteRenderer = GetComponent<SpriteRenderer>();
+            SpriteRenderer = gameObject.AddComponent<SpriteRenderer>();
         }
         SpriteRenderer.sprite = SpriteSheet.GetFrame(0, Facing);
         SpriteRenderer.transform.rotation = Quaternion.Euler(0f, Camera.main.transform.rotation.eulerAngles.y, 0f);

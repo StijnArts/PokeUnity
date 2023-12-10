@@ -1,3 +1,5 @@
+using Assets.Scripts.Pokemon.Data;
+using Assets.Scripts.Registries;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -16,8 +18,26 @@ public class RegistryLoader : MonoBehaviour
         RegisterPokemonNatures();
         RegisterPokemonAbilities();
         RegisterPokemonExperienceGroups();
+        RegisterMoves();
+        RegisterMoveSets();
+        RegisterPokedexes();
         GameStateManager.SetState(GameStateManager.GameStates.ROAMING);
         //Register forms to pokemon after they have been registered to only have to loop through all the files once.
+    }
+
+    private void RegisterPokedexes()
+    {
+        PokedexRegistry.RegisterPokedexes();
+    }
+
+    private void RegisterMoveSets()
+    {
+        MoveRegistry.RegisterMoveSets();
+    }
+
+    private void RegisterMoves()
+    {
+        MoveRegistry.RegisterMoves();
     }
 
     private void RegisterPokemonAbilities()
@@ -38,33 +58,18 @@ public class RegistryLoader : MonoBehaviour
 
     private void RegisterPokemonTypes()
     {
-        PokemonTypeRegistry.registerTypes();
+        PokemonTypeRegistry.RegisterTypes();
         Debug.Log(PokemonTypeRegistry.registryToString());
     }
 
     private void RegisterPokemonForms()
     {
-        string pokemonFormJsonDirectory = Path.GetFullPath("./") + "PokemonData/Forms";
-        foreach (string path in Directory.GetFiles(pokemonFormJsonDirectory))
-        {
-            PokemonData pokemonForm = PokemonJsonReader.getPokemonData<PokemonData>(path);
-            if (pokemonForm != null)
-            {
-                string fileName = Path.GetFileName(path).Replace(".json", "");
-                string pokemonId = fileName.Split('-')[0];
-                string formId = fileName.Replace(pokemonId+"-","");
-                var pokemon = PokemonRegistry.GetPokemon(pokemonId);
-                if(pokemon != null)
-                {
-                    pokemon.Forms.Add(formId, pokemonForm);
-                }
-            }
-        }
+        PokemonRegistry.RegisterPokemonForms();
         Debug.Log(PokemonRegistry.registryToString());
     }
 
     private void RegisterPokemon()
     {
-        PokemonRegistry.RegisterPokemon();
+        PokemonRegistry.RegisterPokemonSpecies();
     }
 }

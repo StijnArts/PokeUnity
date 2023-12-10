@@ -64,7 +64,7 @@ public class DialogManager : MonoBehaviour
 
         Dialog dialog = dialogQueue.Dequeue();
         dialogUIManager.setDialogText(dialog.text);
-        dialogUIManager.showDialogBox();
+        dialogUIManager.ShowDialogBox();
         Debug.Log(dialog.dialogTitle + ": " + dialog.text);
         if(previousDialog != null)
         {
@@ -84,7 +84,7 @@ public class DialogManager : MonoBehaviour
 
     public void GiftPokemon(PokemonGiftEntry pokemonGiftEntry, string source)
     {
-        string flavorText = Settings.playerName + " received " + PokemonRegistry.GetPokemon(pokemonGiftEntry.pokemonId).PokemonName + " from " + source + "!";
+        string flavorText = Settings.playerName + " received " + PokemonRegistry.GetPokemonSpecies(pokemonGiftEntry.pokemonId).PokemonName + " from " + source + "!";
         if (pokemonGiftEntry.customFlavorText != null)
         {
             if (pokemonGiftEntry.customFlavorText != "")
@@ -95,7 +95,7 @@ public class DialogManager : MonoBehaviour
         Debug.Log("system: " + flavorText);
         dialogUIManager.hideTitleAndPortrait();
         dialogUIManager.setDialogText(flavorText);
-        dialogUIManager.showDialogBox();
+        dialogUIManager.ShowDialogBox();
         PlayerController.Party.AddPokemonToParty(PokemonCreator.InstantiatePokemonForSpawn(pokemonGiftEntry, pokemonGiftEntry.spawnConditions));
     }
 
@@ -124,6 +124,6 @@ public class DialogManager : MonoBehaviour
     {
         Debug.Log("End of conversation");
         GameStateManager.SetState(GameStateManager.GameStates.ROAMING);
-        dialogUIManager.hideDialogBox();
+        dialogUIManager.HideDialogBox();
     }
 }

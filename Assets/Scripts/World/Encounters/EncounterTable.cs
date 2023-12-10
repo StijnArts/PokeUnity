@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-[CreateAssetMenu(menuName = "Scriptable Objects/Grass Encounter Table")]
+[CreateAssetMenu(menuName = "Encounter Data/Grass Encounter Table")]
 public class GrassEncounterTable : ScriptableObject
 {
     public PokemonSpawnEntry[] spawnEntries;

@@ -18,9 +18,9 @@ public class PokemonIndividualData
     public int currentHp;
     public string formId = "";
     public Move[] moves = new Move[4];
-    public string Ability;
+    public string AbilityData;
     [HideInInspector]
-    public Ability abilityData;
+    public Ability Ability;
     public Nature.Natures nature = Nature.Natures.Adamant;
     [HideInInspector]
     public Nature natureData;
@@ -48,7 +48,7 @@ public class PokemonIndividualData
 
     public PokemonStats calculateStats(int level, PokemonEVs pokemonEVs, PokemonIVs pokemonIVs, Nature nature)
     {
-        BaseStats baseStats = PokemonRegistry.GetPokemon(pokemonId).BaseStats;
+        BaseStats baseStats = PokemonRegistry.GetPokemonSpecies(pokemonId).BaseStats;
         int hp = PokemonStats.calculateHp(level, baseStats.Hp, pokemonEVs.hpEVs, pokemonIVs.hpIVs);
         int attack = PokemonStats.calculateOtherStat(level, baseStats.Attack, pokemonEVs.attackEVs,
             pokemonIVs.attackIVs, nature, Nature.AffectedStats.ATTACK);
@@ -66,7 +66,7 @@ public class PokemonIndividualData
 
     public PokemonStats calculateStats()
     {
-        BaseStats baseStats = PokemonRegistry.GetPokemon(pokemonId).BaseStats;
+        BaseStats baseStats = PokemonRegistry.GetPokemonSpecies(pokemonId).BaseStats;
         int hp = PokemonStats.calculateHp(level.Value, baseStats.Hp, EVs.hpEVs, IVs.hpIVs);
         int attack = PokemonStats.calculateOtherStat(level.Value, baseStats.Attack, EVs.attackEVs,
             IVs.attackIVs, natureData, Nature.AffectedStats.ATTACK);

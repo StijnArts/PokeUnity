@@ -88,11 +88,11 @@ public class Pokemon : MonoBehaviour
         return false;
         if (pokemonHasForm(pokemonId, formId))
         {
-            return PokemonRegistry.GetPokemon(pokemonId).Forms[formId].HasGenderDifferences;
+            return PokemonRegistry.GetPokemonSpecies(pokemonId).Forms[formId].HasGenderDifferences;
         }
         else
         {
-            return PokemonRegistry.GetPokemon(pokemonId).HasGenderDifferences;
+            return PokemonRegistry.GetPokemonSpecies(pokemonId).HasGenderDifferences;
         }
     }
 
