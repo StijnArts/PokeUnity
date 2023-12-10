@@ -36,6 +36,29 @@ public class AbilityRegistry
         foreach (Ability ability in abilities)
         {
             registry.Add(ability.AbilityId, ability);
+            foreach(var pokemonId in ability.ReceiverPokemonIds)
+            {
+                PokemonSpecies species;
+                if (PokemonRegistry.TryGetPokemon(pokemonId, out species)){
+                    species.Abilities.Add(ability);
+                }
+            }
+
+            foreach (var pokemonId in ability.HiddenReceiverPokemonIds)
+            {
+                PokemonSpecies species;
+                if (PokemonRegistry.TryGetPokemon(pokemonId, out species))
+                {
+                    if(species.HiddenAbility == null)
+                    {
+                        species.HiddenAbility = ability;
+                    } else
+                    {
+                        Debug.LogWarning("Attempted to overwrite an already set hidden ability with " + ability.AbilityId + " during ability registration for " + species.PokemonId + "\n" +
+                            "Overwrites should be made with a PokemonOverwrites Class.");
+                    }
+                }
+            }
         }
 
         return registry;

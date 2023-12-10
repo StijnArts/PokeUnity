@@ -67,6 +67,7 @@
     <Compile Include="Assets\Scripts\Player\PlayerData.cs" />
     <Compile Include="Assets\Scripts\Registries\RegistryLoader.cs" />
     <Compile Include="Assets\Scripts\Registries\PokemonTypeRegistry.cs" />
+    <Compile Include="Assets\Scripts\Pokemon\Data\Ability.cs" />
     <Compile Include="Assets\Scripts\Registries\ExperienceGroupRegistry.cs" />
     <Compile Include="Assets\Scripts\Player\Party.cs" />
     <Compile Include="Assets\Scripts\Registries\PokemonNatureRegistry.cs" />
@@ -95,7 +96,6 @@
     <Compile Include="Assets\Scripts\Pokemon\PokemonGameObjectManager.cs" />
     <Compile Include="Assets\Scripts\Trainer\HasParty.cs" />
     <Compile Include="Assets\Scripts\Sprites\CameraFacingSpriteSheet.cs" />
-    <Compile Include="Assets\Scripts\Pokemon\Ability.cs" />
     <Compile Include="Assets\Scripts\Pokemon\Abilities\Static.cs" />
     <Compile Include="Assets\Scripts\Registries\PokedexRegistry.cs" />
     <Compile Include="Assets\Scripts\Pokemon\PokemonCreator.cs" />

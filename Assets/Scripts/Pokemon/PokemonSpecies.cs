@@ -16,8 +16,8 @@ public abstract class PokemonSpecies
     public int NationalPokedexNumber;
     public string PrimaryType;
     public string SecondaryType;
-    public List<string> Abilities;
-    public string HiddenAbility;
+    public List<Ability> Abilities;
+    public Ability HiddenAbility;
     public BaseStats BaseStats;
     public int CatchRate;
     public double MaleRatio;
@@ -41,8 +41,6 @@ public abstract class PokemonSpecies
         string pokemonName,
         string pokemonId,
         string primaryType,
-        List<string> abilities,
-        string hiddenAbility,
         BaseStats baseStats,
         int catchRate,
         double maleRatio,
@@ -82,8 +80,6 @@ public abstract class PokemonSpecies
         string pokemonId,
         int nationalPokedexNumber,
         string primaryType,
-        List<string> abilities,
-        string hiddenAbility,
         BaseStats baseStats,
         int catchRate,
         double maleRatio,
@@ -107,8 +103,6 @@ public abstract class PokemonSpecies
         string pokemonId,
         string primaryType,
         string secondaryType,
-        List<string> abilities,
-        string hiddenAbility,
         BaseStats baseStats,
         int catchRate,
         double maleRatio,
@@ -133,8 +127,6 @@ public abstract class PokemonSpecies
         int nationalPokedexNumber,
         string primaryType,
         string secondaryType,
-        List<string> abilities,
-        string hiddenAbility,
         BaseStats baseStats,
         int catchRate,
         double maleRatio,

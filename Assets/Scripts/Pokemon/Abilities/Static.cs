@@ -5,7 +5,13 @@ using UnityEngine;
 
 public class Static : Ability
 {
-    public Static() : base("static", "Static")
+    public Static() : base(
+        "static", "Static", 
+        new List<string>()
+        {
+            "pikachu"
+        }, 
+        new List<string>())
     {
         
     }

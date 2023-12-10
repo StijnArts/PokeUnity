@@ -8,7 +8,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <RootNamespace></RootNamespace>
+    <RootNamespace>
+    </RootNamespace>
     <ProjectGuid>{9FDF950E-CBD0-2321-C854-45BBFF036C1A}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
@@ -95,7 +96,7 @@
     <Compile Include="Assets\Scripts\Pokemon\PokemonGameObjectManager.cs" />
     <Compile Include="Assets\Scripts\Trainer\HasParty.cs" />
     <Compile Include="Assets\Scripts\Sprites\CameraFacingSpriteSheet.cs" />
-    <Compile Include="Assets\Scripts\Pokemon\Ability.cs" />
+    <Compile Include="Assets\Scripts\Pokemon\Data\Ability.cs" />
     <Compile Include="Assets\Scripts\Pokemon\Abilities\Static.cs" />
     <Compile Include="Assets\Scripts\Registries\PokedexRegistry.cs" />
     <Compile Include="Assets\Scripts\Pokemon\PokemonCreator.cs" />

@@ -17,10 +17,10 @@ public static class PokemonRegistry
         }
     }
 
-    public static PokemonSpecies GetPokemonSpecies(string id)
+    public static PokemonSpecies GetPokemonSpecies(string pokemonSpeciesId)
     {
         PokemonSpecies value;
-        PokemonDictionary.TryGetValue(id, out value);
+        TryGetPokemon(pokemonSpeciesId, out value);
         return value;
     }
 
@@ -61,5 +61,10 @@ public static class PokemonRegistry
         }
 
         return registry;
+    }
+
+    internal static bool TryGetPokemon(string pokemonId, out PokemonSpecies species)
+    { 
+        return PokemonDictionary.TryGetValue(pokemonId, out species);
     }
 }
