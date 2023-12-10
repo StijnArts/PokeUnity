@@ -1,4 +1,5 @@
 using Assets.Scripts.Pokemon.Data;
+using Assets.Scripts.Registries;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -17,8 +18,26 @@ public class RegistryLoader : MonoBehaviour
         //RegisterPokemonNatures();
         RegisterPokemonAbilities();
         RegisterPokemonExperienceGroups();
+        RegisterMoves();
+        RegisterMoveSets();
+        RegisterPokedexes();
         GameStateManager.SetState(GameStateManager.GameStates.ROAMING);
         //Register forms to pokemon after they have been registered to only have to loop through all the files once.
+    }
+
+    private void RegisterPokedexes()
+    {
+        PokedexRegistry.RegisterPokedexes();
+    }
+
+    private void RegisterMoveSets()
+    {
+        MoveRegistry.RegisterMoveSets();
+    }
+
+    private void RegisterMoves()
+    {
+        MoveRegistry.RegisterMoves();
     }
 
     private void RegisterPokemonAbilities()

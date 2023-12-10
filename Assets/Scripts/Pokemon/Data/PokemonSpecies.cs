@@ -7,36 +7,12 @@ using System;
 using System.Collections.Generic;
 
 [Serializable]
-public abstract class PokemonSpecies
-
+public abstract class PokemonSpecies : BaseSpecies
 {
     public Dictionary<string, PokemonForm> Forms = new Dictionary<string, PokemonForm>();
-    public string PokemonName;
-    public string PokemonId;
     public int NationalPokedexNumber;
-    public string PrimaryType;
-    public string SecondaryType;
-    public List<Ability> Abilities;
-    public Ability HiddenAbility;
-    public BaseStats BaseStats;
-    public int CatchRate;
-    public double MaleRatio;
-    public int BaseExperienceYield;
-    public string ExperienceGroup;
-    public int EggCycles;
-    public List<string> EggGroups;
-    public List<MoveSet> MoveSets;
-    public List<PokedexEntry> Pokedex;
-    public string PreEvolution;
-    public List<Evolution> Evolutions;
-    public int BaseFriendship;
-    public EvYield EvYield;
-    public double HeightInCm;
-    public double WeightInKilos;
-    public bool CannotDynamax;
-    public bool HasGenderDifferences;
 
-    public PokemonSpecies(
+    internal PokemonSpecies(
         string pokemonName,
         string pokemonId,
         string primaryType,
@@ -52,24 +28,9 @@ public abstract class PokemonSpecies
         double heightInCm,
         double weightInGrams,
         bool hasGenderDifferences = false,
-        bool cannotDynamax = false)
+        bool cannotDynamax = false) :
+            base(pokemonName, pokemonId, primaryType, baseStats, catchRate, maleRatio, baseExperienceYield, experienceGroup, eggCycles, eggGroups, baseFriendship, evYield, heightInCm, weightInGrams, cannotDynamax, hasGenderDifferences)
     {
-        PokemonName = pokemonName;
-        PokemonId = pokemonId;
-        PrimaryType = primaryType;
-        BaseStats = baseStats;
-        CatchRate = catchRate;
-        MaleRatio = maleRatio;
-        BaseExperienceYield = baseExperienceYield;
-        ExperienceGroup = experienceGroup;
-        EggCycles = eggCycles;
-        EggGroups = eggGroups;
-        BaseFriendship = baseFriendship;
-        EvYield = evYield;
-        HeightInCm = heightInCm;
-        WeightInKilos = weightInGrams;
-        CannotDynamax = cannotDynamax;
-        HasGenderDifferences = hasGenderDifferences;
     }
 
     internal PokemonSpecies(
@@ -181,17 +142,8 @@ public abstract class PokemonSpecies
         // stringOfData += "\n" + move;
         //}
         stringOfData += "\n]," +
+            "\n]," + 
             "\n]," +
-            "\npokedex: [";
-        foreach (PokedexEntry pokedex in Pokedex)
-        {
-            stringOfData +=
-            "\n{" +
-                "\n   Version:" + pokedex.Version +
-                "\n   Text:" + pokedex.Text +
-            "\n},";
-        }
-        stringOfData += "\n]," +
             "\npreEvolution:" + PreEvolution + ",";
         stringOfData += "\nevolutions: [";
         foreach (Evolution evolution in Evolutions)

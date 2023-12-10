@@ -1,4 +1,5 @@
 ﻿using Assets.Scripts.Pokemon.Data;
+using Assets.Scripts.Pokemon.Moves;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,7 +15,7 @@ namespace Assets.Scripts.Pokemon.Species.Pikachu
                 Pikachu.Identifier,
                 new Dictionary<int, string>()
                 {
-                    {1,  "tackle"}
+                    {1,  Tackle.MoveId}
                 })
         {
         }

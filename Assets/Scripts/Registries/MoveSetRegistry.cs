@@ -62,12 +62,20 @@ namespace Assets.Scripts.Registries
                 var targetPokemonSpecies = PokemonRegistry.GetPokemonSpecies(identifier.SpeciesId);
                 if (!string.IsNullOrEmpty(identifier.FormId) && targetPokemonSpecies.Forms.ContainsKey(identifier.FormId))
                 {
-                    targetPokemonSpecies = targetPokemonSpecies.Forms[identifier.FormId];
+                    var form = targetPokemonSpecies.Forms[identifier.FormId];
+                    foreach (var moveSet in moveSetsPerIdentifier[identifier])
+                    {
+                        form.MoveSets.Add(moveSet);
+                    }
                 }
-                foreach (var moveSet in moveSetsPerIdentifier[identifier])
+                else
                 {
-                    targetPokemonSpecies.MoveSets.Add(moveSet);
+                    foreach (var moveSet in moveSetsPerIdentifier[identifier])
+                    {
+                        targetPokemonSpecies.MoveSets.Add(moveSet);
+                    }
                 }
+                
             }
         }
     }

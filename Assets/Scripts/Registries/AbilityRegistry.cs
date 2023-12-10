@@ -56,14 +56,22 @@ public class AbilityRegistry
                 PokemonSpecies species;
                 if (PokemonRegistry.TryGetPokemon(pokemonId.SpeciesId, out species))
                 {
-                    var targetSpecies = species;
                     if (!string.IsNullOrEmpty(pokemonId.FormId) && species.Forms.ContainsKey(pokemonId.FormId))
                     {
-                        targetSpecies = species.Forms[pokemonId.FormId];
-                    }
-                    if (targetSpecies.HiddenAbility == null)
+                        var form = species.Forms[pokemonId.FormId];
+                        if (form.HiddenAbility == null)
+                        {
+                            form.HiddenAbility = ability;
+                        }
+                        else
+                        {
+                            Debug.LogWarning("Attempted to overwrite an already set hidden AbilityId with " + ability.AbilityId + " during AbilityId registration for " + species.PokemonId + "\n" +
+                                "Overwrites should be made with a PokemonOverwrites Class.");
+                        }
+                    } 
+                    else if (species.HiddenAbility == null)
                     {
-                        targetSpecies.HiddenAbility = ability;
+                        species.HiddenAbility = ability;
                     } else
                     {
                         Debug.LogWarning("Attempted to overwrite an already set hidden AbilityId with " + ability.AbilityId + " during AbilityId registration for " + species.PokemonId + "\n" +

@@ -1,3 +1,4 @@
+using Assets.Scripts.Pokemon.Data;
 using Assets.Scripts.Registries;
 using System;
 using System.Collections;
@@ -55,7 +56,7 @@ public static class PokemonRegistry
                 registry.Add(pokemonSpecies.PokemonId, pokemonSpecies);
                 if(pokemonSpecies.NationalPokedexNumber != 0)
                 {
-                    NationalPokedex.NationalPokedexDictionary.Add(pokemonSpecies.NationalPokedexNumber, pokemonSpecies);
+                    PokedexRegistry.NationalPokedexDictionary.Add(pokemonSpecies.NationalPokedexNumber, pokemonSpecies);
                 }
             }
         }
@@ -66,5 +67,12 @@ public static class PokemonRegistry
     internal static bool TryGetPokemon(string pokemonId, out PokemonSpecies species)
     { 
         return PokemonDictionary.TryGetValue(pokemonId, out species);
+    }
+
+    internal static PokemonSpecies GetPokemonSpecies(PokemonIdentifier identifier)
+    {
+        PokemonSpecies species;
+        PokemonRegistry.TryGetPokemon(identifier.SpeciesId, out species);
+        return species;
     }
 }
