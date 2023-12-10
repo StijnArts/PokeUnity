@@ -56,6 +56,10 @@ PrefabInstance:
       propertyPath: m_Constraints
       value: 126
       objectReference: {fileID: 0}
+    - target: {fileID: 7292699245428520492, guid: 92b1e6d1ae4f2984f90bbea8c1419810, type: 3}
+      propertyPath: PokemonIndividualData.possibleAbilities.Array.size
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7709583819088428586, guid: 92b1e6d1ae4f2984f90bbea8c1419810, type: 3}
       propertyPath: MillisecondPerFrame
       value: 25

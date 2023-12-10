@@ -8,11 +8,10 @@ namespace Assets.Scripts.Pokemon.Data
 {
     public class BaseSpecies
     {
-        public string PokemonName;
         public string PokemonId;
         public string PrimaryType;
         public string SecondaryType;
-        public List<Ability> Abilities;
+        public List<Ability> Abilities = new List<Ability>();
         public Ability HiddenAbility;
         public BaseStats BaseStats;
         public int CatchRate;
@@ -22,8 +21,8 @@ namespace Assets.Scripts.Pokemon.Data
         public int EggCycles;
         public List<string> EggGroups;
         public List<MoveSet> MoveSets;
-        public string PreEvolution;
-        public List<Evolution> Evolutions;
+        public PokemonIdentifier PreEvolution;
+        public List<Evolution> Evolutions = new List<Evolution>();
         public int BaseFriendship;
         public EvYield EvYield;
         public double HeightInCm;
@@ -32,7 +31,6 @@ namespace Assets.Scripts.Pokemon.Data
         public bool HasGenderDifferences;
 
         public BaseSpecies(
-        string pokemonName,
         string pokemonId,
         string primaryType,
         BaseStats baseStats,
@@ -49,7 +47,6 @@ namespace Assets.Scripts.Pokemon.Data
         bool hasGenderDifferences = false,
         bool cannotDynamax = false)
         {
-            PokemonName = pokemonName;
             PokemonId = pokemonId;
             PrimaryType = primaryType;
             BaseStats = baseStats;
@@ -68,7 +65,6 @@ namespace Assets.Scripts.Pokemon.Data
         }
 
         public BaseSpecies(
-            string pokemonName,
             string pokemonId,
             string primaryType,
             string secondaryType,
@@ -85,7 +81,7 @@ namespace Assets.Scripts.Pokemon.Data
             double weightInGrams,
             bool hasGenderDifferences = false,
             bool cannotDynamax = false) :
-                this(pokemonName, pokemonId, primaryType, baseStats, catchRate, maleRatio, baseExperienceYield, experienceGroup, eggCycles, eggGroups, baseFriendship, evYield, heightInCm, weightInGrams, cannotDynamax, hasGenderDifferences)
+                this(pokemonId, primaryType, baseStats, catchRate, maleRatio, baseExperienceYield, experienceGroup, eggCycles, eggGroups, baseFriendship, evYield, heightInCm, weightInGrams, cannotDynamax, hasGenderDifferences)
         {
             SecondaryType = secondaryType;
         }

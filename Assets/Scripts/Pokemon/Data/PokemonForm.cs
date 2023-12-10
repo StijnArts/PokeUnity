@@ -8,9 +8,13 @@ namespace Assets.Scripts.Pokemon.Data
 {
     public abstract class PokemonForm : BaseSpecies
     {
+        public string FormName;
+        public string FormId;
+
         public PokemonForm(
-            string pokemonName, 
-            string pokemonId, 
+            string formName,
+            string formId, 
+            PokemonIdentifier originalPokemonId, 
             string primaryType,
             BaseStats baseStats, 
             int catchRate, 
@@ -24,13 +28,16 @@ namespace Assets.Scripts.Pokemon.Data
             double heightInCm, 
             double weightInGrams, 
             bool hasGenderDifferences = false, 
-            bool cannotDynamax = false) : base(pokemonName, pokemonId, primaryType, baseStats, catchRate, maleRatio, baseExperienceYield, experienceGroup, eggCycles, eggGroups, baseFriendship, evYield, heightInCm, weightInGrams, hasGenderDifferences, cannotDynamax)
+            bool cannotDynamax = false) : base(originalPokemonId.SpeciesId, primaryType, baseStats, catchRate, maleRatio, baseExperienceYield, experienceGroup, eggCycles, eggGroups, baseFriendship, evYield, heightInCm, weightInGrams, hasGenderDifferences, cannotDynamax)
         {
+            FormName = formName;
+            FormId = formId;
         }
 
         public PokemonForm(
-            string pokemonName, 
-            string pokemonId, 
+            string formName,
+            string formId,
+            PokemonIdentifier originalPokemonId,
             string primaryType, 
             string secondaryType, 
             BaseStats baseStats, 
@@ -45,8 +52,10 @@ namespace Assets.Scripts.Pokemon.Data
             double heightInCm, 
             double weightInGrams, 
             bool hasGenderDifferences = false, 
-            bool cannotDynamax = false) : base(pokemonName, pokemonId, primaryType, secondaryType, baseStats, catchRate, maleRatio, baseExperienceYield, experienceGroup, eggCycles, eggGroups, baseFriendship, evYield, heightInCm, weightInGrams, hasGenderDifferences, cannotDynamax)
+            bool cannotDynamax = false) : base(originalPokemonId.SpeciesId, primaryType, secondaryType, baseStats, catchRate, maleRatio, baseExperienceYield, experienceGroup, eggCycles, eggGroups, baseFriendship, evYield, heightInCm, weightInGrams, hasGenderDifferences, cannotDynamax)
         {
+            FormName = formName;
+            FormId = formId;
         }
     }
 }

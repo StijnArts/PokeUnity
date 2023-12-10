@@ -9,38 +9,35 @@ using UnityEngine;
 namespace Assets.Scripts.Registries
 {
     public class MoveRegistry
-
     {
         //TODO create abilities
-        public static Dictionary<string, Move> Moves = RegisterMoves();
+        public static Dictionary<string, Move> MovesDictionary = new Dictionary<string, Move>();
 
         public static void RegisterAbility(string id, Move ability)
         {
-            Moves.Add(id, ability);
+            MovesDictionary.Add(id, ability);
         }
 
-        public static List<string> GetAbilityIds() => Moves.Values.Select(move => move.MoveId).ToList();
+        public static List<string> GetAbilityIds() => MovesDictionary.Values.Select(move => move.MoveId).ToList();
 
         public static Move GetAbility(string id)
         {
             Move value;
-            Moves.TryGetValue(id, out value);
+            MovesDictionary.TryGetValue(id, out value);
             if (value == null)
             {
-                return Moves["none"];
+                return MovesDictionary["none"];
             }
             return value;
         }
 
-        public static Dictionary<string, Move> RegisterMoves()
+        public static void RegisterMoves()
         {
-            var registry = new Dictionary<string, Move>();
             var moves = SubTypeReflector<Move>.FindSubTypeClasses();
             foreach (Move move in moves)
             {
-                registry.Add(move.MoveId, move);
+                MovesDictionary.Add(move.MoveId, move);
             }
-            return registry;
         }
         
         public static void RegisterMoveSets()

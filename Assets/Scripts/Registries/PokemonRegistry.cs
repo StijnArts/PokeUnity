@@ -7,7 +7,6 @@ using System.IO;
 using UnityEngine;
 
 public static class PokemonRegistry
-
 {
     public static Dictionary<string, PokemonSpecies> PokemonDictionary = new Dictionary<string, PokemonSpecies>();
     public static void AddPokemon(string id, PokemonSpecies pokemonSpecies)
@@ -45,23 +44,20 @@ public static class PokemonRegistry
         return list;
     }
 
-    public static Dictionary<string, PokemonSpecies> RegisterPokemonSpecies()
+    public static void RegisterPokemonSpecies()
     {
-        var registry = new Dictionary<string, PokemonSpecies>();
         var foundSpecies = SubTypeReflector<PokemonSpecies>.FindSubTypeClasses();
         foreach (var pokemonSpecies in foundSpecies)
         {
             if (pokemonSpecies != null)
             {
-                registry.Add(pokemonSpecies.PokemonId, pokemonSpecies);
+                PokemonDictionary.Add(pokemonSpecies.PokemonId, pokemonSpecies);
                 if(pokemonSpecies.NationalPokedexNumber != 0)
                 {
                     PokedexRegistry.NationalPokedexDictionary.Add(pokemonSpecies.NationalPokedexNumber, pokemonSpecies);
                 }
             }
         }
-
-        return registry;
     }
 
     internal static bool TryGetPokemon(string pokemonId, out PokemonSpecies species)
@@ -74,5 +70,17 @@ public static class PokemonRegistry
         PokemonSpecies species;
         PokemonRegistry.TryGetPokemon(identifier.SpeciesId, out species);
         return species;
+    }
+
+    public static void RegisterPokemonForms()
+    {
+        var foundForms = SubTypeReflector<PokemonForm>.FindSubTypeClasses();
+        foreach (var pokemonForm in foundForms)
+        {
+            if (pokemonForm != null)
+            {
+                GetPokemonSpecies(pokemonForm.PokemonId).Forms.Add(pokemonForm.FormId, pokemonForm);
+            }
+        }
     }
 }

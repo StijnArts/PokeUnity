@@ -1,4 +1,5 @@
 using Assets.Scripts.Pokemon.Data;
+using Assets.Scripts.Pokemon.PokemonTypes;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -13,7 +14,7 @@ namespace Assets.Scripts.Pokemon.Species.Pikachu
                  "Pikachu",                                 //Name
                  Identifier.SpeciesId,                                 //Pokemon Id
                  25,                                        //National Pokedex Number
-                 "electric",                                //Primary Type passed by type id
+                 Electric.TypeName,                         //Primary Type passed by type id
                                                             //Secondary Type (leave empty if none)
                  new BaseStats(35, 55, 40, 50, 50, 90),     //Base Stats
                  190,                                       //Catchrate

@@ -27,19 +27,17 @@ namespace Assets.Scripts.Registries
             return value;
         }
 
-        public static Dictionary<string, PokedexData> RegisterPokedexes()
+        public static void RegisterPokedexes()
         {
-            var registry = new Dictionary<string, PokedexData>();
             var foundDexes = SubTypeReflector<PokedexData>.FindSubTypeClasses();
             foreach (PokedexData pokedexData in foundDexes)
             {
                 if (pokedexData != null)
                 {
-                    registry.Add(pokedexData.PokedexId, pokedexData);
+                    PokedexDictionary.Add(pokedexData.PokedexId, pokedexData);
                 }
             }
             CompleteNationalPokedexNumbering();
-            return registry;
         }
 
         public static void CompleteNationalPokedexNumbering()

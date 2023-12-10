@@ -13,9 +13,9 @@ public class RegistryLoader : MonoBehaviour
     void Start()
     {
         RegisterPokemon();
-        //RegisterPokemonForms();
-        //RegisterPokemonTypes();
-        //RegisterPokemonNatures();
+        RegisterPokemonForms();
+        RegisterPokemonTypes();
+        RegisterPokemonNatures();
         RegisterPokemonAbilities();
         RegisterPokemonExperienceGroups();
         RegisterMoves();
@@ -58,28 +58,13 @@ public class RegistryLoader : MonoBehaviour
 
     private void RegisterPokemonTypes()
     {
-        PokemonTypeRegistry.registerTypes();
+        PokemonTypeRegistry.RegisterTypes();
         Debug.Log(PokemonTypeRegistry.registryToString());
     }
 
     private void RegisterPokemonForms()
     {
-        string pokemonFormJsonDirectory = Path.GetFullPath("./") + "PokemonSpecies/Forms";
-        foreach (string path in Directory.GetFiles(pokemonFormJsonDirectory))
-        {
-            PokemonForm pokemonForm = PokemonJsonReader.getPokemonData<PokemonForm>(path);
-            if (pokemonForm != null)
-            {
-                string fileName = Path.GetFileName(path).Replace(".json", "");
-                string pokemonId = fileName.Split('-')[0];
-                string formId = fileName.Replace(pokemonId+"-","");
-                var pokemon = PokemonRegistry.GetPokemonSpecies(pokemonId);
-                if(pokemon != null)
-                {
-                    pokemon.Forms.Add(formId, pokemonForm);
-                }
-            }
-        }
+        PokemonRegistry.RegisterPokemonForms();
         Debug.Log(PokemonRegistry.registryToString());
     }
 

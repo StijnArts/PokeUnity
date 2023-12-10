@@ -9,6 +9,7 @@ using System.Collections.Generic;
 [Serializable]
 public abstract class PokemonSpecies : BaseSpecies
 {
+    public string PokemonName;
     public Dictionary<string, PokemonForm> Forms = new Dictionary<string, PokemonForm>();
     public int NationalPokedexNumber;
 
@@ -29,8 +30,9 @@ public abstract class PokemonSpecies : BaseSpecies
         double weightInGrams,
         bool hasGenderDifferences = false,
         bool cannotDynamax = false) :
-            base(pokemonName, pokemonId, primaryType, baseStats, catchRate, maleRatio, baseExperienceYield, experienceGroup, eggCycles, eggGroups, baseFriendship, evYield, heightInCm, weightInGrams, cannotDynamax, hasGenderDifferences)
+            base(pokemonId, primaryType, baseStats, catchRate, maleRatio, baseExperienceYield, experienceGroup, eggCycles, eggGroups, baseFriendship, evYield, heightInCm, weightInGrams, cannotDynamax, hasGenderDifferences)
     {
+        PokemonName = pokemonName;
     }
 
     internal PokemonSpecies(
@@ -148,7 +150,7 @@ public abstract class PokemonSpecies : BaseSpecies
         stringOfData += "\nevolutions: [";
         foreach (Evolution evolution in Evolutions)
         {
-            stringOfData += evolution.classToString();
+            stringOfData += evolution.ClassToString();
         }
         stringOfData += "\n]," +
           "\nbaseFriendship:" + 50 + "," +
@@ -188,43 +190,6 @@ public class BaseStats
     public int SpecialAttack;
     public int SpecialDefence;
     public int Speed;
-}
-[Serializable]
-public class Evolution
-{
-    public Evolution() { }
-    public string Id;
-    public string Variant;
-    public string ResultPokemonId;
-    public int ResultFormId;
-    public bool ConsumeHeldItem;
-    public List<string> LearnableMoves;
-    public List<string> Requirements;
-    public string RequiredContext;
-
-    public string classToString()
-    {
-        string classToString = "\n{" +
-            "Id:" + this.Id + ",";
-        classToString += "Variant:" + this.Variant + ",";
-        classToString += "ResultPokemonId:" + this.ResultPokemonId + ",";
-        classToString += "ResultFormId:" + this.ResultFormId + ",";
-        classToString += "ConsumeHeldItem:" + this.ConsumeHeldItem + ",";
-        classToString += "LearnableMoves: [";
-        foreach (string move in this.LearnableMoves)
-        {
-            classToString += "\n" + move + ",";
-        }
-        classToString += "\n]," +
-            "Requirements: [";
-        foreach (string requirement in this.Requirements)
-        {
-            classToString += "\n" + requirement + ",";
-        }
-        classToString += "RequiredContext:" + this.RequiredContext +
-            "\n},";
-        return classToString;
-    }
 }
 [Serializable]
 public class EvYield

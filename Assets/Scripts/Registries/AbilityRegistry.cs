@@ -9,7 +9,7 @@ using UnityEngine;
 public class AbilityRegistry
 {
     //TODO create abilities
-    public static Dictionary<string, Ability> Abilities = RegisterAbilities();
+    public static Dictionary<string, Ability> Abilities = new Dictionary<string, Ability>();
 
     public static void RegisterAbility(string id, Ability ability)
     {
@@ -29,13 +29,12 @@ public class AbilityRegistry
         return value;
     }
 
-    public static Dictionary<string, Ability> RegisterAbilities()
+    public static void RegisterAbilities()
     {
-        var registry = new Dictionary<string, Ability>();
         var abilities = SubTypeReflector<Ability>.FindSubTypeClasses();
         foreach (Ability ability in abilities)
         {
-            registry.Add(ability.AbilityId, ability);
+            Abilities.Add(ability.AbilityId, ability);
             //TODO check for any modification files that target the ability and apply them
             foreach(var pokemonId in ability.ReceiverPokemonIds)
             {
@@ -80,7 +79,5 @@ public class AbilityRegistry
                 }
             }
         }
-
-        return registry;
     }
 }
