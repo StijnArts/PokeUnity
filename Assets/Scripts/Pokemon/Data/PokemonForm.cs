@@ -11,9 +11,7 @@ namespace Assets.Scripts.Pokemon.Data
         public PokemonForm(
             string pokemonName, 
             string pokemonId, 
-            string primaryType, 
-            List<string> abilities, 
-            string hiddenAbility, 
+            string primaryType,
             BaseStats baseStats, 
             int catchRate, 
             double maleRatio, 
@@ -26,7 +24,7 @@ namespace Assets.Scripts.Pokemon.Data
             double heightInCm, 
             double weightInGrams, 
             bool hasGenderDifferences = false, 
-            bool cannotDynamax = false) : base(pokemonName, pokemonId, primaryType, abilities, hiddenAbility, baseStats, catchRate, maleRatio, baseExperienceYield, experienceGroup, eggCycles, eggGroups, baseFriendship, evYield, heightInCm, weightInGrams, hasGenderDifferences, cannotDynamax)
+            bool cannotDynamax = false) : base(pokemonName, pokemonId, primaryType, baseStats, catchRate, maleRatio, baseExperienceYield, experienceGroup, eggCycles, eggGroups, baseFriendship, evYield, heightInCm, weightInGrams, hasGenderDifferences, cannotDynamax)
         {
         }
 
@@ -35,8 +33,6 @@ namespace Assets.Scripts.Pokemon.Data
             string pokemonId, 
             int nationalPokedexNumber, 
             string primaryType, 
-            List<string> abilities, 
-            string hiddenAbility, 
             BaseStats baseStats, 
             int catchRate, 
             double maleRatio, 
@@ -49,7 +45,7 @@ namespace Assets.Scripts.Pokemon.Data
             double heightInCm, 
             double weightInGrams, 
             bool hasGenderDifferences = false, 
-            bool cannotDynamax = false) : base(pokemonName, pokemonId, nationalPokedexNumber, primaryType, abilities, hiddenAbility, baseStats, catchRate, maleRatio, baseExperienceYield, experienceGroup, eggCycles, eggGroups, baseFriendship, evYield, heightInCm, weightInGrams, hasGenderDifferences, cannotDynamax)
+            bool cannotDynamax = false) : base(pokemonName, pokemonId, nationalPokedexNumber, primaryType, baseStats, catchRate, maleRatio, baseExperienceYield, experienceGroup, eggCycles, eggGroups, baseFriendship, evYield, heightInCm, weightInGrams, hasGenderDifferences, cannotDynamax)
         {
         }
 
@@ -58,8 +54,6 @@ namespace Assets.Scripts.Pokemon.Data
             string pokemonId, 
             string primaryType, 
             string secondaryType, 
-            List<string> abilities, 
-            string hiddenAbility, 
             BaseStats baseStats, 
             int catchRate, 
             double maleRatio, 
@@ -72,7 +66,7 @@ namespace Assets.Scripts.Pokemon.Data
             double heightInCm, 
             double weightInGrams, 
             bool hasGenderDifferences = false, 
-            bool cannotDynamax = false) : base(pokemonName, pokemonId, primaryType, secondaryType, abilities, hiddenAbility, baseStats, catchRate, maleRatio, baseExperienceYield, experienceGroup, eggCycles, eggGroups, baseFriendship, evYield, heightInCm, weightInGrams, hasGenderDifferences, cannotDynamax)
+            bool cannotDynamax = false) : base(pokemonName, pokemonId, primaryType, secondaryType, baseStats, catchRate, maleRatio, baseExperienceYield, experienceGroup, eggCycles, eggGroups, baseFriendship, evYield, heightInCm, weightInGrams, hasGenderDifferences, cannotDynamax)
         {
         }
 
@@ -82,8 +76,6 @@ namespace Assets.Scripts.Pokemon.Data
             int nationalPokedexNumber, 
             string primaryType, 
             string secondaryType, 
-            List<string> abilities, 
-            string hiddenAbility, 
             BaseStats baseStats, 
             int catchRate, 
             double maleRatio, 
@@ -96,7 +88,7 @@ namespace Assets.Scripts.Pokemon.Data
             double heightInCm, 
             double weightInGrams, 
             bool hasGenderDifferences = false, 
-            bool cannotDynamax = false) : base(pokemonName, pokemonId, nationalPokedexNumber, primaryType, secondaryType, abilities, hiddenAbility, baseStats, catchRate, maleRatio, baseExperienceYield, experienceGroup, eggCycles, eggGroups, baseFriendship, evYield, heightInCm, weightInGrams, hasGenderDifferences, cannotDynamax)
+            bool cannotDynamax = false) : base(pokemonName, pokemonId, nationalPokedexNumber, primaryType, secondaryType, baseStats, catchRate, maleRatio, baseExperienceYield, experienceGroup, eggCycles, eggGroups, baseFriendship, evYield, heightInCm, weightInGrams, hasGenderDifferences, cannotDynamax)
         {
         }
     }

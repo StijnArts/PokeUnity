@@ -17,7 +17,7 @@ public class PokemonSpawnEntry
     public Move moveTwo;
     public Move moveThree;
     public Move moveFour;
-    public string ability;
+    public string AbilityId;
     public PokemonSpawnEntry(float spawnWeight, string pokemonId, string formId, int minLevel, int maxLevel) : this(spawnWeight, pokemonId, minLevel, maxLevel)
     {
         this.formId = formId;

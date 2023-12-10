@@ -25,7 +25,7 @@ public abstract class PokemonSpecies
     public string ExperienceGroup;
     public int EggCycles;
     public List<string> EggGroups;
-    public MoveSet MoveSet;
+    public List<MoveSet> MoveSets;
     public List<PokedexEntry> Pokedex;
     public string PreEvolution;
     public List<Evolution> Evolutions;
@@ -35,7 +35,6 @@ public abstract class PokemonSpecies
     public double WeightInKilos;
     public bool CannotDynamax;
     public bool HasGenderDifferences;
-
 
     public PokemonSpecies(
         string pokemonName,
@@ -58,8 +57,6 @@ public abstract class PokemonSpecies
         PokemonName = pokemonName;
         PokemonId = pokemonId;
         PrimaryType = primaryType;
-        Abilities = abilities;
-        HiddenAbility = hiddenAbility;
         BaseStats = baseStats;
         CatchRate = catchRate;
         MaleRatio = maleRatio;
@@ -93,7 +90,7 @@ public abstract class PokemonSpecies
         double weightInGrams,
         bool hasGenderDifferences = false,
         bool cannotDynamax = false) :
-            this(pokemonName, pokemonId, primaryType, abilities, hiddenAbility, baseStats, catchRate, maleRatio, baseExperienceYield, experienceGroup, eggCycles, eggGroups, baseFriendship, evYield, heightInCm, weightInGrams, cannotDynamax, hasGenderDifferences)
+            this(pokemonName, pokemonId, primaryType, baseStats, catchRate, maleRatio, baseExperienceYield, experienceGroup, eggCycles, eggGroups, baseFriendship, evYield, heightInCm, weightInGrams, cannotDynamax, hasGenderDifferences)
     {
         NationalPokedexNumber = nationalPokedexNumber;
     }
@@ -116,7 +113,7 @@ public abstract class PokemonSpecies
         double weightInGrams,
         bool hasGenderDifferences = false,
         bool cannotDynamax = false) :
-            this(pokemonName, pokemonId, primaryType, abilities, hiddenAbility, baseStats, catchRate, maleRatio, baseExperienceYield, experienceGroup, eggCycles, eggGroups, baseFriendship, evYield, heightInCm, weightInGrams, cannotDynamax, hasGenderDifferences)
+            this(pokemonName, pokemonId, primaryType, baseStats, catchRate, maleRatio, baseExperienceYield, experienceGroup, eggCycles, eggGroups, baseFriendship, evYield, heightInCm, weightInGrams, cannotDynamax, hasGenderDifferences)
     {
         SecondaryType = secondaryType;
     }
@@ -140,7 +137,7 @@ public abstract class PokemonSpecies
         double weightInGrams,
         bool hasGenderDifferences = false,
         bool cannotDynamax = false) :
-            this(pokemonName, pokemonId, primaryType, secondaryType, abilities, hiddenAbility, baseStats, catchRate, maleRatio, baseExperienceYield, experienceGroup, eggCycles, eggGroups, baseFriendship, evYield, heightInCm, weightInGrams, cannotDynamax, hasGenderDifferences)
+            this(pokemonName, pokemonId, primaryType, secondaryType, baseStats, catchRate, maleRatio, baseExperienceYield, experienceGroup, eggCycles, eggGroups, baseFriendship, evYield, heightInCm, weightInGrams, cannotDynamax, hasGenderDifferences)
     {
         NationalPokedexNumber = nationalPokedexNumber;
     }
@@ -153,12 +150,12 @@ public abstract class PokemonSpecies
         stringOfData += "\nprimaryType:" + PrimaryType + ",";
         stringOfData += "\nsecondaryType:" + SecondaryType + ",";
         stringOfData += "\nabilities: [";
-        foreach (string ability in Abilities)
+        foreach (var ability in Abilities)
         {
-            stringOfData += "\n" + AbilityRegistry.GetAbility(ability).AbilityName;
+            stringOfData += "\n" + ability.AbilityName;
         }
         stringOfData += "\n]," +
-            "\nhiddenAbility:" + AbilityRegistry.GetAbility(HiddenAbility).AbilityName + ",";
+            "\nhiddenAbility:" + HiddenAbility.AbilityName + ",";
         stringOfData += "\nbaseStats: {" +
         "\nhp:" + BaseStats.Hp + ",";
         stringOfData += "\nattack:" + BaseStats.Attack + ",";

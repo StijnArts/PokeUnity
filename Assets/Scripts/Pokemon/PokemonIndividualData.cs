@@ -18,9 +18,9 @@ public class PokemonIndividualData
     public int currentHp;
     public string formId = "";
     public Move[] moves = new Move[4];
-    public string Ability;
+    public string AbilityData;
     [HideInInspector]
-    public Ability abilityData;
+    public Ability Ability;
     public Nature.Natures nature = Nature.Natures.Adamant;
     [HideInInspector]
     public Nature natureData;

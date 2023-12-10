@@ -72,6 +72,7 @@
     <Compile Include="Assets\Scripts\Player\Party.cs" />
     <Compile Include="Assets\Scripts\Registries\PokemonNatureRegistry.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerCameraScript.cs" />
+    <Compile Include="Assets\Scripts\Pokemon\Data\PokemonIdentifier.cs" />
     <Compile Include="Assets\Scripts\World\Spawning\PokemonSpawnEntry.cs" />
     <Compile Include="Assets\Scripts\Player\Inventory\ItemTransferEntry.cs" />
     <Compile Include="Assets\Scripts\Pokemon\PokemonIndividualData.cs" />
@@ -81,6 +82,7 @@
     <Compile Include="Assets\Scripts\Player\PlayerController.cs" />
     <Compile Include="Assets\Scripts\Pokemon\Abilities\None.cs" />
     <Compile Include="Assets\Scripts\Registries\EvolutionRegistry.cs" />
+    <Compile Include="Assets\Scripts\Pokemon\Data\MoveSet.cs" />
     <Compile Include="Assets\Scripts\Pokemon\PokemonStats.cs" />
     <Compile Include="Assets\Scripts\Pokemon\Move.cs" />
     <Compile Include="Assets\Scripts\World\Direction.cs" />
@@ -103,13 +105,13 @@
     <Compile Include="Assets\Scripts\Registries\SubTypeReflector.cs" />
     <Compile Include="Assets\Scripts\Pokemon\PokemonGiftEntry.cs" />
     <Compile Include="Assets\Scripts\Dialog\Dialog.cs" />
+    <Compile Include="Assets\Scripts\Pokemon\Species\Pikachu\PikachuMovesets.cs" />
     <Compile Include="Assets\Scripts\Pokemon\Data\Pokedex\PokedexEntry.cs" />
     <Compile Include="Assets\Scripts\World\Spawning\SpawnConditions.cs" />
     <Compile Include="Assets\Scripts\Pokemon\PokemonSpecies.cs" />
     <Compile Include="Assets\Scripts\Pokemon\PokemonType.cs" />
     <Compile Include="Assets\Scripts\Dialog\DialogueManager.cs" />
     <Compile Include="Assets\Scripts\Dialog\DialogTextButton.cs" />
-    <Compile Include="Assets\Scripts\Pokemon\MoveSet.cs" />
     <Compile Include="Assets\Scripts\Pokemon\HeldItem.cs" />
     <Compile Include="Assets\Scripts\Pokemon\PokemonJsonReader.cs" />
     <Compile Include="Assets\Scripts\ServiceLocator.cs" />

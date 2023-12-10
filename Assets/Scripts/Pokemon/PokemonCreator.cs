@@ -36,14 +36,15 @@ public class PokemonCreator
         pokemonIndividualData.nature = (Nature.Natures)DetermineNature();
         pokemonIndividualData.level = new ObservableClasses.ObservableInteger() { Value = UnityEngine.Random.Range(pokemonSpawnEntry.minLevel, pokemonSpawnEntry.maxLevel + 1) };
         //abilities from range
-        if(pokemonSpawnEntry.ability == null)
+        if(pokemonSpawnEntry.AbilityId == null)
         {
             pokemonIndividualData.Ability = GenerateAbility(pokemonSpecies, conditions);
         } else
         {
-            pokemonIndividualData.Ability = pokemonSpawnEntry.ability;
+            pokemonIndividualData.Ability = AbilityRegistry.GetAbility(pokemonSpawnEntry.AbilityId);
         }
-        
+
+        pokemonIndividualData.AbilityData = pokemonIndividualData.Ability.AbilityId;
         pokemonIndividualData.IVs = GenerateIVs();
         pokemonIndividualData.gender = DetermineGender(pokemonSpecies.MaleRatio);
         pokemonIndividualData.friendship = pokemonSpecies.BaseFriendship;
@@ -105,14 +106,14 @@ public class PokemonCreator
             UnityEngine.Random.Range(0, 32));
     }
 
-    private static string GenerateAbility(PokemonSpecies pokemonSpecies, SpawnConditions conditions)
+    private static Ability GenerateAbility(PokemonSpecies pokemonSpecies, SpawnConditions conditions)
     {
-        var abilityPool = new List<string>(pokemonSpecies.Abilities);
+        var abilityPool = new List<Ability>(pokemonSpecies.Abilities);
         if(conditions.canHaveHiddenAbility == true)
         {
             abilityPool.Add(pokemonSpecies.HiddenAbility);
         }
         var selectedAbility = abilityPool[UnityEngine.Random.Range(0, abilityPool.Count)];
-        return AbilityRegistry.GetAbility(selectedAbility).AbilityId;
+        return selectedAbility;
     }
 }

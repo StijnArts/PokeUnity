@@ -11,7 +11,7 @@ public class AbilityRegistry
     //TODO create abilities
     public static Dictionary<string, Ability> Abilities = RegisterAbilities();
 
-    public static void RegisterPokemonAbility(string id, Ability ability)
+    public static void RegisterAbility(string id, Ability ability)
     {
         Abilities.Add(id, ability);
     }
@@ -36,25 +36,37 @@ public class AbilityRegistry
         foreach (Ability ability in abilities)
         {
             registry.Add(ability.AbilityId, ability);
+            //TODO check for any modification files that target the ability and apply them
             foreach(var pokemonId in ability.ReceiverPokemonIds)
             {
                 PokemonSpecies species;
-                if (PokemonRegistry.TryGetPokemon(pokemonId, out species)){
-                    species.Abilities.Add(ability);
+                if (PokemonRegistry.TryGetPokemon(pokemonId.SpeciesId, out species)){
+                    if(!string.IsNullOrEmpty(pokemonId.FormId) && species.Forms.ContainsKey(pokemonId.FormId))
+                    {
+                        species.Forms[pokemonId.FormId].Abilities.Add(ability);
+                    } else
+                    {
+                        species.Abilities.Add(ability);
+                    }
                 }
             }
 
             foreach (var pokemonId in ability.HiddenReceiverPokemonIds)
             {
                 PokemonSpecies species;
-                if (PokemonRegistry.TryGetPokemon(pokemonId, out species))
+                if (PokemonRegistry.TryGetPokemon(pokemonId.SpeciesId, out species))
                 {
-                    if(species.HiddenAbility == null)
+                    var targetSpecies = species;
+                    if (!string.IsNullOrEmpty(pokemonId.FormId) && species.Forms.ContainsKey(pokemonId.FormId))
                     {
-                        species.HiddenAbility = ability;
+                        targetSpecies = species.Forms[pokemonId.FormId];
+                    }
+                    if (targetSpecies.HiddenAbility == null)
+                    {
+                        targetSpecies.HiddenAbility = ability;
                     } else
                     {
-                        Debug.LogWarning("Attempted to overwrite an already set hidden ability with " + ability.AbilityId + " during ability registration for " + species.PokemonId + "\n" +
+                        Debug.LogWarning("Attempted to overwrite an already set hidden AbilityId with " + ability.AbilityId + " during AbilityId registration for " + species.PokemonId + "\n" +
                             "Overwrites should be made with a PokemonOverwrites Class.");
                     }
                 }
