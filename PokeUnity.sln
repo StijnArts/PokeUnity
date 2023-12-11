@@ -25,9 +25,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Unity.VisualScripting.Core"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Unity.Mathematics", "Unity.Mathematics.csproj", "{51D136A4-0505-69C8-739C-4DC2744CA091}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Unity.2D.Animation.Editor", "Unity.2D.Animation.Editor.csproj", "{C07706A9-C0D3-A4AE-4D10-EB689022D154}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Unity.2D.Common.Path.Editor", "Unity.2D.Common.Path.Editor.csproj", "{67946A22-9699-62C2-6A20-5404D5302557}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Unity.2D.Animation.Editor", "Unity.2D.Animation.Editor.csproj", "{C07706A9-C0D3-A4AE-4D10-EB689022D154}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cinemachine", "Cinemachine.csproj", "{4C8D583C-F517-8AEF-B474-824A95BC52E6}"
 EndProject
@@ -217,14 +217,14 @@ Global
 		{51D136A4-0505-69C8-739C-4DC2744CA091}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{51D136A4-0505-69C8-739C-4DC2744CA091}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{51D136A4-0505-69C8-739C-4DC2744CA091}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C07706A9-C0D3-A4AE-4D10-EB689022D154}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C07706A9-C0D3-A4AE-4D10-EB689022D154}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C07706A9-C0D3-A4AE-4D10-EB689022D154}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C07706A9-C0D3-A4AE-4D10-EB689022D154}.Release|Any CPU.Build.0 = Release|Any CPU
 		{67946A22-9699-62C2-6A20-5404D5302557}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{67946A22-9699-62C2-6A20-5404D5302557}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{67946A22-9699-62C2-6A20-5404D5302557}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{67946A22-9699-62C2-6A20-5404D5302557}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C07706A9-C0D3-A4AE-4D10-EB689022D154}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C07706A9-C0D3-A4AE-4D10-EB689022D154}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C07706A9-C0D3-A4AE-4D10-EB689022D154}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C07706A9-C0D3-A4AE-4D10-EB689022D154}.Release|Any CPU.Build.0 = Release|Any CPU
 		{4C8D583C-F517-8AEF-B474-824A95BC52E6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{4C8D583C-F517-8AEF-B474-824A95BC52E6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4C8D583C-F517-8AEF-B474-824A95BC52E6}.Release|Any CPU.ActiveCfg = Release|Any CPU

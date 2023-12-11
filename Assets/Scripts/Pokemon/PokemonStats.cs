@@ -29,13 +29,13 @@ public class PokemonStats
         this.speed = baseStats.Speed;
     }
 
-    internal static int calculateHp(int level, int baseHp, int hpEVs, int hpIVs)
+    internal static int CalculateHp(int level, int baseHp, int hpEVs, int hpIVs)
     {
         int hp = (int)(Math.Floor((2 * baseHp + hpIVs + Math.Floor(hpEVs / 4D) * level) / 100) + level + 10);
         return hp;
     }
 
-    internal static int calculateOtherStat(int level, int baseStat, int EVs, int IVs, Nature nature, Nature.AffectedStats statType)
+    internal static int CalculateOtherStat(int level, int baseStat, int EVs, int IVs, Nature nature, Nature.AffectedStats statType)
     {
         double natureModifier = 1.0D;
         if(nature.negativeStat == statType)

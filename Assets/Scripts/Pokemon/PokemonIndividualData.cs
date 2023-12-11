@@ -1,3 +1,4 @@
+using Assets.Scripts.Pokemon.Data;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -7,25 +8,23 @@ using UnityEngine;
 [Serializable]
 public class PokemonIndividualData
 {
-    public List<Ability> possibleAbilities = AbilityRegistry.Abilities.Values.ToList();
     [HideInInspector]
-    public int nationalPokedexNumber;
-    public string pokemonName;
-    public string pokemonId;
+    public string PokemonName;
+    public string PokemonId;
     public ObservableClasses.ObservableInteger level = new ObservableClasses.ObservableInteger() { Value = 1 };//TODO make move learning and evolutions subscribe to the level observable
     public string nickname = null;
     [HideInInspector]
-    public int currentHp;
-    public string formId = "";
-    public Move[] moves = new Move[4];
+    public int CurrentHp;
+    public string FormId = "";
+    public Move[] Moves = new Move[4];
     public string AbilityData;
     [HideInInspector]
     public Ability Ability;
-    public Nature.Natures nature = Nature.Natures.Adamant;
+    public Nature.Natures Nature = global::Nature.Natures.Adamant;
     [HideInInspector]
-    public Nature natureData;
-    public PokemonType primaryType;
-    public PokemonType secondaryType = null;
+    public Nature NatureData;
+    public PokemonType PrimaryType;
+    public PokemonType SecondaryType = null;
     [HideInInspector]
     public float hitboxHeight;
     [HideInInspector]
@@ -46,39 +45,58 @@ public class PokemonIndividualData
     public List<Move> learnableMoves = new List<Move>();
     public bool isSavedPokemon = false;
 
-    public PokemonStats calculateStats(int level, PokemonEVs pokemonEVs, PokemonIVs pokemonIVs, Nature nature)
+    private PokemonStats CalculateStats(int level, PokemonEVs pokemonEVs, PokemonIVs pokemonIVs, Nature nature)
     {
-        BaseStats baseStats = PokemonRegistry.GetPokemonSpecies(pokemonId).BaseStats;
-        int hp = PokemonStats.calculateHp(level, baseStats.Hp, pokemonEVs.hpEVs, pokemonIVs.hpIVs);
-        int attack = PokemonStats.calculateOtherStat(level, baseStats.Attack, pokemonEVs.attackEVs,
-            pokemonIVs.attackIVs, nature, Nature.AffectedStats.ATTACK);
-        int defence = PokemonStats.calculateOtherStat(level, baseStats.Defence, pokemonEVs.defenceEVs,
-            pokemonIVs.defenceIVs, nature, Nature.AffectedStats.DEFENCE);
-        int specialAttack = PokemonStats.calculateOtherStat(level, baseStats.SpecialAttack, pokemonEVs.specialAttackEVs,
-            pokemonIVs.specialAttackIVs, nature, Nature.AffectedStats.SPECIAL_ATTACK);
-        int specialdefence = PokemonStats.calculateOtherStat(level, baseStats.SpecialDefence, pokemonEVs.specialdefenceEVs,
-            pokemonIVs.specialdefenceIVs, nature, Nature.AffectedStats.SPECIAL_DEFENCE);
-        int speed = PokemonStats.calculateOtherStat(level, baseStats.Speed, pokemonEVs.speedEVs,
-            pokemonIVs.speedIVs, nature, Nature.AffectedStats.SPEED);
+        BaseStats baseStats = PokemonRegistry.GetPokemonSpecies(PokemonId).BaseStats;
+        int hp = PokemonStats.CalculateHp(level, baseStats.Hp, pokemonEVs.hpEVs, pokemonIVs.hpIVs);
+        int attack = PokemonStats.CalculateOtherStat(level, baseStats.Attack, pokemonEVs.attackEVs,
+            pokemonIVs.attackIVs, nature, global::Nature.AffectedStats.ATTACK);
+        int defence = PokemonStats.CalculateOtherStat(level, baseStats.Defence, pokemonEVs.defenceEVs,
+            pokemonIVs.defenceIVs, nature, global::Nature.AffectedStats.DEFENCE);
+        int specialAttack = PokemonStats.CalculateOtherStat(level, baseStats.SpecialAttack, pokemonEVs.specialAttackEVs,
+            pokemonIVs.specialAttackIVs, nature, global::Nature.AffectedStats.SPECIAL_ATTACK);
+        int specialdefence = PokemonStats.CalculateOtherStat(level, baseStats.SpecialDefence, pokemonEVs.specialdefenceEVs,
+            pokemonIVs.specialdefenceIVs, nature, global::Nature.AffectedStats.SPECIAL_DEFENCE);
+        int speed = PokemonStats.CalculateOtherStat(level, baseStats.Speed, pokemonEVs.speedEVs,
+            pokemonIVs.speedIVs, nature, global::Nature.AffectedStats.SPEED);
 
         return new PokemonStats(hp, attack, defence, specialAttack, specialdefence, speed);
     }
 
-    public PokemonStats calculateStats()
+    private PokemonStats CalculateStats()
     {
-        BaseStats baseStats = PokemonRegistry.GetPokemonSpecies(pokemonId).BaseStats;
-        int hp = PokemonStats.calculateHp(level.Value, baseStats.Hp, EVs.hpEVs, IVs.hpIVs);
-        int attack = PokemonStats.calculateOtherStat(level.Value, baseStats.Attack, EVs.attackEVs,
-            IVs.attackIVs, natureData, Nature.AffectedStats.ATTACK);
-        int defence = PokemonStats.calculateOtherStat(level.Value, baseStats.Defence, EVs.defenceEVs,
-            IVs.defenceIVs, natureData, Nature.AffectedStats.DEFENCE);
-        int specialAttack = PokemonStats.calculateOtherStat(level.Value, baseStats.SpecialAttack, EVs.specialAttackEVs,
-            IVs.specialAttackIVs, natureData, Nature.AffectedStats.SPECIAL_ATTACK);
-        int specialdefence = PokemonStats.calculateOtherStat(level.Value, baseStats.SpecialDefence, EVs.specialdefenceEVs,
-            IVs.specialdefenceIVs, natureData, Nature.AffectedStats.SPECIAL_DEFENCE);
-        int speed = PokemonStats.calculateOtherStat(level.Value, baseStats.Speed, EVs.speedEVs,
-            IVs.speedIVs, natureData, Nature.AffectedStats.SPEED);
+        BaseStats baseStats = PokemonRegistry.GetPokemonSpecies(PokemonId).BaseStats;
+        int hp = PokemonStats.CalculateHp(level.Value, baseStats.Hp, EVs.hpEVs, IVs.hpIVs);
+        int attack = PokemonStats.CalculateOtherStat(level.Value, baseStats.Attack, EVs.attackEVs,
+            IVs.attackIVs, NatureData, global::Nature.AffectedStats.ATTACK);
+        int defence = PokemonStats.CalculateOtherStat(level.Value, baseStats.Defence, EVs.defenceEVs,
+            IVs.defenceIVs, NatureData, global::Nature.AffectedStats.DEFENCE);
+        int specialAttack = PokemonStats.CalculateOtherStat(level.Value, baseStats.SpecialAttack, EVs.specialAttackEVs,
+            IVs.specialAttackIVs, NatureData, global::Nature.AffectedStats.SPECIAL_ATTACK);
+        int specialdefence = PokemonStats.CalculateOtherStat(level.Value, baseStats.SpecialDefence, EVs.specialdefenceEVs,
+            IVs.specialdefenceIVs, NatureData, global::Nature.AffectedStats.SPECIAL_DEFENCE);
+        int speed = PokemonStats.CalculateOtherStat(level.Value, baseStats.Speed, EVs.speedEVs,
+            IVs.speedIVs, NatureData, global::Nature.AffectedStats.SPEED);
 
         return new PokemonStats(hp, attack, defence, specialAttack, specialdefence, speed);
+    }
+
+    internal void Initialize()
+    {
+        NatureData = PokemonNatureRegistry.GetNature((int)Nature);
+
+        var species = PokemonRegistry.GetPokemonSpecies(new PokemonIdentifier(PokemonId, FormId));
+        Ability = AbilityRegistry.GetAbility(AbilityData);
+        PrimaryType = PokemonTypeRegistry.GetType(species.PrimaryType);
+        stats = CalculateStats();
+        if (species.SecondaryType != null)
+        {
+            SecondaryType = PokemonTypeRegistry.GetType(species.SecondaryType);
+        }
+
+        if (!string.IsNullOrEmpty(FormId) && species.Forms.ContainsKey(FormId))
+        {
+            //TODO overwrite species data where form data is not null
+        }
     }
 }

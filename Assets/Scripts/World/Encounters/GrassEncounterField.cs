@@ -34,7 +34,7 @@ public class GrassEncounterField : MonoBehaviour
                     PokemonSpawnEntry spawnEntry = GrassEncounterTable.pickFromSpawnEntries();
                     pokemonGameObject = Instantiate(pokemonPrefab, player.transform.position, Quaternion.identity);
                     pokemonGameObject.GetComponent<Pokemon>().PokemonIndividualData = PokemonCreator.InstantiatePokemonForSpawn(spawnEntry, SpawnConditions);
-                    pokemonGameObject.GetComponent<Pokemon>().initializeSelf();
+                    pokemonGameObject.GetComponent<Pokemon>().InitializeSelf();
                     pokemonGameObject.GetComponent<BoxCollider>().enabled = false;//set location at player
                 }
             }

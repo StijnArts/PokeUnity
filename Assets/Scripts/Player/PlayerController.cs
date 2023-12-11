@@ -22,7 +22,8 @@ public class PlayerController : MonoBehaviour
     public float WalkSpeed = 10;
     public float RunSpeed = 20;
     private float _facing = 180.0f;
-    [SerializeField] private float smoothTime = 0.05f;
+    [SerializeField] 
+    private float smoothTime = 0.05f;
     private float _currentVelocity;
     [HideInInspector]
     public bool IsRunning = false;
@@ -30,6 +31,7 @@ public class PlayerController : MonoBehaviour
     public float PreviousSubmitValue = 0;
     public ObservableClasses.ObservableBoolean SubmitPressedAndReleased = new ObservableClasses.ObservableBoolean() { Value = false };
     public List<Flag> Flags = new List<Flag>();
+    [SerializeField]
     public static Party Party = new Party();
     
     // Start is called before the first frame update
