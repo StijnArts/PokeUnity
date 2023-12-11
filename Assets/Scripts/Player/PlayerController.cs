@@ -124,8 +124,9 @@ public class PlayerController : MonoBehaviour
     {
         HandleGravity();
         HandleRotation();
+        var oldPosition = new Vector3(transform.position.x, transform.position.y, transform.position.z);
         _characterController.Move(_direction * Time.deltaTime * (IsRunning ? RunSpeed : WalkSpeed));
-        TrackMovement();
+        TrackMovement(oldPosition);
     }
 
     private void HandleGravity()
@@ -153,9 +154,8 @@ public class PlayerController : MonoBehaviour
         _cameraFacingSprite.ApplyRotation(angle);
     }
 
-    private void TrackMovement()
+    private void TrackMovement(Vector3 oldPosition)
     {
-        var oldPosition = new Vector3(transform.position.x, transform.position.y, transform.position.z);
         float moved = Math.Abs(transform.position.x - oldPosition.x) + Math.Abs(transform.position.z - oldPosition.z);
         if (moved > 0)
         {

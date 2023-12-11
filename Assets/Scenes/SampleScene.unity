@@ -1425,9 +1425,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   GrassEncounterTable: {fileID: 11400000, guid: 65763adbd86887a4bbf73c2a89c4ea99, type: 2}
   SpawnConditions: {fileID: 11400000, guid: 4aa4eab43957472458d257da4553febc, type: 2}
-  pokemonPrefab: {fileID: 0}
-  player: {fileID: 0}
-  pokemonGameObject: {fileID: 0}
+  PokemonPrefab: {fileID: 0}
+  Player: {fileID: 0}
+  PokemonGameObject: {fileID: 0}
 --- !u!1 &1118264387
 GameObject:
   m_ObjectHideFlags: 0
@@ -1485,9 +1485,9 @@ GameObject:
   - component: {fileID: 1202762379}
   - component: {fileID: 1202762382}
   - component: {fileID: 1202762387}
-  - component: {fileID: 1202762383}
   - component: {fileID: 1202762385}
   - component: {fileID: 1202762386}
+  - component: {fileID: 1202762388}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -1532,27 +1532,6 @@ MonoBehaviour:
   IsRunning: 0
   PreviousSubmitValue: 0
   Flags: []
---- !u!65 &1202762383
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1202762378}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 1
-  m_Enabled: 0
-  serializedVersion: 3
-  m_Size: {x: 1, y: 2, z: 0.5}
-  m_Center: {x: 0, y: 1, z: 0}
 --- !u!114 &1202762385
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1614,6 +1593,25 @@ CharacterController:
   m_SkinWidth: 0.1
   m_MinMoveDistance: 0
   m_Center: {x: 0, y: 1, z: 0}
+--- !u!114 &1202762388
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1202762378}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7451af9e402aa3a42bf7c4da2349b62b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  party:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
 --- !u!1 &1238532225
 GameObject:
   m_ObjectHideFlags: 0
@@ -2607,6 +2605,10 @@ PrefabInstance:
     - target: {fileID: 2711744434322497900, guid: bdcc977cb6aed5d4b8d3a210dfb5d883, type: 3}
       propertyPath: PokemonIndividualData.isShiny
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2711744434322497900, guid: bdcc977cb6aed5d4b8d3a210dfb5d883, type: 3}
+      propertyPath: PokemonIndividualData.PokemonId
+      value: pikachu
       objectReference: {fileID: 0}
     - target: {fileID: 2711744434322497900, guid: bdcc977cb6aed5d4b8d3a210dfb5d883, type: 3}
       propertyPath: PokemonIndividualData.pokemonId

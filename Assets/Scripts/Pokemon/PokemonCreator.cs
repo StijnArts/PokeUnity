@@ -33,7 +33,7 @@ public class PokemonCreator
             }
         }
         //TODO fill with form information if it overrides base info
-        pokemonIndividualData.nature = (Nature.Natures)DetermineNature();
+        pokemonIndividualData.Nature = (Nature.Natures)DetermineNature();
         pokemonIndividualData.level = new ObservableClasses.ObservableInteger() { Value = UnityEngine.Random.Range(pokemonSpawnEntry.minLevel, pokemonSpawnEntry.maxLevel + 1) };
         //abilities from range
         if(pokemonSpawnEntry.AbilityId == null)
@@ -50,8 +50,8 @@ public class PokemonCreator
         pokemonIndividualData.friendship = pokemonSpecies.BaseFriendship;
         pokemonIndividualData.isValid = true;
         pokemonIndividualData.EVs = new PokemonEVs();
-        pokemonIndividualData.pokemonId = pokemonSpawnEntry.pokemonId;
-        pokemonIndividualData.formId = pokemonSpawnEntry.formId;
+        pokemonIndividualData.PokemonId = pokemonSpawnEntry.pokemonId;
+        pokemonIndividualData.FormId = pokemonSpawnEntry.formId;
         pokemonIndividualData.moves = DetermineMoves(pokemonSpawnEntry, pokemonSpecies);
         pokemonIndividualData.baseStats = new PokemonStats(pokemonSpecies.BaseStats);
         return pokemonIndividualData;

@@ -26,15 +26,30 @@ public class CameraFacingSprite : MonoBehaviour
     private Direction.Directions _lastFacing = (Direction.Directions)1000;
     public SpriteType TypeOfSprite;
     [HideInInspector]
-    public string TextureLocation;
+    public string TextureLocation => GetTextureLocation();
+
+    private string GetTextureLocation()
+    {
+        var textureLocation = "Sprites/" + Enum.GetName(typeof(SpriteType), TypeOfSprite) + "/" + SpriteGroup + "/" + SpriteGroup;
+        if (!string.IsNullOrWhiteSpace(SpriteSuffix))
+        {
+            textureLocation += SpriteSuffix;
+        }
+        return textureLocation;
+    }
 
     void Start()
     {
+        InitializeSprite();
+    }
+
+    private void InitializeSprite()
+    {
         gameObject.transform.localScale = new Vector3(1, 1, 0.00001f);
-        SpriteSheet = new CameraFacingSpriteSheet(SpriteWidth);
+        SpriteSheet = new CameraFacingSpriteSheet(ref SpriteWidth);
         SpriteRenderer = GetComponent<SpriteRenderer>();
-        DetermineTextireLocation();
-        if(SpriteRenderer == null)
+        DetermineTextureLocation();
+        if (SpriteRenderer == null)
         {
             SpriteRenderer = gameObject.AddComponent<SpriteRenderer>();
         }
@@ -47,6 +62,7 @@ public class CameraFacingSprite : MonoBehaviour
 
         var material = Resources.Load<Material>("Materials/ShadowCastingSpriteMaterial");
         SpriteRenderer.material = material;
+        this.enabled = true;
     }
 
     // Update is called once per frame
@@ -66,8 +82,6 @@ public class CameraFacingSprite : MonoBehaviour
         {
             UpdateDirection();
         }
-
-
     }
 
     private void UpdateDirection()
@@ -79,16 +93,20 @@ public class CameraFacingSprite : MonoBehaviour
         }
     }
 
-    private void DetermineTextireLocation()
+    private void DetermineTextureLocation()
     {
-        SetNewSpriteLocation(SpriteGroup, SpriteGroup);
+        SetNewSpriteLocation(SpriteGroup);
     }
 
-    public void SetNewSpriteLocation(string spriteGroup, string spriteSuffix)
+    public void SetNewSpriteLocation(string spriteGroup, string spriteSuffix = "")
     {
-        TextureLocation = "Sprites/" + Enum.GetName(typeof(SpriteType), TypeOfSprite) + "/" + spriteGroup + "/" + 
-            spriteSuffix;
+        SpriteGroup = spriteGroup;
+        SpriteSuffix = spriteSuffix;
         CurrentFrame = 0;
+        if (SpriteSheet == null)
+        {
+            InitializeSprite();
+        }
         SpriteSheet.LoadTexture(TextureLocation);
     }
 

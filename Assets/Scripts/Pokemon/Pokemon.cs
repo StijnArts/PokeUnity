@@ -4,6 +4,7 @@ using System;
 using System.IO;
 using UnityEditor;
 using Unity.VisualScripting;
+using Assets.Scripts.Pokemon.Data;
 
 [Serializable]
 public class Pokemon : MonoBehaviour
@@ -19,7 +20,7 @@ public class Pokemon : MonoBehaviour
         {
             if(GameStateManager.GetState() != GameStateManager.GameStates.LOADING)
             {
-                initializeSelf();
+                InitializeSelf();
             } else
             {
                 GameStateManager.currentGameState.OnChanged += InitializeAfterLoading();
@@ -33,59 +34,63 @@ public class Pokemon : MonoBehaviour
         {
             if (GameStateManager.GetState() != GameStateManager.GameStates.LOADING)
             {
-                initializeSelf();
+                InitializeSelf();
                 GameStateManager.currentGameState.OnChanged -= InitializeAfterLoading();
             }
         };
     }
 
-    public void initializeSelf()
+    public void InitializeSelf()
     {
-        //PokemonIndividualData.natureData = PokemonNatureRegistry.GetNature((int)PokemonIndividualData.nature);
-        //PokemonIndividualData.abilityData = AbilityRegistry.GetAbility(PokemonIndividualData.Ability);
-        //PokemonIndividualData.primaryType = PokemonTypeRegistry.GetType(PokemonRegistry.GetPokemon(PokemonIndividualData.pokemonId).PrimaryType);
-        //string secondaryTypeName = PokemonRegistry.GetPokemon(PokemonIndividualData.pokemonId).SecondaryType;
-        //if (secondaryTypeName != null)
-        //{
-        //    PokemonIndividualData.secondaryType = PokemonTypeRegistry.GetType(secondaryTypeName);
-        //}
+        PokemonIndividualData.natureData = PokemonNatureRegistry.GetNature((int)PokemonIndividualData.Nature);
 
-        //PokemonIndividualData.stats = PokemonIndividualData.calculateStats();
-        InitializeSprite(PokemonIndividualData.pokemonId, PokemonIndividualData.formId);
+        var species = PokemonRegistry.GetPokemonSpecies(new PokemonIdentifier(PokemonIndividualData.PokemonId, PokemonIndividualData.FormId));
+        PokemonIndividualData.Ability = AbilityRegistry.GetAbility(PokemonIndividualData.AbilityData);
+        PokemonIndividualData.primaryType = PokemonTypeRegistry.GetType(species.PrimaryType);
+        PokemonIndividualData.stats = PokemonIndividualData.calculateStats();
+        if (species.SecondaryType != null)
+        {
+            PokemonIndividualData.secondaryType = PokemonTypeRegistry.GetType(species.SecondaryType);
+        }
+        
+        if (!string.IsNullOrEmpty(PokemonIndividualData.FormId) && species.Forms.ContainsKey(PokemonIndividualData.FormId))
+        {
+            //TODO overwrite species data where form data is not null
+        }
+
+        InitializeSprite(PokemonIndividualData.PokemonId, PokemonIndividualData.FormId);
     }
 
     public void setIndividualPokemonData(PokemonIndividualData pokemonIndividualData)
     {
         this.PokemonIndividualData = pokemonIndividualData;
-        initializeSelf();
+        InitializeSelf();
     }
 
     public void InitializeSprite(string pokemonId, string formId)
     {
-        string spriteLocation = "Sprites/Pokemon/" + pokemonId + "/" + pokemonId;
+        string suffix = "";
         if (pokemonHasForm(pokemonId, formId))
         {
-            spriteLocation += "_" + formId;
+            suffix += "_" + formId;
         }
         if (pokemonOrFormHasGenderDifferences(pokemonId, formId) && gameObject.GetComponent<Pokemon>().PokemonIndividualData.gender == Pokemon.PokemonGender.FEMALE)
         {
-            spriteLocation += "_female";
+            suffix += "_female";
         }
         if (gameObject.GetComponent<Pokemon>().PokemonIndividualData.isShiny)
         {
-            spriteLocation += "_shiny";
+            suffix += "_shiny";
         }
         
         if (gameObject != null)
         {
-            gameObject.GetComponentInChildren<SpriteRenderer>().sprite = Resources.Load(spriteLocation+"_animated", typeof(Sprite)) as Sprite;
-            gameObject.GetComponentInChildren<SpriteRenderer>().enabled = true;
+            gameObject.GetComponentInChildren<CameraFacingSprite>().SetNewSpriteLocation(pokemonId, suffix);
         }
     }
 
     private bool pokemonOrFormHasGenderDifferences(string pokemonId, string formId)
     {
-        return false;
         if (pokemonHasForm(pokemonId, formId))
         {
             return PokemonRegistry.GetPokemonSpecies(pokemonId).Forms[formId].HasGenderDifferences;
@@ -98,6 +103,6 @@ public class Pokemon : MonoBehaviour
 
     private static bool pokemonHasForm(string pokemonId, string formId)
     {
-        return false;//PokemonRegistry.GetPokemon(pokemonId).Forms.ContainsKey(formId);
+        return PokemonRegistry.GetPokemonSpecies(pokemonId).Forms.ContainsKey(formId);
     }
 }

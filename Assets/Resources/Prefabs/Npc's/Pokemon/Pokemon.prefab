@@ -52,20 +52,15 @@ MonoBehaviour:
     possibleAbilities: []
     nationalPokedexNumber: 0
     pokemonName: 
-    pokemonId: 
+    PokemonId: 
     level:
       value: 1
     nickname: 
     currentHp: 0
-    formId: 
-    moves:
-    - {fileID: 0}
-    - {fileID: 0}
-    - {fileID: 0}
-    - {fileID: 0}
-    Ability: 
-    abilityData: {fileID: 0}
-    nature: 0
+    FormId: 
+    AbilityData: 
+    Ability: {fileID: 0}
+    Nature: 0
     natureData:
       positiveStat: 0
       negativeStat: 0
@@ -94,7 +89,6 @@ MonoBehaviour:
     isValid: 0
     currentExperience: 0
     friendship: 0
-    learnableMoves: []
     isSavedPokemon: 0
 --- !u!54 &7228871143437145619
 Rigidbody:
@@ -179,6 +173,22 @@ PrefabInstance:
       propertyPath: m_Name
       value: CameraFacingSprite
       objectReference: {fileID: 0}
+    - target: {fileID: 7469980616769715961, guid: 03e3bbabefd7e4744bb4238f3a699325, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7469980616769715961, guid: 03e3bbabefd7e4744bb4238f3a699325, type: 3}
+      propertyPath: SpriteWidth
+      value: 48
+      objectReference: {fileID: 0}
+    - target: {fileID: 7469980616769715961, guid: 03e3bbabefd7e4744bb4238f3a699325, type: 3}
+      propertyPath: PixelsPerUnit
+      value: 48
+      objectReference: {fileID: 0}
+    - target: {fileID: 7469980616769715961, guid: 03e3bbabefd7e4744bb4238f3a699325, type: 3}
+      propertyPath: MillisecondPerFrame
+      value: 50
+      objectReference: {fileID: 0}
     - target: {fileID: 8839406879150462338, guid: 03e3bbabefd7e4744bb4238f3a699325, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -219,7 +229,8 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 6803074519525398171, guid: 03e3bbabefd7e4744bb4238f3a699325, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []

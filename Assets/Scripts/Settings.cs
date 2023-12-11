@@ -4,5 +4,6 @@ using UnityEngine;
 
 public static class Settings
 {
-    public static string playerName = "Player";
+    public static string PlayerName = "Player";
+    public static int MaxPartySize = 6;
 }

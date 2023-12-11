@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class HasParty : MonoBehaviour
 {
-    public Pokemon[] party = new Pokemon[6];
+    public Pokemon[] party = new Pokemon[Settings.MaxPartySize];
     // Start is called before the first frame update
     void Start()
     {

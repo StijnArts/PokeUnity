@@ -84,7 +84,7 @@ public class DialogManager : MonoBehaviour
 
     public void GiftPokemon(PokemonGiftEntry pokemonGiftEntry, string source)
     {
-        string flavorText = Settings.playerName + " received " + PokemonRegistry.GetPokemonSpecies(pokemonGiftEntry.pokemonId).PokemonName + " from " + source + "!";
+        string flavorText = Settings.PlayerName + " received " + PokemonRegistry.GetPokemonSpecies(pokemonGiftEntry.pokemonId).PokemonName + " from " + source + "!";
         if (pokemonGiftEntry.customFlavorText != null)
         {
             if (pokemonGiftEntry.customFlavorText != "")

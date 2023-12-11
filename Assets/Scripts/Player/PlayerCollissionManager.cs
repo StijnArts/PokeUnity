@@ -17,10 +17,10 @@ public class PlayerCollisionManager : MonoBehaviour
 
     public void OnTriggerExit(Collider other)
     {
-        //Debug.Log(other.gameObject.name);
+        Debug.Log(other.gameObject.name);
         if (other.gameObject.GetComponent<GrassEncounterField>() != null)
         {
-            //Debug.Log("Found a grass field");
+            Debug.Log("Found a grass field");
             this.GetComponent<PlayerController>().IsInTallGrass = false;
             other.gameObject.GetComponent<GrassEncounterField>().UnregisterToMovement(this.GetComponent<PlayerController>().StepsTakenInGrass);
         }
