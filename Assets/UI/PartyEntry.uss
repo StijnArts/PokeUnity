@@ -1,0 +1,17 @@
+.partyEntry {
+    flex-grow: 1;
+    height: 90%;
+    width: 90%;
+    align-self: center;
+    justify-content: flex-start;
+    bottom: auto;
+    flex-shrink: 1;
+    background-image: resource('Sprites/missingsprite');
+    -unity-background-scale-mode: scale-to-fit;
+    max-height: none;
+    align-items: center;
+    flex-direction: column;
+    margin-top: 5%;
+    max-width: none;
+    margin-bottom: 5px;
+}

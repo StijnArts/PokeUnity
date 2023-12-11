@@ -21,7 +21,7 @@ public class CameraFacingSprite : MonoBehaviour
     public int PixelsPerUnit = 16;
     [HideInInspector]
     public int CurrentFrame = 0;
-    private float LastFrameUpdateTimeStamp = 0;
+    protected float LastFrameUpdateTimeStamp = 0;
     public Direction.Directions Facing = Direction.Directions.South;
     private Direction.Directions _lastFacing = (Direction.Directions)1000;
     public SpriteType TypeOfSprite;
@@ -38,12 +38,12 @@ public class CameraFacingSprite : MonoBehaviour
         return textureLocation;
     }
 
-    void Start()
+    void Awake()
     {
         InitializeSprite();
     }
 
-    private void InitializeSprite()
+    protected void InitializeSprite()
     {
         gameObject.transform.localScale = new Vector3(1, 1, 0.00001f);
         SpriteSheet = new CameraFacingSpriteSheet(ref SpriteWidth);
@@ -53,7 +53,7 @@ public class CameraFacingSprite : MonoBehaviour
         {
             SpriteRenderer = gameObject.AddComponent<SpriteRenderer>();
         }
-        SpriteRenderer.sprite = SpriteSheet.GetFrame(0, Facing);
+        SpriteRenderer.sprite = SpriteSheet.GetFrame(0, PixelsPerUnit, Facing);
         SpriteRenderer.transform.rotation = Quaternion.Euler(0f, Camera.main.transform.rotation.eulerAngles.y, 0f);
         SpriteRenderer.transform.localPosition = new Vector3(0, 0 + yOffset, 0);
         LastFrameUpdateTimeStamp = 0;
@@ -93,7 +93,7 @@ public class CameraFacingSprite : MonoBehaviour
         }
     }
 
-    private void DetermineTextureLocation()
+    protected void DetermineTextureLocation()
     {
         SetNewSpriteLocation(SpriteGroup);
     }

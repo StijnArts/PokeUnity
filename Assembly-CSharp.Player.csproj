@@ -62,7 +62,9 @@
     <Compile Include="Assets\Scripts\Pokemon\PokemonTypes\Ground.cs" />
     <Compile Include="Assets\Scripts\Drawers\DialogPropertyDrawer.cs" />
     <Compile Include="Assets\Scripts\Pokemon\Data\BaseSpecies.cs" />
+    <Compile Include="Assets\Scripts\Player\PlayerParty.cs" />
     <Compile Include="Assets\Scripts\World\Encounters\EncounterTable.cs" />
+    <Compile Include="Assets\Scripts\Sprites\PokemonSprite.cs" />
     <Compile Include="Assets\Scripts\Pokemon\Pokemon.cs" />
     <Compile Include="Assets\Scripts\Registries\PokemonRegistry.cs" />
     <Compile Include="Assets\Scripts\Pokemon\ExperienceGroup.cs" />
@@ -71,7 +73,6 @@
     <Compile Include="Assets\Scripts\Registries\PokemonTypeRegistry.cs" />
     <Compile Include="Assets\Scripts\Pokemon\Data\Ability.cs" />
     <Compile Include="Assets\Scripts\Registries\ExperienceGroupRegistry.cs" />
-    <Compile Include="Assets\Scripts\Player\Party.cs" />
     <Compile Include="Assets\Scripts\Registries\PokemonNatureRegistry.cs" />
     <Compile Include="Assets\Scripts\Pokemon\PokemonTypes\Steel.cs" />
     <Compile Include="Assets\Scripts\Pokemon\Data\PokemonIdentifier.cs" />
@@ -102,6 +103,7 @@
     <Compile Include="Assets\Scripts\Pokemon\PokemonTypes\Fairy.cs" />
     <Compile Include="Assets\Scripts\Pokemon\PokemonTypes\Dark.cs" />
     <Compile Include="Assets\Scripts\Pokemon\Species\Pikachu\Pikachu.cs" />
+    <Compile Include="Assets\Scripts\UI\HudUiManager.cs" />
     <Compile Include="Assets\Scripts\Pokemon\PokemonTypes\Poison.cs" />
     <Compile Include="Assets\Scripts\Pokemon\PokemonTypes\Electric.cs" />
     <Compile Include="Assets\Scripts\Registries\ScriptableObjectInstanceFinder.cs" />
@@ -131,7 +133,9 @@
     <Compile Include="Assets\Scripts\Pokemon\PokemonTypes\Flying.cs" />
     <Compile Include="Assets\Scripts\Dialog\DialogueManager.cs" />
     <Compile Include="Assets\Scripts\Dialog\DialogTextButton.cs" />
+    <Compile Include="Assets\Scripts\Pokemon\Data\Party.cs" />
     <Compile Include="Assets\Scripts\Pokemon\Abilities\LightningRod.cs" />
+    <Compile Include="Assets\Scripts\UI\PartyEntryController.cs" />
     <Compile Include="Assets\Scripts\Pokemon\HeldItem.cs" />
     <Compile Include="Assets\Scripts\Pokemon\PokemonJsonReader.cs" />
     <Compile Include="Assets\Scripts\ServiceLocator.cs" />
@@ -145,8 +149,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\UI\BaseUI.uss" />
+    <None Include="Assets\UI\Standard HUD\PartyEntry.uxml" />
     <None Include="Assets\Shaders\SpriteShader.shader" />
     <None Include="Assets\UI\Dialog\DialogUIDocument.uxml" />
+    <None Include="Assets\UI\PartyEntry.uss" />
     <None Include="Assets\UI\Standard HUD\StandardHUD.uxml" />
   </ItemGroup>
   <ItemGroup>

@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8839406879150462338}
   - component: {fileID: 7469980616769715961}
-  - component: {fileID: 6803074519525398171}
+  - component: {fileID: 398812786702280172}
   m_Layer: 0
   m_Name: CameraFacingSprite
   m_TagString: NPC
@@ -48,15 +48,14 @@ MonoBehaviour:
   SpriteRenderer: {fileID: 0}
   SpriteSuffix: 
   SpriteGroup: 
-  MillisecondPerFrame: 25
+  MillisecondPerFrame: 50
   yOffset: 0
   SpriteWidth: 16
   PixelsPerUnit: 16
   CurrentFrame: 0
   Facing: 180
   TypeOfSprite: 0
-  TextureLocation: 
---- !u!212 &6803074519525398171
+--- !u!212 &398812786702280172
 SpriteRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

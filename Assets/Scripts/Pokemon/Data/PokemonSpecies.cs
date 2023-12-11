@@ -28,9 +28,12 @@ public abstract class PokemonSpecies : BaseSpecies
         EvYield evYield,
         double heightInCm,
         double weightInGrams,
+        int spriteWidth,
+        int spriteResolution,
+        int spriteAnimationSpeed,
         bool hasGenderDifferences = false,
         bool cannotDynamax = false) :
-            base(pokemonId, primaryType, baseStats, catchRate, maleRatio, baseExperienceYield, experienceGroup, eggCycles, eggGroups, baseFriendship, evYield, heightInCm, weightInGrams, cannotDynamax, hasGenderDifferences)
+            base(pokemonId, primaryType, baseStats, catchRate, maleRatio, baseExperienceYield, experienceGroup, eggCycles, eggGroups, baseFriendship, evYield, heightInCm, weightInGrams, spriteWidth, spriteResolution, spriteAnimationSpeed, cannotDynamax, hasGenderDifferences)
     {
         PokemonName = pokemonName;
     }
@@ -51,9 +54,12 @@ public abstract class PokemonSpecies : BaseSpecies
         EvYield evYield,
         double heightInCm,
         double weightInGrams,
+        int spriteWidth,
+        int spriteResolution,
+        int spriteAnimationSpeed,
         bool hasGenderDifferences = false,
         bool cannotDynamax = false) :
-            this(pokemonName, pokemonId, primaryType, baseStats, catchRate, maleRatio, baseExperienceYield, experienceGroup, eggCycles, eggGroups, baseFriendship, evYield, heightInCm, weightInGrams, cannotDynamax, hasGenderDifferences)
+            this(pokemonName, pokemonId, primaryType, baseStats, catchRate, maleRatio, baseExperienceYield, experienceGroup, eggCycles, eggGroups, baseFriendship, evYield, heightInCm, weightInGrams, spriteWidth, spriteResolution, spriteAnimationSpeed, cannotDynamax, hasGenderDifferences)
     {
         NationalPokedexNumber = nationalPokedexNumber;
     }
@@ -74,9 +80,12 @@ public abstract class PokemonSpecies : BaseSpecies
         EvYield evYield,
         double heightInCm,
         double weightInGrams,
+        int spriteWidth,
+        int spriteResolution,
+        int spriteAnimationSpeed,
         bool hasGenderDifferences = false,
         bool cannotDynamax = false) :
-            this(pokemonName, pokemonId, primaryType, baseStats, catchRate, maleRatio, baseExperienceYield, experienceGroup, eggCycles, eggGroups, baseFriendship, evYield, heightInCm, weightInGrams, cannotDynamax, hasGenderDifferences)
+            this(pokemonName, pokemonId, primaryType, baseStats, catchRate, maleRatio, baseExperienceYield, experienceGroup, eggCycles, eggGroups, baseFriendship, evYield, heightInCm, weightInGrams, spriteWidth, spriteResolution, spriteAnimationSpeed, cannotDynamax, hasGenderDifferences)
     {
         SecondaryType = secondaryType;
     }
@@ -98,9 +107,12 @@ public abstract class PokemonSpecies : BaseSpecies
         EvYield evYield,
         double heightInCm,
         double weightInGrams,
+        int spriteWidth,
+        int spriteResolution,
+        int spriteAnimationSpeed,
         bool hasGenderDifferences = false,
         bool cannotDynamax = false) :
-            this(pokemonName, pokemonId, primaryType, secondaryType, baseStats, catchRate, maleRatio, baseExperienceYield, experienceGroup, eggCycles, eggGroups, baseFriendship, evYield, heightInCm, weightInGrams, cannotDynamax, hasGenderDifferences)
+            this(pokemonName, pokemonId, primaryType, secondaryType, baseStats, catchRate, maleRatio, baseExperienceYield, experienceGroup, eggCycles, eggGroups, baseFriendship, evYield, heightInCm, weightInGrams, spriteWidth, spriteResolution, spriteAnimationSpeed, cannotDynamax, hasGenderDifferences)
     {
         NationalPokedexNumber = nationalPokedexNumber;
     }

@@ -29,6 +29,9 @@ namespace Assets.Scripts.Pokemon.Data
         public double WeightInKilos;
         public bool CannotDynamax;
         public bool HasGenderDifferences;
+        public int SpriteWidth;
+        public int SpriteResolution;
+        public int SpriteAnimationSpeed;
 
         public BaseSpecies(
         string pokemonId,
@@ -44,6 +47,9 @@ namespace Assets.Scripts.Pokemon.Data
         EvYield evYield,
         double heightInCm,
         double weightInGrams,
+        int spriteWidth,
+        int spriteResolution,
+        int spriteAnimationSpeed,
         bool hasGenderDifferences = false,
         bool cannotDynamax = false)
         {
@@ -62,6 +68,9 @@ namespace Assets.Scripts.Pokemon.Data
             WeightInKilos = weightInGrams;
             CannotDynamax = cannotDynamax;
             HasGenderDifferences = hasGenderDifferences;
+            SpriteWidth = spriteWidth;
+            SpriteResolution = spriteResolution;
+            SpriteAnimationSpeed = spriteAnimationSpeed;
         }
 
         public BaseSpecies(
@@ -79,9 +88,12 @@ namespace Assets.Scripts.Pokemon.Data
             EvYield evYield,
             double heightInCm,
             double weightInGrams,
+            int spriteWidth,
+            int spriteResolution,
+            int spriteAnimationSpeed,
             bool hasGenderDifferences = false,
             bool cannotDynamax = false) :
-                this(pokemonId, primaryType, baseStats, catchRate, maleRatio, baseExperienceYield, experienceGroup, eggCycles, eggGroups, baseFriendship, evYield, heightInCm, weightInGrams, cannotDynamax, hasGenderDifferences)
+                this(pokemonId, primaryType, baseStats, catchRate, maleRatio, baseExperienceYield, experienceGroup, eggCycles, eggGroups, baseFriendship, evYield, heightInCm, weightInGrams, spriteWidth, spriteResolution, spriteAnimationSpeed, cannotDynamax, hasGenderDifferences)
         {
             SecondaryType = secondaryType;
         }

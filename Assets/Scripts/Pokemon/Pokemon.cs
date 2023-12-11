@@ -5,6 +5,7 @@ using System.IO;
 using UnityEditor;
 using Unity.VisualScripting;
 using Assets.Scripts.Pokemon.Data;
+using Assets.Scripts.Sprites;
 
 [Serializable]
 public class Pokemon : MonoBehaviour
@@ -54,40 +55,16 @@ public class Pokemon : MonoBehaviour
 
     public void InitializeSprite(string pokemonId, string formId)
     {
-        string suffix = "";
-        if (pokemonHasForm(pokemonId, formId))
-        {
-            suffix += "_" + formId;
-        }
-        if (pokemonOrFormHasGenderDifferences(pokemonId, formId) && gameObject.GetComponent<Pokemon>().PokemonIndividualData.gender == Pokemon.PokemonGender.FEMALE)
-        {
-            suffix += "_female";
-        }
-        if (gameObject.GetComponent<Pokemon>().PokemonIndividualData.isShiny)
-        {
-            suffix += "_shiny";
-        }
-        
         if (gameObject != null)
         {
-            gameObject.GetComponentInChildren<CameraFacingSprite>().SetNewSpriteLocation(pokemonId, suffix);
+            var pokemonSprite = gameObject.GetComponentInChildren<PokemonSprite>();
+            if (pokemonSprite == null) 
+            {
+                gameObject.AddComponent<PokemonSprite>();
+            }
+            pokemonSprite.enabled = false;
+            pokemonSprite.InitializeSprite(pokemonId, PokemonIndividualData.GetSpriteSuffix(), PokemonIndividualData.GetSpriteWidth(), PokemonIndividualData.GetSpriteResolution(), PokemonIndividualData.GetSpriteAnimationSpeed());
+            pokemonSprite.enabled = true;
         }
-    }
-
-    private bool pokemonOrFormHasGenderDifferences(string pokemonId, string formId)
-    {
-        if (pokemonHasForm(pokemonId, formId))
-        {
-            return PokemonRegistry.GetPokemonSpecies(pokemonId).Forms[formId].HasGenderDifferences;
-        }
-        else
-        {
-            return PokemonRegistry.GetPokemonSpecies(pokemonId).HasGenderDifferences;
-        }
-    }
-
-    private static bool pokemonHasForm(string pokemonId, string formId)
-    {
-        return PokemonRegistry.GetPokemonSpecies(pokemonId).Forms.ContainsKey(formId);
     }
 }

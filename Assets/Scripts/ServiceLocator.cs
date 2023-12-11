@@ -6,8 +6,9 @@ using UnityEngine;
 public class ServiceLocator : MonoBehaviour
 {
     public static ServiceLocator Instance;
-    public DialogUIManager DialogUIManager {  get; private set; }
-    public DialogManager DialogManager { get; private set; }
+    public DialogUIManager DialogUIManager => GetComponentInChildren<DialogUIManager>();
+    public HudUiManager HudUiManager => GetComponentInChildren<HudUiManager>();
+    public DialogManager DialogManager => GetComponentInChildren<DialogManager>();
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -16,7 +17,5 @@ public class ServiceLocator : MonoBehaviour
             return;
         }
         Instance = this;
-        DialogManager = GetComponentInChildren<DialogManager>();
-        DialogUIManager = GetComponentInChildren<DialogUIManager>();
     }
 }

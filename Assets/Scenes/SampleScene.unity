@@ -1314,6 +1314,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 824341280}
+  - component: {fileID: 824341281}
   m_Layer: 0
   m_Name: HUDUIManager
   m_TagString: Untagged
@@ -1337,6 +1338,19 @@ Transform:
   - {fileID: 2118485003}
   m_Father: {fileID: 1548311}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &824341281
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 824341279}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e6c1661f11e8e6b47a557a7bab4caf7d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  PartyEntry: {fileID: 9197481963319205126, guid: 460396c979aa56e4f99e8de168df5105, type: 3}
 --- !u!1 &975827356
 GameObject:
   m_ObjectHideFlags: 0
@@ -1517,9 +1531,9 @@ GameObject:
   - component: {fileID: 1202762379}
   - component: {fileID: 1202762382}
   - component: {fileID: 1202762387}
+  - component: {fileID: 1202762383}
   - component: {fileID: 1202762385}
   - component: {fileID: 1202762386}
-  - component: {fileID: 1202762388}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -1564,6 +1578,27 @@ MonoBehaviour:
   IsRunning: 0
   PreviousSubmitValue: 0
   Flags: []
+--- !u!65 &1202762383
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1202762378}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 1
+  m_Enabled: 0
+  serializedVersion: 3
+  m_Size: {x: 1, y: 2, z: 0.5}
+  m_Center: {x: 0, y: 1, z: 0}
 --- !u!114 &1202762385
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1625,25 +1660,6 @@ CharacterController:
   m_SkinWidth: 0.1
   m_MinMoveDistance: 0
   m_Center: {x: 0, y: 1, z: 0}
---- !u!114 &1202762388
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1202762378}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7451af9e402aa3a42bf7c4da2349b62b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  party:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
 --- !u!1 &1238532225
 GameObject:
   m_ObjectHideFlags: 0
@@ -2676,7 +2692,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3993129027245195793, guid: bdcc977cb6aed5d4b8d3a210dfb5d883, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.196
+      value: 3.87
       objectReference: {fileID: 0}
     - target: {fileID: 6133695876055510267, guid: bdcc977cb6aed5d4b8d3a210dfb5d883, type: 3}
       propertyPath: m_Name

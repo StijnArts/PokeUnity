@@ -1,3 +1,4 @@
+using Assets.Scripts.Player;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -32,7 +33,7 @@ public class PlayerController : MonoBehaviour
     public ObservableClasses.ObservableBoolean SubmitPressedAndReleased = new ObservableClasses.ObservableBoolean() { Value = false };
     public List<Flag> Flags = new List<Flag>();
     [SerializeField]
-    public static Party Party = new Party();
+    public PlayerParty Party;
     
     // Start is called before the first frame update
     void Start()
@@ -40,6 +41,11 @@ public class PlayerController : MonoBehaviour
         _characterController = GetComponent<CharacterController>();
         _cameraFacingSprite = GetComponentInChildren<CameraFacingSprite>();
         HandleInteractions();
+    }
+
+    private void Awake()
+    {
+        Party = new PlayerParty(this);
     }
 
     // Update is called once per frame

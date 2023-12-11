@@ -20,6 +20,11 @@ public class CameraFacingSpriteSheet
         SpriteWidth = width;
     }
 
+    public CameraFacingSpriteSheet(int width)
+    {
+        SpriteWidth = width;
+    }
+
     public void LoadTexture(string textureLocation)
     {
         Textures.Clear();

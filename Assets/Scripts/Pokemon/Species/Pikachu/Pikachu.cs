@@ -26,7 +26,10 @@ namespace Assets.Scripts.Pokemon.Species.Pikachu
                  50,                                        //Base Friendship
                  new EvYield() { Speed = 2 },               //Ev Yield
                  40,                                        //Height in Centimetres
-                 6.0                                        //Weight in Kilograms
+                 6.0,                                       //Weight in Kilograms
+                 48,
+                 48,
+                 25
            )
         {
 

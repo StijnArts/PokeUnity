@@ -45,6 +45,41 @@ public class PokemonIndividualData
     public List<Move> learnableMoves = new List<Move>();
     public bool isSavedPokemon = false;
 
+    public string GetSpriteSuffix()
+    {
+        string suffix = "";
+        if (pokemonHasForm(PokemonId, FormId))
+        {
+            suffix += "_" + FormId;
+        }
+        if (pokemonOrFormHasGenderDifferences(PokemonId, FormId) && gender == Pokemon.PokemonGender.FEMALE)
+        {
+            suffix += "_female";
+        }
+        if (isShiny)
+        {
+            suffix += "_shiny";
+        }
+        return suffix;
+    }
+
+    private bool pokemonOrFormHasGenderDifferences(string pokemonId, string formId)
+    {
+        if (pokemonHasForm(pokemonId, formId))
+        {
+            return PokemonRegistry.GetPokemonSpecies(pokemonId).Forms[formId].HasGenderDifferences;
+        }
+        else
+        {
+            return PokemonRegistry.GetPokemonSpecies(pokemonId).HasGenderDifferences;
+        }
+    }
+
+    private static bool pokemonHasForm(string pokemonId, string formId)
+    {
+        return PokemonRegistry.GetPokemonSpecies(pokemonId).Forms.ContainsKey(formId);
+    }
+
     private PokemonStats CalculateStats(int level, PokemonEVs pokemonEVs, PokemonIVs pokemonIVs, Nature nature)
     {
         BaseStats baseStats = PokemonRegistry.GetPokemonSpecies(PokemonId).BaseStats;
@@ -100,4 +135,20 @@ public class PokemonIndividualData
             //TODO overwrite species data where form data is not null
         }
     }
+
+    public int GetSpriteWidth()
+    {
+        return PokemonRegistry.GetPokemonSpecies(new PokemonIdentifier(PokemonId, FormId)).SpriteWidth;
+    }
+
+    public int GetSpriteResolution()
+    {
+        return PokemonRegistry.GetPokemonSpecies(new PokemonIdentifier(PokemonId, FormId)).SpriteResolution;
+    }
+
+    public int GetSpriteAnimationSpeed()
+    {
+        return PokemonRegistry.GetPokemonSpecies(new PokemonIdentifier(PokemonId, FormId)).SpriteAnimationSpeed;
+    }
+
 }

@@ -49,19 +49,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   PokemonIndividualData:
-    possibleAbilities: []
-    nationalPokedexNumber: 0
-    pokemonName: 
+    PokemonName: 
     PokemonId: 
     level:
       value: 1
     nickname: 
-    currentHp: 0
+    CurrentHp: 0
     FormId: 
     AbilityData: 
-    Ability: {fileID: 0}
     Nature: 0
-    natureData:
+    NatureData:
       positiveStat: 0
       negativeStat: 0
       favoriteFlavor: 0
@@ -171,7 +168,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 484137899678175811, guid: 03e3bbabefd7e4744bb4238f3a699325, type: 3}
       propertyPath: m_Name
-      value: CameraFacingSprite
+      value: PokemonSprite
       objectReference: {fileID: 0}
     - target: {fileID: 7469980616769715961, guid: 03e3bbabefd7e4744bb4238f3a699325, type: 3}
       propertyPath: m_Enabled
@@ -184,10 +181,6 @@ PrefabInstance:
     - target: {fileID: 7469980616769715961, guid: 03e3bbabefd7e4744bb4238f3a699325, type: 3}
       propertyPath: PixelsPerUnit
       value: 48
-      objectReference: {fileID: 0}
-    - target: {fileID: 7469980616769715961, guid: 03e3bbabefd7e4744bb4238f3a699325, type: 3}
-      propertyPath: MillisecondPerFrame
-      value: 50
       objectReference: {fileID: 0}
     - target: {fileID: 8839406879150462338, guid: 03e3bbabefd7e4744bb4238f3a699325, type: 3}
       propertyPath: m_LocalPosition.x
@@ -230,11 +223,41 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents:
-    - {fileID: 6803074519525398171, guid: 03e3bbabefd7e4744bb4238f3a699325, type: 3}
+    - {fileID: 7469980616769715961, guid: 03e3bbabefd7e4744bb4238f3a699325, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 484137899678175811, guid: 03e3bbabefd7e4744bb4238f3a699325, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7254398543610281972}
   m_SourcePrefab: {fileID: 100100000, guid: 03e3bbabefd7e4744bb4238f3a699325, type: 3}
+--- !u!1 &859979391489200784 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 484137899678175811, guid: 03e3bbabefd7e4744bb4238f3a699325, type: 3}
+  m_PrefabInstance: {fileID: 961310068287062227}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &7254398543610281972
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 859979391489200784}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 700a37b512a4f6d43869d0ed0c1a14f7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SpriteRenderer: {fileID: 0}
+  SpriteSuffix: 
+  SpriteGroup: 
+  MillisecondPerFrame: 50
+  yOffset: 0
+  SpriteWidth: 16
+  PixelsPerUnit: 16
+  CurrentFrame: 0
+  Facing: 180
+  TypeOfSprite: 0
 --- !u!4 &8645965501675705681 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8839406879150462338, guid: 03e3bbabefd7e4744bb4238f3a699325, type: 3}

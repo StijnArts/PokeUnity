@@ -26,7 +26,7 @@ public class DialogUIManager : MonoBehaviour
         DialogContainer.style.display = DisplayStyle.Flex;
     }
 
-    public void setDialogText(String text)
+    public void SetDialogText(String text)
     {
         DialogTextLabel.text = text;
     }
@@ -36,7 +36,7 @@ public class DialogUIManager : MonoBehaviour
         DialogContainer.style.display = DisplayStyle.None;
     }
 
-    internal void hideTitleAndPortrait()
+    internal void HideTitleAndPortrait()
     {
         //TODO hide the title and portrait
     }
