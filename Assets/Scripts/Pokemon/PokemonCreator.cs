@@ -12,7 +12,6 @@ public class PokemonCreator
         PokemonSpecies pokemonSpecies = PokemonRegistry.GetPokemonSpecies(pokemonSpawnEntry.pokemonId);
         if (pokemonSpecies != null )
         {
-            
             return putDataIntoPokemon(pokemonSpawnEntry, conditions, pokemonSpecies);
         }
         Debug.Log("Failed to find pokemon Data.");
@@ -24,19 +23,18 @@ public class PokemonCreator
         PokemonIndividualData pokemonIndividualData = new PokemonIndividualData();
         if(pokemonSpawnEntry.formId == "")
         {
-            pokemonIndividualData.pokemonName = pokemonSpecies.PokemonName;
-            pokemonIndividualData.nationalPokedexNumber = pokemonSpecies.NationalPokedexNumber;
-            pokemonIndividualData.primaryType = PokemonTypeRegistry.GetType(pokemonSpecies.PrimaryType);
+            pokemonIndividualData.PokemonName = pokemonSpecies.PokemonName;
+            pokemonIndividualData.PrimaryType = PokemonTypeRegistry.GetType(pokemonSpecies.PrimaryType);
             if (pokemonSpecies.SecondaryType != null)
             {
-                pokemonIndividualData.secondaryType = PokemonTypeRegistry.GetType(pokemonSpecies.SecondaryType);
+                pokemonIndividualData.SecondaryType = PokemonTypeRegistry.GetType(pokemonSpecies.SecondaryType);
             }
         }
         //TODO fill with form information if it overrides base info
         pokemonIndividualData.Nature = (Nature.Natures)DetermineNature();
         pokemonIndividualData.level = new ObservableClasses.ObservableInteger() { Value = UnityEngine.Random.Range(pokemonSpawnEntry.minLevel, pokemonSpawnEntry.maxLevel + 1) };
         //abilities from range
-        if(pokemonSpawnEntry.AbilityId == null)
+        if(string.IsNullOrWhiteSpace(pokemonSpawnEntry.AbilityId))
         {
             pokemonIndividualData.Ability = GenerateAbility(pokemonSpecies, conditions);
         } else
@@ -52,8 +50,9 @@ public class PokemonCreator
         pokemonIndividualData.EVs = new PokemonEVs();
         pokemonIndividualData.PokemonId = pokemonSpawnEntry.pokemonId;
         pokemonIndividualData.FormId = pokemonSpawnEntry.formId;
-        pokemonIndividualData.moves = DetermineMoves(pokemonSpawnEntry, pokemonSpecies);
+        pokemonIndividualData.Moves = DetermineMoves(pokemonSpawnEntry, pokemonSpecies);
         pokemonIndividualData.baseStats = new PokemonStats(pokemonSpecies.BaseStats);
+        pokemonIndividualData.Initialize();
         return pokemonIndividualData;
 
         //TODO give pokemon all learnable moves it should have for its level and give pokemon its 4 latest level up moves

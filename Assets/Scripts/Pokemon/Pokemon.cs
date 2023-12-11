@@ -42,28 +42,13 @@ public class Pokemon : MonoBehaviour
 
     public void InitializeSelf()
     {
-        PokemonIndividualData.natureData = PokemonNatureRegistry.GetNature((int)PokemonIndividualData.Nature);
-
-        var species = PokemonRegistry.GetPokemonSpecies(new PokemonIdentifier(PokemonIndividualData.PokemonId, PokemonIndividualData.FormId));
-        PokemonIndividualData.Ability = AbilityRegistry.GetAbility(PokemonIndividualData.AbilityData);
-        PokemonIndividualData.primaryType = PokemonTypeRegistry.GetType(species.PrimaryType);
-        PokemonIndividualData.stats = PokemonIndividualData.calculateStats();
-        if (species.SecondaryType != null)
-        {
-            PokemonIndividualData.secondaryType = PokemonTypeRegistry.GetType(species.SecondaryType);
-        }
-        
-        if (!string.IsNullOrEmpty(PokemonIndividualData.FormId) && species.Forms.ContainsKey(PokemonIndividualData.FormId))
-        {
-            //TODO overwrite species data where form data is not null
-        }
-
+        PokemonIndividualData.Initialize();
         InitializeSprite(PokemonIndividualData.PokemonId, PokemonIndividualData.FormId);
     }
 
-    public void setIndividualPokemonData(PokemonIndividualData pokemonIndividualData)
+    public void SetIndividualPokemonData(PokemonIndividualData pokemonIndividualData)
     {
-        this.PokemonIndividualData = pokemonIndividualData;
+        PokemonIndividualData = pokemonIndividualData;
         InitializeSelf();
     }
 

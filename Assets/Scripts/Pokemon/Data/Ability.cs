@@ -4,7 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using UnityEngine;
-public class Ability : UnityEngine.Object
+public class Ability
 {
     public string AbilityName;
     public string AbilityId;

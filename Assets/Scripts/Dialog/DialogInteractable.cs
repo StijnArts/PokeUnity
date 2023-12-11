@@ -39,12 +39,12 @@ public class DialogInteractable : MonoBehaviour
         //If multiple sets of dialog have 
         foreach (var dialog in dialogs)
         {
-            if(dialog.dialogTitle == null)
+            if(dialog.DialogTitle == null)
             {
-                dialog.dialogTitle = interactableName;
-            } else if(dialog.dialogTitle == "")
+                dialog.DialogTitle = interactableName;
+            } else if(dialog.DialogTitle == "")
             {
-                dialog.dialogTitle = interactableName;
+                dialog.DialogTitle = interactableName;
             }
         }
         ServiceLocator.Instance.DialogManager.StartDialog(dialogs);

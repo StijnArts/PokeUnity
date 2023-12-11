@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -52,7 +51,7 @@ public class DialogManager : MonoBehaviour
         }
         if (pokemonGiftEntries.Count > 0)
         {
-            GiftPokemon(pokemonGiftEntries.Dequeue(), previousDialog.dialogTitle);
+            GiftPokemon(pokemonGiftEntries.Dequeue(), previousDialog.DialogTitle);
             //display pokemon gifting dialog from queue
             return;
         }
@@ -63,10 +62,10 @@ public class DialogManager : MonoBehaviour
         }
 
         Dialog dialog = dialogQueue.Dequeue();
-        dialogUIManager.setDialogText(dialog.text);
+        dialogUIManager.setDialogText(dialog.Text);
         dialogUIManager.ShowDialogBox();
-        Debug.Log(dialog.dialogTitle + ": " + dialog.text);
-        if(previousDialog != null)
+        Debug.Log(dialog.DialogTitle + ": " + dialog.Text);
+        if (previousDialog != null)
         {
             previousDialog.actionsHaveBeenExecuted = false;
         }
@@ -75,7 +74,7 @@ public class DialogManager : MonoBehaviour
 
     private bool allQueuesAreEmpty()
     {
-        if(dialogQueue.Count == 0 && pokemonGiftEntries.Count == 0)
+        if (dialogQueue.Count == 0 && pokemonGiftEntries.Count == 0)
         {
             return true;
         }
@@ -85,14 +84,11 @@ public class DialogManager : MonoBehaviour
     public void GiftPokemon(PokemonGiftEntry pokemonGiftEntry, string source)
     {
         string flavorText = Settings.PlayerName + " received " + PokemonRegistry.GetPokemonSpecies(pokemonGiftEntry.pokemonId).PokemonName + " from " + source + "!";
-        if (pokemonGiftEntry.customFlavorText != null)
+        if (!string.IsNullOrWhiteSpace(pokemonGiftEntry.CustomFlavorText))
         {
-            if (pokemonGiftEntry.customFlavorText != "")
-            {
-                flavorText = pokemonGiftEntry.customFlavorText;
-            }
+            flavorText = pokemonGiftEntry.CustomFlavorText;
         }
-        Debug.Log("system: " + flavorText);
+        Debug.Log("System: " + flavorText);
         dialogUIManager.hideTitleAndPortrait();
         dialogUIManager.setDialogText(flavorText);
         dialogUIManager.ShowDialogBox();
@@ -101,19 +97,19 @@ public class DialogManager : MonoBehaviour
 
     private void executeDialogAction(Dialog dialog)
     {
-        if (!dialog.isSpecial)
+        if (!dialog.IsSpecial)
         {
             return;
         }
-        if (dialog.giftsPokemon)
+        if (dialog.GiftsPokemon)
         {
-            foreach (PokemonGiftEntry giftEntry in dialog.giftablePokemon)
+            foreach (PokemonGiftEntry giftEntry in dialog.GiftablePokemon)
             {
                 pokemonGiftEntries.Enqueue(giftEntry);
             }
             //gift pokemon in sequential order
         }
-        if (dialog.giftsItems)
+        if (dialog.GiftsItems)
         {
             //gift items in sequential order
         }

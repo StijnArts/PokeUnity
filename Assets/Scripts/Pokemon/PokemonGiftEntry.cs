@@ -6,7 +6,7 @@ using UnityEngine;
 [Serializable]
 public class PokemonGiftEntry : PokemonSpawnEntry
 {
-    public string customFlavorText;
+    public string CustomFlavorText;
     public SpawnConditions spawnConditions;
     public PokemonGiftEntry(float spawnWeight, string pokemonId, string formId, int minLevel, int maxLevel) : base(spawnWeight, pokemonId, formId, minLevel, maxLevel)
     {
