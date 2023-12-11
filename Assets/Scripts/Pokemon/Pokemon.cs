@@ -19,7 +19,7 @@ public class Pokemon : MonoBehaviour
         {
             if(GameStateManager.GetState() != GameStateManager.GameStates.LOADING)
             {
-                initializeSelf();
+                InitializeSelf();
             } else
             {
                 GameStateManager.currentGameState.OnChanged += InitializeAfterLoading();
@@ -33,31 +33,22 @@ public class Pokemon : MonoBehaviour
         {
             if (GameStateManager.GetState() != GameStateManager.GameStates.LOADING)
             {
-                initializeSelf();
+                InitializeSelf();
                 GameStateManager.currentGameState.OnChanged -= InitializeAfterLoading();
             }
         };
     }
 
-    public void initializeSelf()
+    public void InitializeSelf()
     {
-        //PokemonIndividualData.natureData = PokemonNatureRegistry.GetNature((int)PokemonIndividualData.nature);
-        //PokemonIndividualData.abilityData = AbilityRegistry.GetAbility(PokemonIndividualData.Ability);
-        //PokemonIndividualData.primaryType = PokemonTypeRegistry.GetType(PokemonRegistry.GetPokemon(PokemonIndividualData.pokemonId).PrimaryType);
-        //string secondaryTypeName = PokemonRegistry.GetPokemon(PokemonIndividualData.pokemonId).SecondaryType;
-        //if (secondaryTypeName != null)
-        //{
-        //    PokemonIndividualData.secondaryType = PokemonTypeRegistry.GetType(secondaryTypeName);
-        //}
-
-        //PokemonIndividualData.stats = PokemonIndividualData.calculateStats();
-        InitializeSprite(PokemonIndividualData.pokemonId, PokemonIndividualData.formId);
+        PokemonIndividualData.Initialize();
+        InitializeSprite(PokemonIndividualData.PokemonId, PokemonIndividualData.FormId);
     }
 
-    public void setIndividualPokemonData(PokemonIndividualData pokemonIndividualData)
+    public void SetIndividualPokemonData(PokemonIndividualData pokemonIndividualData)
     {
-        this.PokemonIndividualData = pokemonIndividualData;
-        initializeSelf();
+        PokemonIndividualData = pokemonIndividualData;
+        InitializeSelf();
     }
 
     public void InitializeSprite(string pokemonId, string formId)

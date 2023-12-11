@@ -11,6 +11,6 @@ public static class SubTypeReflector<T>
     {
         var types = Assembly.GetExecutingAssembly().ManifestModule.GetTypes().Where(type => type.BaseType == typeof(T) && !type.IsAbstract).ToArray();
 
-       return types.Select(abilityType => (T)Activator.CreateInstance(abilityType)).Where(abilityInstance => abilityInstance is T).ToList();
+       return types.Select(abilityType => (T)Activator.CreateInstance(abilityType)).Where(instance => instance is T).ToList();
     }
 }

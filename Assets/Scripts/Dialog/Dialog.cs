@@ -10,28 +10,28 @@ public class Dialog
     //[SerializeField]
     //public List<Flag> flags = new List<Flag>();
     [SerializeField]
-    public string dialogTitle = "";
+    public string DialogTitle = "";
     [TextArea(3,10)]
     [SerializeField]
-    public string text = "";
+    public string Text = "";
     [SerializeField]
-    public bool isSpecial = false;
+    public bool IsSpecial = false;
     [SerializeField]
-    public bool giftsItems = false;
+    public bool GiftsItems = false;
     [SerializeField]
-    public bool giftsPokemon = false;
+    public bool GiftsPokemon = false;
     [SerializeField]
     public bool HasBattle = false;
     [SerializeField]
     public bool HasOptions = false;
     [SerializeField]
-    public Party battleParty = new Party();
+    public Party BattleParty = new Party();
     [SerializeField]
-    public bool setsFlags = false;
+    public bool SetsFlags = false;
     [SerializeField]
-    public ItemTransferEntry[] giftableItems = new ItemTransferEntry[0];
+    public ItemTransferEntry[] GiftableItems = new ItemTransferEntry[0];
     [SerializeField]
-    public PokemonGiftEntry[] giftablePokemon = new PokemonGiftEntry[0];
+    public PokemonGiftEntry[] GiftablePokemon = new PokemonGiftEntry[0];
     [HideInInspector]
     public bool actionsHaveBeenExecuted = false;
 }

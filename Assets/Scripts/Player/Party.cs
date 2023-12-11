@@ -6,8 +6,7 @@ using UnityEngine;
 [Serializable]
 public class Party
 {
-    [Range(1,6)]
-    public PokemonIndividualData[] party = new PokemonIndividualData[6];
+    public PokemonIndividualData[] party = new PokemonIndividualData[Settings.MaxPartySize];
     public void AddPokemonToParty(PokemonIndividualData pokemonToAdd)
     {
         if (!IsPartyFull())

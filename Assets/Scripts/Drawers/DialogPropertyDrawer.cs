@@ -12,8 +12,8 @@ public class DialogPropertyDrawer : PropertyDrawer
     {
         var titleFieldPosition = new Rect(position);
         titleFieldPosition.height = EditorGUIUtility.singleLineHeight;
-        EditorGUI.BeginProperty(titleFieldPosition, label, property.FindPropertyRelative("dialogTitle"));
-        EditorGUI.PropertyField(titleFieldPosition, property.FindPropertyRelative("dialogTitle"));
+        EditorGUI.BeginProperty(titleFieldPosition, label, property.FindPropertyRelative("DialogTitle"));
+        EditorGUI.PropertyField(titleFieldPosition, property.FindPropertyRelative("DialogTitle"));
         EditorGUI.EndProperty();
 
         Rect textFieldPosition = new Rect(position);
@@ -26,27 +26,27 @@ public class DialogPropertyDrawer : PropertyDrawer
         var isSpecialToggleFieldPosition = new Rect(position);
         isSpecialToggleFieldPosition.height = EditorGUIUtility.singleLineHeight;
         isSpecialToggleFieldPosition.y = textFieldPosition.yMax + EditorGUIUtility.standardVerticalSpacing;
-        EditorGUI.BeginProperty(isSpecialToggleFieldPosition, label, property.FindPropertyRelative("isSpecial"));
-        EditorGUI.PropertyField(isSpecialToggleFieldPosition, property.FindPropertyRelative("isSpecial"));
+        EditorGUI.BeginProperty(isSpecialToggleFieldPosition, label, property.FindPropertyRelative("IsSpecial"));
+        EditorGUI.PropertyField(isSpecialToggleFieldPosition, property.FindPropertyRelative("IsSpecial"));
         EditorGUI.EndProperty();
 
-        if (property.FindPropertyRelative("isSpecial").boolValue == true)
+        if (property.FindPropertyRelative("IsSpecial").boolValue == true)
         {
             var giftsItemToggleFieldPosition = new Rect(position);
             giftsItemToggleFieldPosition.height = EditorGUIUtility.singleLineHeight;
             giftsItemToggleFieldPosition.y = isSpecialToggleFieldPosition.yMax + EditorGUIUtility.standardVerticalSpacing;
-            EditorGUI.BeginProperty(giftsItemToggleFieldPosition, label, property.FindPropertyRelative("giftsItems"));
-            EditorGUI.PropertyField(giftsItemToggleFieldPosition, property.FindPropertyRelative("giftsItems"));
+            EditorGUI.BeginProperty(giftsItemToggleFieldPosition, label, property.FindPropertyRelative("GiftsItems"));
+            EditorGUI.PropertyField(giftsItemToggleFieldPosition, property.FindPropertyRelative("GiftsItems"));
             EditorGUI.EndProperty();
 
             float itemFieldMaxY = giftsItemToggleFieldPosition.yMax;
-            if (property.FindPropertyRelative("giftsItems").boolValue == true)
+            if (property.FindPropertyRelative("GiftsItems").boolValue == true)
             {
                 //Show item configs
                 var itemDictionaryFieldPosition = new Rect(position);
                 itemDictionaryFieldPosition.height = EditorGUIUtility.singleLineHeight;
                 itemDictionaryFieldPosition.y = giftsItemToggleFieldPosition.yMax + EditorGUIUtility.standardVerticalSpacing;
-                SerializedProperty itemList = property.FindPropertyRelative("giftableItems");
+                SerializedProperty itemList = property.FindPropertyRelative("GiftableItems");
                 EditorGUI.BeginProperty(itemDictionaryFieldPosition, label, itemList);
                 EditorGUI.PropertyField(itemDictionaryFieldPosition, itemList);
                 EditorGUI.EndProperty();
@@ -73,18 +73,18 @@ public class DialogPropertyDrawer : PropertyDrawer
             var giftsPokemonToggleFieldPosition = new Rect(position);
             giftsPokemonToggleFieldPosition.height = EditorGUIUtility.singleLineHeight;
             giftsPokemonToggleFieldPosition.y = itemFieldMaxY + EditorGUIUtility.standardVerticalSpacing;
-            EditorGUI.BeginProperty(giftsPokemonToggleFieldPosition, label, property.FindPropertyRelative("giftsPokemon"));
-            EditorGUI.PropertyField(giftsPokemonToggleFieldPosition, property.FindPropertyRelative("giftsPokemon"));
+            EditorGUI.BeginProperty(giftsPokemonToggleFieldPosition, label, property.FindPropertyRelative("GiftsPokemon"));
+            EditorGUI.PropertyField(giftsPokemonToggleFieldPosition, property.FindPropertyRelative("GiftsPokemon"));
             EditorGUI.EndProperty();
 
             float pokemonFieldMaxY = giftsPokemonToggleFieldPosition.yMax;
-            if (property.FindPropertyRelative("giftsPokemon").boolValue == true)
+            if (property.FindPropertyRelative("GiftsPokemon").boolValue == true)
             {
                 //Show pokemon configs
                 var itemDictionaryFieldPosition = new Rect(position);
                 itemDictionaryFieldPosition.height = EditorGUIUtility.singleLineHeight;
                 itemDictionaryFieldPosition.y = giftsPokemonToggleFieldPosition.yMax + EditorGUIUtility.standardVerticalSpacing;
-                SerializedProperty itemList = property.FindPropertyRelative("giftablePokemon");
+                SerializedProperty itemList = property.FindPropertyRelative("GiftablePokemon");
                 EditorGUI.BeginProperty(itemDictionaryFieldPosition, label, itemList);
                 EditorGUI.PropertyField(itemDictionaryFieldPosition, itemList);
                 EditorGUI.EndProperty();
@@ -114,11 +114,11 @@ public class DialogPropertyDrawer : PropertyDrawer
         int totalLines = 3 + 4;
         float propertyHeight = 0;
         //giftable items
-        if (property.FindPropertyRelative("isSpecial").boolValue == true)
+        if (property.FindPropertyRelative("IsSpecial").boolValue == true)
         {
             totalLines += 2;
-            SerializedProperty GiftableItemsArrayProperty = property.FindPropertyRelative("giftableItems");
-            if (property.FindPropertyRelative("giftsItems").boolValue == true)
+            SerializedProperty GiftableItemsArrayProperty = property.FindPropertyRelative("GiftableItems");
+            if (property.FindPropertyRelative("GiftsItems").boolValue == true)
             {
                 totalLines++;
                 if (GiftableItemsArrayProperty.isExpanded == true)
@@ -136,8 +136,8 @@ public class DialogPropertyDrawer : PropertyDrawer
             }
 
             //giftable pokemon
-            SerializedProperty GiftablePokemonArrayProperty = property.FindPropertyRelative("giftablePokemon");
-            if (property.FindPropertyRelative("giftsPokemon").boolValue == true)
+            SerializedProperty GiftablePokemonArrayProperty = property.FindPropertyRelative("GiftablePokemon");
+            if (property.FindPropertyRelative("GiftsPokemon").boolValue == true)
             {
                 totalLines++;
                 if (GiftablePokemonArrayProperty.isExpanded == true)
