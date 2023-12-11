@@ -38,6 +38,15 @@ namespace Assets.Scripts.Registries
                 }
             }
             CompleteNationalPokedexNumbering();
+            AssignNationalPokedexNumbers();
+        }
+
+        private static void AssignNationalPokedexNumbers()
+        {
+            foreach(var pair in NationalPokedexDictionary)
+            {
+                pair.Value.NationalPokedexNumber = pair.Key;
+            }
         }
 
         public static void CompleteNationalPokedexNumbering()
