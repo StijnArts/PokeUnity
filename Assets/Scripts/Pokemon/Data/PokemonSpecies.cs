@@ -3,6 +3,7 @@
 using Assets.Scripts.Pokemon;
 using Assets.Scripts.Pokemon.Data;
 using Assets.Scripts.Pokemon.Pokedex;
+using Assets.Scripts.Registries;
 using System;
 using System.Collections.Generic;
 
@@ -167,7 +168,7 @@ public abstract class PokemonSpecies : BaseSpecies
         stringOfData += "\n]," +
           "\nbaseFriendship:" + 50 + "," +
           "\nevYield: {" +
-          "\n   hp:" + EvYield.Hp + "," +
+          "\n   Hp:" + EvYield.Hp + "," +
           "\n   attack:" + EvYield.Attack + "," +
           "\n   defence:" + EvYield.Defence + "," +
           "\n   specialAttack:" + EvYield.SpecialAttack + "," +
@@ -179,6 +180,29 @@ public abstract class PokemonSpecies : BaseSpecies
           "\ncannotDynamax:" + CannotDynamax +
             "\n}";
         return stringOfData;
+    }
+
+    public Move[] FindLatestLevelUpMoves(int level)
+    {
+        var moveset = MoveSets[0].LevelUpMoves;
+        var latestLevelUpMoves = new Move[Settings.MaxMoveSlots];
+        var foundMoveCounter = 0;
+        for (int i = level; i >= 0; i--)
+        {
+            if(foundMoveCounter >= Settings.MaxMoveSlots)
+            {
+                break;
+            } else if(foundMoveCounter >= MoveSets[0].LevelUpMoves.Count)
+            {
+                break;
+            }
+            if (moveset.ContainsKey(i))
+            {
+                latestLevelUpMoves[foundMoveCounter] = MoveRegistry.GetMove(moveset[i]);
+                foundMoveCounter++;
+            }
+        }
+        return latestLevelUpMoves;
     }
 }
 [Serializable]

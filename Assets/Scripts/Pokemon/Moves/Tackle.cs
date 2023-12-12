@@ -1,4 +1,7 @@
-﻿using System;
+﻿using Assets.Scripts.Pokemon.Data;
+using Assets.Scripts.Pokemon.Data.Moves;
+using Assets.Scripts.Pokemon.PokemonTypes;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,8 +9,14 @@ using System.Threading.Tasks;
 
 namespace Assets.Scripts.Pokemon.Moves
 {
-    public class Tackle
+    public class Tackle : Move
     {
-        public static string MoveId = "tackle";
+        public static string MoveIdentifier = "tackle";
+
+        public Tackle() : base(MoveIdentifier, "Tackle", Normal.TypeName, MoveCategories.Physical, 40)
+        {
+            BasePower = 40;
+            
+        }
     }
 }

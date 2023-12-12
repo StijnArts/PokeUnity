@@ -1,3 +1,4 @@
+using Assets.Scripts.Pokemon;
 using Assets.Scripts.Pokemon.Data;
 using System;
 using System.Collections;
@@ -11,12 +12,12 @@ public class PokemonIndividualData
     [HideInInspector]
     public string PokemonName;
     public string PokemonId;
-    public ObservableClasses.ObservableInteger level = new ObservableClasses.ObservableInteger() { Value = 1 };//TODO make move learning and evolutions subscribe to the level observable
-    public string nickname = null;
+    public ObservableClasses.ObservableInteger Level = new ObservableClasses.ObservableInteger() { Value = 1 };//TODO make move learning and evolutions subscribe to the level observable
+    public string Nickname = null;
     [HideInInspector]
     public int CurrentHp;
     public string FormId = "";
-    public Move[] Moves = new Move[4];
+    public PokemonMove[] Moves = new PokemonMove[Settings.MaxMoveSlots];
     public string AbilityData;
     [HideInInspector]
     public Ability Ability;
@@ -32,7 +33,7 @@ public class PokemonIndividualData
     public bool isShiny = false;
     public Pokemon.PokemonGender gender = Pokemon.PokemonGender.MALE;
     [HideInInspector]
-    public PokemonStats stats = new PokemonStats(1, 1, 1, 1, 1, 1);
+    public PokemonStats Stats = new PokemonStats(1, 1, 1, 1, 1, 1);
     [HideInInspector]
     public PokemonStats baseStats = new PokemonStats(1, 1, 1, 1, 1, 1);
     public PokemonEVs EVs = new PokemonEVs();
@@ -102,16 +103,16 @@ public class PokemonIndividualData
     private PokemonStats CalculateStats()
     {
         BaseStats baseStats = PokemonRegistry.GetPokemonSpecies(PokemonId).BaseStats;
-        int hp = PokemonStats.CalculateHp(level.Value, baseStats.Hp, EVs.hpEVs, IVs.hpIVs);
-        int attack = PokemonStats.CalculateOtherStat(level.Value, baseStats.Attack, EVs.attackEVs,
+        int hp = PokemonStats.CalculateHp(Level.Value, baseStats.Hp, EVs.hpEVs, IVs.hpIVs);
+        int attack = PokemonStats.CalculateOtherStat(Level.Value, baseStats.Attack, EVs.attackEVs,
             IVs.attackIVs, NatureData, global::Nature.AffectedStats.ATTACK);
-        int defence = PokemonStats.CalculateOtherStat(level.Value, baseStats.Defence, EVs.defenceEVs,
+        int defence = PokemonStats.CalculateOtherStat(Level.Value, baseStats.Defence, EVs.defenceEVs,
             IVs.defenceIVs, NatureData, global::Nature.AffectedStats.DEFENCE);
-        int specialAttack = PokemonStats.CalculateOtherStat(level.Value, baseStats.SpecialAttack, EVs.specialAttackEVs,
+        int specialAttack = PokemonStats.CalculateOtherStat(Level.Value, baseStats.SpecialAttack, EVs.specialAttackEVs,
             IVs.specialAttackIVs, NatureData, global::Nature.AffectedStats.SPECIAL_ATTACK);
-        int specialdefence = PokemonStats.CalculateOtherStat(level.Value, baseStats.SpecialDefence, EVs.specialdefenceEVs,
+        int specialdefence = PokemonStats.CalculateOtherStat(Level.Value, baseStats.SpecialDefence, EVs.specialdefenceEVs,
             IVs.specialdefenceIVs, NatureData, global::Nature.AffectedStats.SPECIAL_DEFENCE);
-        int speed = PokemonStats.CalculateOtherStat(level.Value, baseStats.Speed, EVs.speedEVs,
+        int speed = PokemonStats.CalculateOtherStat(Level.Value, baseStats.Speed, EVs.speedEVs,
             IVs.speedIVs, NatureData, global::Nature.AffectedStats.SPEED);
 
         return new PokemonStats(hp, attack, defence, specialAttack, specialdefence, speed);
@@ -124,7 +125,7 @@ public class PokemonIndividualData
         var species = PokemonRegistry.GetPokemonSpecies(new PokemonIdentifier(PokemonId, FormId));
         Ability = AbilityRegistry.GetAbility(AbilityData);
         PrimaryType = PokemonTypeRegistry.GetType(species.PrimaryType);
-        stats = CalculateStats();
+        Stats = CalculateStats();
         if (species.SecondaryType != null)
         {
             SecondaryType = PokemonTypeRegistry.GetType(species.SecondaryType);
@@ -151,4 +152,8 @@ public class PokemonIndividualData
         return PokemonRegistry.GetPokemonSpecies(new PokemonIdentifier(PokemonId, FormId)).SpriteAnimationSpeed;
     }
 
+    public string GetName()
+    {
+        return string.IsNullOrEmpty(Nickname) ? PokemonName : Nickname;
+    }
 }

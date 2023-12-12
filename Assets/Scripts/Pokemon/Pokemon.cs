@@ -15,6 +15,9 @@ public class Pokemon : MonoBehaviour
 
     [Serialize]
     public PokemonIndividualData PokemonIndividualData = new PokemonIndividualData();
+    [SerializeField]
+    public bool IsWild = false;
+
     void Start()
     {
         if (PokemonIndividualData.isSavedPokemon)
@@ -24,7 +27,7 @@ public class Pokemon : MonoBehaviour
                 InitializeSelf();
             } else
             {
-                GameStateManager.currentGameState.OnChanged += InitializeAfterLoading();
+                GameStateManager.CurrentGameState.OnChanged += InitializeAfterLoading();
             }
         }
     }
@@ -36,7 +39,7 @@ public class Pokemon : MonoBehaviour
             if (GameStateManager.GetState() != GameStateManager.GameStates.LOADING)
             {
                 InitializeSelf();
-                GameStateManager.currentGameState.OnChanged -= InitializeAfterLoading();
+                GameStateManager.CurrentGameState.OnChanged -= InitializeAfterLoading();
             }
         };
     }

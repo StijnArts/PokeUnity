@@ -1,4 +1,25 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
     <Style src="project://database/Assets/UI/BaseUI.uss?fileID=7433441132597879392&amp;guid=74651805207b64542bd8cb62a1789a29&amp;type=3#BaseUI" />
-    <ui:ListView focusable="true" reorderable="false" name="PartyView" class="PartyView" />
+    <ui:ListView focusable="true" reorderable="false" name="PartyView" class="PartyView" style="min-height: auto; max-height: 72%; height: auto;" />
+    <ui:VisualElement name="BattleContainer" style="flex-grow: 1; display: none; visibility: visible;">
+        <ui:VisualElement name="SelectedOpponent" class="BattleWidget" style="visibility: visible; background-color: rgba(132, 132, 132, 0);">
+            <ui:Label tabindex="-1" text="Pokemon Name" parse-escape-sequences="true" display-tooltip-when-elided="true" name="SelectedOposingPokemonName" style="-unity-text-align: upper-right; -unity-font-style: bold; font-size: 16px; text-overflow: ellipsis;" />
+            <ui:ProgressBar value="100" name="HealthBar" />
+        </ui:VisualElement>
+        <ui:VisualElement name="SelectedTeammate" class="BattleWidget" style="visibility: visible; top: 76%; left: 6%;">
+            <ui:Label tabindex="-1" text="Pokemon Name" parse-escape-sequences="true" display-tooltip-when-elided="true" name="SelectedOposingPokemonName" style="-unity-text-align: upper-left; -unity-font-style: bold; font-size: 16px; text-overflow: ellipsis;" />
+            <ui:ProgressBar value="100" name="HealthBar" />
+        </ui:VisualElement>
+        <ui:VisualElement name="BattleOptionContainer" style="flex-grow: 1; min-height: auto; min-width: auto; flex-direction: column; display: flex;">
+            <ui:VisualElement name="MoveSelector" picking-mode="Ignore" style="flex-grow: 1; background-color: rgb(136, 136, 136); max-width: 35%; max-height: 40%; left: 63%; top: 56%; display: flex; visibility: visible; overflow: visible;">
+                <ui:ListView focusable="true" name="MovesView" style="min-height: auto;" />
+            </ui:VisualElement>
+            <ui:VisualElement name="OptionSelector" picking-mode="Ignore" style="flex-grow: 1; background-color: rgb(136, 136, 136); max-width: 20%; max-height: none; left: 78%; top: 56%; display: flex;">
+                <ui:ListView focusable="true" name="OptionsView" style="min-height: auto; max-height: none;" />
+            </ui:VisualElement>
+            <ui:VisualElement name="MoveOptionContainer" style="flex-grow: 1; min-height: auto; min-width: auto; display: flex; visibility: visible;">
+                <ui:VisualElement name="MoveDescriptionContainer" style="flex-grow: 1; background-color: rgb(229, 158, 158); max-width: 40%; max-height: 20%; left: 37.5%; top: 70%; visibility: visible; display: none;" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
 </ui:UXML>

@@ -81,17 +81,18 @@
     <Compile Include="Assets\Scripts\Player\Inventory\ItemTransferEntry.cs" />
     <Compile Include="Assets\Scripts\Pokemon\Data\PokemonSpecies.cs" />
     <Compile Include="Assets\Scripts\Pokemon\PokemonIndividualData.cs" />
+    <Compile Include="Assets\Scripts\UI\BattleOptionsListController.cs" />
     <Compile Include="Assets\Scripts\Sprites\CameraFacingSprite.cs" />
     <Compile Include="Assets\Scripts\Settings.cs" />
     <Compile Include="Assets\Scripts\Pokemon\PokemonTypes\Bug.cs" />
     <Compile Include="Assets\Scripts\ObservableClasses.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerController.cs" />
     <Compile Include="Assets\Scripts\Pokemon\Abilities\None.cs" />
+    <Compile Include="Assets\Scripts\Battle\BattleManager.cs" />
     <Compile Include="Assets\Scripts\Registries\EvolutionRegistry.cs" />
     <Compile Include="Assets\Scripts\Pokemon\Data\MoveSet.cs" />
     <Compile Include="Assets\Scripts\Pokemon\PokemonStats.cs" />
     <Compile Include="Assets\Scripts\Pokemon\PokemonTypes\Unknown.cs" />
-    <Compile Include="Assets\Scripts\Pokemon\Move.cs" />
     <Compile Include="Assets\Scripts\World\Direction.cs" />
     <Compile Include="Assets\Scripts\Dialog\DialogInteractable.cs" />
     <Compile Include="Assets\Scripts\Pokemon\PokemonTypes\Normal.cs" />
@@ -119,8 +120,10 @@
     <Compile Include="Assets\Scripts\Registries\PokedexRegistry.cs" />
     <Compile Include="Assets\Scripts\Pokemon\PokemonCreator.cs" />
     <Compile Include="Assets\Scripts\Pokemon\Data\Pokedex\PokedexData.cs" />
+    <Compile Include="Assets\Scripts\UI\MoveOptionController.cs" />
     <Compile Include="Assets\Scripts\World\Encounters\GrassEncounterField.cs" />
     <Compile Include="Assets\Scripts\Registries\SubTypeReflector.cs" />
+    <Compile Include="Assets\Scripts\UI\BattlerWidgetController.cs" />
     <Compile Include="Assets\Scripts\Pokemon\PokemonTypes\Water.cs" />
     <Compile Include="Assets\Scripts\Pokemon\PokemonGiftEntry.cs" />
     <Compile Include="Assets\Scripts\Pokemon\PokemonTypes\Ice.cs" />
@@ -130,6 +133,8 @@
     <Compile Include="Assets\Scripts\Pokemon\Data\Pokedex\PokedexEntry.cs" />
     <Compile Include="Assets\Scripts\World\Spawning\SpawnConditions.cs" />
     <Compile Include="Assets\Scripts\Pokemon\Moves\Tackle.cs" />
+    <Compile Include="Assets\Scripts\Pokemon\Data\Moves\Move.cs" />
+    <Compile Include="Assets\Scripts\Pokemon\PokemonMove.cs" />
     <Compile Include="Assets\Scripts\Pokemon\PokemonTypes\Flying.cs" />
     <Compile Include="Assets\Scripts\Dialog\DialogueManager.cs" />
     <Compile Include="Assets\Scripts\Dialog\DialogTextButton.cs" />
@@ -137,6 +142,7 @@
     <Compile Include="Assets\Scripts\Pokemon\Abilities\LightningRod.cs" />
     <Compile Include="Assets\Scripts\UI\PartyEntryController.cs" />
     <Compile Include="Assets\Scripts\Pokemon\HeldItem.cs" />
+    <Compile Include="Assets\Scripts\UI\BattleUiManager.cs" />
     <Compile Include="Assets\Scripts\Pokemon\PokemonJsonReader.cs" />
     <Compile Include="Assets\Scripts\ServiceLocator.cs" />
     <Compile Include="Assets\Scripts\Pokemon\PokemonTypes\Psychic.cs" />
@@ -145,15 +151,19 @@
     <Compile Include="Assets\Scripts\Player\PlayerCollissionManager.cs" />
     <Compile Include="Assets\Scripts\Pokemon\PokemonTypes\Ghost.cs" />
     <Compile Include="Assets\Scripts\Pokemon\Data\Evolution.cs" />
+    <Compile Include="Assets\Scripts\UI\PartyListController.cs" />
+    <Compile Include="Assets\Scripts\Pokemon\Data\Moves\MoveCategories.cs" />
     <Compile Include="Assets\Scripts\Pokemon\Nature.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Assets\UI\Standard HUD\MoveOption.uxml" />
     <None Include="Assets\UI\BaseUI.uss" />
     <None Include="Assets\UI\Standard HUD\PartyEntry.uxml" />
     <None Include="Assets\Shaders\SpriteShader.shader" />
     <None Include="Assets\UI\Dialog\DialogUIDocument.uxml" />
     <None Include="Assets\UI\PartyEntry.uss" />
     <None Include="Assets\UI\Standard HUD\StandardHUD.uxml" />
+    <None Include="Assets\UI\Standard HUD\BattleOption.uxml" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">

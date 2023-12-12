@@ -87,6 +87,7 @@ MonoBehaviour:
     currentExperience: 0
     friendship: 0
     isSavedPokemon: 0
+  IsWild: 1
 --- !u!54 &7228871143437145619
 Rigidbody:
   m_ObjectHideFlags: 0

@@ -10,6 +10,7 @@ namespace Assets.Scripts.Player
     public class PlayerParty : Party
     {
         private PlayerController _player;
+        public int SelectedPokemon;
         private HudUiManager _hudUiManager => ServiceLocator.Instance.HudUiManager;
         public PlayerParty(PlayerController player) 
         { 
@@ -19,13 +20,30 @@ namespace Assets.Scripts.Player
         {
             if (!IsPartyFull())
             {
-                var slotNumber = getLastEmptySlot();
+                var partyIsEmpty = IsPartyEmpty();
+                var slotNumber = GetLastEmptySlot();
                 PartyPokemon[slotNumber] = pokemonToAdd;
-
+                if (partyIsEmpty)
+                {
+                    SelectedPokemon = slotNumber;
+                }
                 _hudUiManager.RefreshPartyList();
             }
 
             //TODO send pokemon to pc
+        }
+
+        private bool IsPartyEmpty()
+        {
+            bool isPartyEmpty = true;
+            foreach (var partySlot in PartyPokemon)
+            {
+                if (partySlot != null)
+                {
+                    isPartyEmpty = false;
+                }
+            }
+            return isPartyEmpty;
         }
 
         public bool IsPartyFull()
@@ -41,16 +59,10 @@ namespace Assets.Scripts.Player
             return isPartyFull;
         }
 
-        public bool partySlotIsFilled(int slot)
-        {
-            return PartyPokemon[slot] != null;
-        }
-
-        public int getLastEmptySlot()
+        public int GetLastEmptySlot()
         {
             //TODO finish this method
             int slot = 0;
-            bool emptySlotHasBeenFound = false;
             foreach (PokemonIndividualData pokemon in PartyPokemon)
             {
                 if (pokemon == null)
@@ -62,9 +74,27 @@ namespace Assets.Scripts.Player
             return slot;
         }
 
-        public PokemonIndividualData getFirstPartySlot()
+        public PokemonIndividualData GetFirstPartySlot()
         {
             return PartyPokemon[0];
+        }
+
+        public PokemonIndividualData GetSelectedPokemon()
+        {
+            return PartyPokemon[SelectedPokemon];
+        }
+
+        public List<PokemonIndividualData> PartyAsList()
+        {
+            var selectedPokemon = new List<PokemonIndividualData>();
+            foreach (var partyPokemon in PartyPokemon)
+            {
+                if (partyPokemon != null)
+                {
+                    selectedPokemon.Add(partyPokemon);
+                }
+            }
+            return selectedPokemon;
         }
     }
 }

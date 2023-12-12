@@ -169,6 +169,7 @@ Transform:
   - {fileID: 1118264388}
   - {fileID: 1794684573}
   - {fileID: 824341280}
+  - {fileID: 1574040955}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &58648442
@@ -918,6 +919,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6906101293007669895, guid: 6fcb77488c3398c4680090df106d8d39, type: 3}
+      propertyPath: dialogs.Array.data[0].GiftablePokemon.Array.data[0].Nickname
+      value: Pikachu Fan's Pikachu
+      objectReference: {fileID: 0}
+    - target: {fileID: 6906101293007669895, guid: 6fcb77488c3398c4680090df106d8d39, type: 3}
       propertyPath: dialogs.Array.data[0].GiftablePokemon.Array.data[0].maxLevel
       value: 5
       objectReference: {fileID: 0}
@@ -1350,7 +1355,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e6c1661f11e8e6b47a557a7bab4caf7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  StandardHudDocument: {fileID: 0}
   PartyEntry: {fileID: 9197481963319205126, guid: 460396c979aa56e4f99e8de168df5105, type: 3}
+  BattleMenuEntry: {fileID: 9197481963319205126, guid: ffd01bd4def8fa649bd1b2489b1eb748, type: 3}
+  MoveMenuEntry: {fileID: 9197481963319205126, guid: 023b31607340a7848b64fae2df045f74, type: 3}
 --- !u!1 &975827356
 GameObject:
   m_ObjectHideFlags: 0
@@ -1927,6 +1935,50 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f8472f61e971f634aa4df8690442a6d2, type: 3}
+--- !u!1 &1574040954
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1574040955}
+  - component: {fileID: 1574040956}
+  m_Layer: 0
+  m_Name: BattleManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1574040955
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1574040954}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1548311}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1574040956
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1574040954}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b1ab1d14dce884446a8e7ed516c93fc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1576582267
 GameObject:
   m_ObjectHideFlags: 0

@@ -52,7 +52,7 @@ public class PlayerController : MonoBehaviour
     void FixedUpdate()
     {
         HandleInput();
-        if (GameStateManager.GetState() == GameStateManager.GameStates.ROAMING)
+        if (GameStateManager.GetState() != (GameStateManager.GameStates.LOADING | GameStateManager.GameStates.DIALOG))
         {
             HandleMovement();
         }
@@ -181,8 +181,21 @@ public class PlayerController : MonoBehaviour
         Debug.Log("Player Entered my Dialog range");
     }
 
-    internal void ExitDialogRange(DialogInteractable dialogInteractable)
+    public void ExitDialogRange(DialogInteractable dialogInteractable)
     {
         ObjectsInDialogRange.Remove(dialogInteractable);
+    }
+
+    public List<PokemonIndividualData> SelectPokemon()
+    {
+        var selectedPokemon = new List<PokemonIndividualData>() { Party.GetSelectedPokemon() };
+        foreach(var partyPokemon in Party.PartyPokemon)
+        {
+            if(partyPokemon != Party.GetSelectedPokemon() && partyPokemon != null)
+            {
+                selectedPokemon.Add(partyPokemon);
+            }
+        }
+        return selectedPokemon;
     }
 }

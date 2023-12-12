@@ -8,65 +8,25 @@ using UnityEngine.UIElements;
 
 public class HudUiManager : MonoBehaviour
 {
-    UIDocument DialogUIDocument;
-    ListView PartyView;
+    public UIDocument StandardHudDocument;
     public VisualTreeAsset PartyEntry;
-    private PlayerParty _playerParty => GameObject.Find("Player").GetComponentInChildren<PlayerController>().Party;
+    public VisualTreeAsset BattleMenuEntry;
+    public VisualTreeAsset MoveMenuEntry;
+    private PartyListController _partyListController;
     private void OnEnable()
     {
-        DialogUIDocument = GetComponentInChildren<UIDocument>();
-        if (DialogUIDocument == null)
+        
+        StandardHudDocument = GetComponentInChildren<UIDocument>();
+        if (StandardHudDocument == null)
         {
             Debug.Log("No Dialog UIDocument was found.");
         }
-        PartyView = DialogUIDocument.rootVisualElement.Q("PartyView") as ListView;
-        GameStateManager.currentGameState.OnChanged += InitializePartyListAfterLoading();
-    }
-
-    public void ShowDialogBox()
-    {
-        PartyView.style.display = DisplayStyle.Flex;
-    }
-
-    internal void HideParty()
-    {
-        PartyView.style.display = DisplayStyle.None;
-    }
-
-    private void InitializePartyList()
-    {
-        PartyView.makeItem = () =>
-        {
-            var partyEntry = PartyEntry.Instantiate();
-            partyEntry.userData = new PartyEntryController(partyEntry.Q<VisualElement>("PokemonSprite"));
-            return partyEntry;
-        };
-
-        PartyView.bindItem = (element, index) =>
-        {
-            var controller = element.userData as PartyEntryController;
-            controller.SetPokemonData(_playerParty.PartyPokemon[index]);
-        };
-
-        PartyView.fixedItemHeight = 90;
-
-        PartyView.itemsSource = _playerParty.PartyPokemon;
-    }
-
-    private Action InitializePartyListAfterLoading()
-    {
-        return () =>
-        {
-            if (GameStateManager.GetState() != GameStateManager.GameStates.LOADING)
-            {
-                InitializePartyList();
-                GameStateManager.currentGameState.OnChanged -= InitializePartyListAfterLoading();
-            }
-        };
+        var partyView = StandardHudDocument.rootVisualElement.Q("PartyView") as ListView;
+        _partyListController = new PartyListController(partyView, PartyEntry);
     }
 
     public void RefreshPartyList()
     {
-        PartyView.Rebuild();
+        _partyListController.RefreshPartyList();
     }
 }

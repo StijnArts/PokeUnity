@@ -20,7 +20,7 @@ namespace Assets.Scripts.Pokemon.Data
         public string ExperienceGroup;
         public int EggCycles;
         public List<string> EggGroups;
-        public List<MoveSet> MoveSets;
+        public List<MoveSet> MoveSets = new List<MoveSet>();
         public PokemonIdentifier PreEvolution;
         public List<Evolution> Evolutions = new List<Evolution>();
         public int BaseFriendship;

@@ -2,7 +2,7 @@
 
 public class PokemonStats
 {
-    public int hp;
+    public int Hp;
     public int attack;
     public int defence;
     public int specialAttack;
@@ -11,7 +11,7 @@ public class PokemonStats
 
     public PokemonStats(int hp, int attack, int defence, int specialAttack, int specialdefence, int speed)
     {
-        this.hp = hp;
+        this.Hp = hp;
         this.attack = attack;
         this.defence = defence;
         this.specialAttack = specialAttack;
@@ -21,7 +21,7 @@ public class PokemonStats
 
     public PokemonStats(BaseStats baseStats)
     {
-        this.hp = baseStats.Hp;
+        this.Hp = baseStats.Hp;
         this.attack = baseStats.Attack;
         this.defence = baseStats.Defence;
         this.specialAttack = baseStats.SpecialAttack;
@@ -51,6 +51,6 @@ public class PokemonStats
 
     public int calculateStatTotal()
     {
-        return (hp + attack + defence + specialAttack + specialdefence + speed);
+        return (Hp + attack + defence + specialAttack + specialdefence + speed);
     }
 }
