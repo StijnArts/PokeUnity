@@ -21,7 +21,7 @@ namespace Assets.Scripts.Battle
             _battleUiManager.StartBattle(playerSidePokemon[0], opposingSides[0][0]);
         }
 
-        internal void SelectMove(PokemonMove move)
+        public void SelectMove(PokemonMove move)
         {
             Debug.Log(_player.Party.GetSelectedPokemon().GetName() + " used " + move.Move.MoveName + "!");
         }

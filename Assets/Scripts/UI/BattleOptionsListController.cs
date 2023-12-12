@@ -12,14 +12,12 @@ namespace Assets.Scripts.UI
         public enum BattleOption { Battle, Pokemon, Bag, Run }
         public List<BattleOption> Options = new List<BattleOption>(Enum.GetValues(typeof(BattleOption)).Cast<BattleOption>());
         public float OptionsEntryHeight = 55;
-        private VisualElement _optionsContainer;
         private ListView _optionsView;
         private VisualTreeAsset _optionsEntry;
         private Action _showMoveOptions;
-        public BattleOptionsListController(VisualElement optionsContainer, VisualTreeAsset battleOptionEntry, Action showMoveOptions)
+        public BattleOptionsListController(ListView optionsView, VisualTreeAsset battleOptionEntry, Action showMoveOptions)
         {
-            _optionsContainer = optionsContainer;
-            _optionsView = optionsContainer.Q("OptionsView") as ListView;
+            _optionsView = optionsView.Q("OptionsView") as ListView;
             _optionsView.selectionType = SelectionType.None;
             _optionsEntry = battleOptionEntry;
             _showMoveOptions = showMoveOptions;
@@ -56,7 +54,7 @@ namespace Assets.Scripts.UI
                         {
                             void SwitchMenus(ClickEvent click)
                             {
-                                _optionsContainer.style.display = DisplayStyle.None;
+                                _optionsView.style.display = DisplayStyle.None;
                                 showMoveOptions();
                             }
                             button.RegisterCallback<ClickEvent>(SwitchMenus);

@@ -16,16 +16,14 @@ namespace Assets.Scripts.UI
         private PlayerController _playerController => GameObject.Find("Player").GetComponentInChildren<PlayerController>();
         public List<PokemonMove> Moves => _playerController.Party.GetSelectedPokemon().Moves.ToList();
         public float OptionsEntryHeight = 55;
-        private VisualElement _optionsContainer;
         private ListView _movesView;
-        private VisualTreeAsset _optionsEntry;
+        private VisualTreeAsset _movesEntry;
 
-        public MoveOptionController(VisualElement optionsContainer, VisualTreeAsset battleOptionEntry)
+        public MoveOptionController(ListView movesView, VisualTreeAsset battleOptionEntry)
         {
-            _optionsContainer = optionsContainer;
-            _movesView = optionsContainer.Q("MovesView") as ListView;
+            _movesView = movesView;
             _movesView.selectionType = SelectionType.None;
-            _optionsEntry = battleOptionEntry;
+            _movesEntry = battleOptionEntry;
             InitializeMoveOptions();
         }
 
@@ -33,20 +31,19 @@ namespace Assets.Scripts.UI
         {
             _movesView.itemsSource = Moves;
             _movesView.Rebuild();
-            _optionsContainer.style.display = DisplayStyle.Flex;
-            
+            _movesView.style.display = DisplayStyle.Flex;
         }
 
         internal void HideMoveOptions()
         {
-            _optionsContainer.style.display = DisplayStyle.None;
+            _movesView.style.display = DisplayStyle.None;
         }
 
         private void InitializeMoveOptions()
         {
             _movesView.makeItem = () =>
             {
-                var optionEntry = _optionsEntry.Instantiate();
+                var optionEntry = _movesEntry.Instantiate();
                 return optionEntry;
             };
 
@@ -57,7 +54,11 @@ namespace Assets.Scripts.UI
                 var moveNameLabel = element.Q("MoveNameLabel") as Label;
                 var powerPointsLabel = element.Q("PowerPointsLabel") as Label;
                 var button = element.Q("MoveContainer") as VisualElement;
-                button.AddManipulator(new Clickable(evt => ServiceLocator.Instance.BattleManager.SelectMove(move)));
+                void SelectMove(ClickEvent click)
+                {
+                    ServiceLocator.Instance.BattleManager.SelectMove(move);
+                }
+                button.RegisterCallback<ClickEvent>(SelectMove);
                 moveNameLabel.text = move.Move.MoveName.ToLower().FirstCharacterToUpper();
                 powerPointsLabel.text = move.RemainingPowerPoints + "/" + move.Move.PowerPoints;
 

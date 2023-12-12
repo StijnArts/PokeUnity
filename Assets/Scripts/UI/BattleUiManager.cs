@@ -26,9 +26,9 @@ namespace Assets.Scripts.UI
             _selectedOpposingBattlerWidgetController = new BattlerWidgetController(_standardHudDocument.rootVisualElement.Q("SelectedTeammate") as VisualElement,
                 teammmate);
 
-            _moveOptionController = new MoveOptionController(_standardHudDocument.rootVisualElement.Q("MoveSelector"), _hudUiManager.MoveMenuEntry);
+            _moveOptionController = new MoveOptionController(_standardHudDocument.rootVisualElement.Q("MovesView") as ListView, _hudUiManager.MoveMenuEntry);
             _moveOptionController.HideMoveOptions();
-            _battleOptionsController = new BattleOptionsListController(_standardHudDocument.rootVisualElement.Q("OptionSelector"), 
+            _battleOptionsController = new BattleOptionsListController(_standardHudDocument.rootVisualElement.Q("OptionsView") as ListView, 
                 _hudUiManager.BattleMenuEntry, _moveOptionController.ShowMoveOptions);
 
             _battleContainer.style.display = DisplayStyle.Flex;
