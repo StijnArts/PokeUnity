@@ -8,6 +8,8 @@ namespace Assets.Scripts.Battle
 {
     public interface Target
     {
-        public enum TargettingType { Single, All, Adjacent, Ally, Field, Battle }
+        public enum TargettingType
+        { AdjacentAlly, AdjacentAllyOrSelf, AdjacentFoe, Aall, AllAdjacent, AllAdjacentFoes, Allies, AllySide, AllyTeam, Any, FoeSide, 
+            Normal, RandomNormal, Scripted, Self }
     }
 }

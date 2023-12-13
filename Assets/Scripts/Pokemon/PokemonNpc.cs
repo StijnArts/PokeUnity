@@ -5,7 +5,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 
 [Serializable]
-public class PokemonNpc : MonoBehaviour, Target
+public class PokemonNpc : MonoBehaviour
 {
     public enum PokemonGender { MALE, FEMALE, NONE }
     public enum Stats { HP, Attack, Defence, Special_Attack, Special_Defence, Speed }

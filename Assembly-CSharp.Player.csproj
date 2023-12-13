@@ -66,11 +66,13 @@
     <Compile Include="Assets\Scripts\World\Encounters\EncounterTable.cs" />
     <Compile Include="Assets\Scripts\Sprites\PokemonSprite.cs" />
     <Compile Include="Assets\Scripts\Registries\PokemonRegistry.cs" />
+    <Compile Include="Assets\Scripts\Battle\Effect.cs" />
     <Compile Include="Assets\Scripts\Pokemon\ExperienceGroup.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerData.cs" />
     <Compile Include="Assets\Scripts\Battle\Effects\PseudoWeather.cs" />
     <Compile Include="Assets\Scripts\Registries\RegistryLoader.cs" />
     <Compile Include="Assets\Scripts\Registries\PokemonTypeRegistry.cs" />
+    <Compile Include="Assets\Scripts\Battle\Events\MoveEvents.cs" />
     <Compile Include="Assets\Scripts\Pokemon\Data\Ability.cs" />
     <Compile Include="Assets\Scripts\Registries\ExperienceGroupRegistry.cs" />
     <Compile Include="Assets\Scripts\Registries\PokemonNatureRegistry.cs" />
@@ -98,6 +100,7 @@
     <Compile Include="Assets\Scripts\Pokemon\PokemonTypes\Unknown.cs" />
     <Compile Include="Assets\Scripts\World\Direction.cs" />
     <Compile Include="Assets\Scripts\Dialog\DialogInteractable.cs" />
+    <Compile Include="Assets\Scripts\Battle\Events\Sources\StringEventSource.cs" />
     <Compile Include="Assets\Scripts\Pokemon\PokemonTypes\Normal.cs" />
     <Compile Include="Assets\Scripts\GameStateManager.cs" />
     <Compile Include="Assets\Scripts\Pokemon\PokemonEVs.cs" />
@@ -124,6 +127,7 @@
     <Compile Include="Assets\Scripts\Pokemon\PokemonCreator.cs" />
     <Compile Include="Assets\Scripts\Pokemon\Data\Pokedex\PokedexData.cs" />
     <Compile Include="Assets\Scripts\UI\MoveOptionController.cs" />
+    <Compile Include="Assets\Scripts\Battle\Events\Sources\BattleEventSource.cs" />
     <Compile Include="Assets\Scripts\World\Encounters\GrassEncounterField.cs" />
     <Compile Include="Assets\Scripts\Registries\SubTypeReflector.cs" />
     <Compile Include="Assets\Scripts\UI\BattlerWidgetController.cs" />
@@ -132,6 +136,7 @@
     <Compile Include="Assets\Scripts\Pokemon\PokemonTypes\Ice.cs" />
     <Compile Include="Assets\Scripts\Battle\BattleController.cs" />
     <Compile Include="Assets\Scripts\Pokemon\PokemonTypes\Grass.cs" />
+    <Compile Include="Assets\Scripts\Battle\Events\Sources\BooleanEventSource.cs" />
     <Compile Include="Assets\Scripts\Dialog\Dialog.cs" />
     <Compile Include="Assets\Scripts\Pokemon\Species\Pikachu\PikachuMovesets.cs" />
     <Compile Include="Assets\Scripts\Pokemon\Data\Pokedex\PokedexEntry.cs" />
@@ -144,6 +149,7 @@
     <Compile Include="Assets\Scripts\Pokemon\PokemonTypes\Flying.cs" />
     <Compile Include="Assets\Scripts\Dialog\DialogueManager.cs" />
     <Compile Include="Assets\Scripts\Dialog\DialogTextButton.cs" />
+    <Compile Include="Assets\Scripts\Battle\Events\CommonBattleEvents.cs" />
     <Compile Include="Assets\Scripts\Battle\Target.cs" />
     <Compile Include="Assets\Scripts\Battle\Battler.cs" />
     <Compile Include="Assets\Scripts\Battle\ComputerBattleController.cs" />

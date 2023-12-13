@@ -1,11 +1,11 @@
 ﻿using Assets.Scripts.Battle.Effects;
-using Assets.Scripts.Pokemon;
+using Assets.Scripts.Battle.Events.Sources;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.Tracing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Reflection;
 using UnityEngine;
 
 namespace Assets.Scripts.Battle
@@ -20,6 +20,7 @@ namespace Assets.Scripts.Battle
         public List<PseudoWeather> PseudoWeathers = new List<PseudoWeather>();
         public BattleWeather Weathers;
         public Terrain Terrain;
+        private int _eventDepth = 0;
         public BattleManager BattleManager => ServiceLocator.Instance.BattleManager;
         public bool StartOfPokemonTurn = true;
         private void Start()
@@ -35,26 +36,29 @@ namespace Assets.Scripts.Battle
 
         private void Update()
         {
-            
+
             if (!BattleIsReady)
             {
                 StartCoroutine(PrepareBattle());
-            } else
+            }
+            else
             {
                 if (ParticipantsAreReady())
                 {
-                    if(AllPokemonHaveMoved())
+                    if (AllPokemonHaveMoved())
                     {
                         ResetParticipantTurnState();
-                    } else
+                    }
+                    else
                     {
                         PlayTurn();
                     }
-                } else
+                }
+                else
                 {
 
                 }
-                
+
             }
         }
 
@@ -77,11 +81,11 @@ namespace Assets.Scripts.Battle
 
         private void DecideMoveOrder()
         {
-            GetActivePokemonWithBattleControllers().ForEach(activePokemon => 
+            GetActivePokemonWithBattleControllers().ForEach(activePokemon =>
                 activePokemon.Item1.BattleData.CalculateTurnSpeed(activePokemon.Item1.Stats.speed, this, activePokemon.Item2));
-            GetActivePokemonIndividualData().Sort((PokemonIndividualData a, PokemonIndividualData b) => 
-            { 
-                if(a.BattleData.Priority > b.BattleData.Priority)
+            GetActivePokemonIndividualData().Sort((PokemonIndividualData a, PokemonIndividualData b) =>
+            {
+                if (a.BattleData.Priority > b.BattleData.Priority)
                 {
                     return 1;
                 }
@@ -116,7 +120,7 @@ namespace Assets.Scripts.Battle
             foreach (var activePokemon in ActivePokemon)
             {
                 var controller = activePokemon.Key;
-                foreach(var pokemon in activePokemon.Value)
+                foreach (var pokemon in activePokemon.Value)
                 {
                     activePokemonWithControllers.Add(new Tuple<PokemonIndividualData, BattleController>(pokemon.PokemonIndividualData, controller));
                 }
@@ -131,8 +135,8 @@ namespace Assets.Scripts.Battle
 
         private void ResetParticipantTurnState()
         {
-            foreach (var participant in Participants) 
-            { 
+            foreach (var participant in Participants)
+            {
                 participant.FinishedTurn = false;
             }
         }
@@ -152,10 +156,43 @@ namespace Assets.Scripts.Battle
                 .Any();
             }
 
-        
+
             return participantsHaveSelectedPokemon && participantsHaveActivePokemon;
         }
+        //TODO find way to cancel effect with chat message and without;
 
+        //TODO get event modifier and modify it, then save the truncated value to the executing event
+        //https://github.com/smogon/pokemon-showdown/blob/d88ccc2107ec890515edd3db8aa95edba615e5e4/SIM_EVENTS.md#the-chainmodify-pattern
+        public void ChainModify(double modifier, double? denominator)
+        {
 
+        }
+
+        public void RunEvent(string eventid, List<Target> target = null, BattleEventSource source = null, Effect sourceEffect = null, object relayVar = null, bool? onEffect = null, bool? fastExit = null)
+        {
+            if (_eventDepth >= 8)
+            {
+                // oh fuck
+                this.add("message", "STACK LIMIT EXCEEDED");
+                this.add("message", "PLEASE REPORT IN BUG THREAD");
+                this.add("message", "Event: " + eventid);
+                //this.add("message", "Parent event: " + this.event.id);
+                throw new StackOverflowException("Event Depth Exceeded 8");
+            }
+            target = (target == null ? target = new List<Target>() { this } : target);
+            PokemonIndividualData effectSource = (source is PokemonIndividualData ? (PokemonIndividualData)source : null);
+            var handlers = FindEventHandlers(target, eventid, effectSource);
+            if ((bool)onEffect)
+            {
+                if (sourceEffect == null) throw new ArgumentNullException("onEffect passed without an effect");
+                var callback = sourceEffect.Handlers["on" + eventid];
+                if (callback != null)
+                {
+                    if (target.Count > 1) throw new Exception();
+                    handlers.Insert(0, resolvePriority(new EventCallBackWithoutPriority(sourceEffect, callback, , null, target)));
+                }
+            }
+            
+        }
     }
 }

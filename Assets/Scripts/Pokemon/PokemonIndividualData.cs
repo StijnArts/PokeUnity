@@ -1,4 +1,5 @@
 using Assets.Scripts.Battle;
+using Assets.Scripts.Battle.Events.Sources;
 using Assets.Scripts.Pokemon;
 using Assets.Scripts.Pokemon.Data;
 using System;
@@ -8,7 +9,7 @@ using System.Linq;
 using UnityEngine;
 
 [Serializable]
-public class PokemonIndividualData
+public class PokemonIndividualData : Target, BattleEventSource
 {
     [HideInInspector]
     public string PokemonName;
