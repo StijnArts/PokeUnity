@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PlayerData : MonoBehaviour
 {
-    public Pokemon[] PokemonList;
+    public PokemonNpc[] PokemonList;
     // Start is called before the first frame update
     void Start()
     {

@@ -1,31 +1,28 @@
-using System.Collections.Generic;
-using UnityEngine;
-using System;
-using System.IO;
-using UnityEditor;
-using Unity.VisualScripting;
-using Assets.Scripts.Pokemon.Data;
+using Assets.Scripts.Battle;
 using Assets.Scripts.Sprites;
+using System;
+using Unity.VisualScripting;
+using UnityEngine;
 
 [Serializable]
-public class Pokemon : MonoBehaviour
+public class PokemonNpc : MonoBehaviour, Target
 {
     public enum PokemonGender { MALE, FEMALE, NONE }
-    public enum Stats { HP, Attack, Defence, Special_Attack,  Special_Defence, Speed }
+    public enum Stats { HP, Attack, Defence, Special_Attack, Special_Defence, Speed }
 
     [Serialize]
     public PokemonIndividualData PokemonIndividualData = new PokemonIndividualData();
     [SerializeField]
     public bool IsWild = false;
-
     void Start()
     {
         if (PokemonIndividualData.isSavedPokemon)
         {
-            if(GameStateManager.GetState() != GameStateManager.GameStates.LOADING)
+            if (GameStateManager.GetState() != GameStateManager.GameStates.LOADING)
             {
                 InitializeSelf();
-            } else
+            }
+            else
             {
                 GameStateManager.CurrentGameState.OnChanged += InitializeAfterLoading();
             }
@@ -61,7 +58,7 @@ public class Pokemon : MonoBehaviour
         if (gameObject != null)
         {
             var pokemonSprite = gameObject.GetComponentInChildren<PokemonSprite>();
-            if (pokemonSprite == null) 
+            if (pokemonSprite == null)
             {
                 gameObject.AddComponent<PokemonSprite>();
             }
@@ -71,3 +68,4 @@ public class Pokemon : MonoBehaviour
         }
     }
 }
+

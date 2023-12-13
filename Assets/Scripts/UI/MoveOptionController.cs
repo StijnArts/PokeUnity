@@ -53,7 +53,7 @@ namespace Assets.Scripts.UI
 
                 var moveNameLabel = element.Q("MoveNameLabel") as Label;
                 var powerPointsLabel = element.Q("PowerPointsLabel") as Label;
-                var button = element.Q("MoveContainer") as VisualElement;
+                var button = element.Q("MoveContainer");
                 void SelectMove(ClickEvent click)
                 {
                     ServiceLocator.Instance.BattleManager.SelectMove(move);

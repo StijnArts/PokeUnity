@@ -14,16 +14,19 @@ namespace Assets.Scripts.Battle
     {
         private BattleUiManager _battleUiManager => new();
         private PlayerController _player => GameObject.Find("Player").GetComponentInChildren<PlayerController>();
-
-        public void StartBattle(List<PokemonIndividualData> playerSidePokemon, List<List<PokemonIndividualData>> opposingSides)
+        public static PlayerBattleController PlayerBattleController;
+        private Battle currentBattle;
+        public void StartBattle(BattleController thisSide, List<BattleController> opposingSides)
         {
+            currentBattle = gameObject.AddComponent<Battle>();
+            currentBattle.PrepareBattle();
             GameStateManager.SetState(GameStateManager.GameStates.BATTLE);
             _battleUiManager.StartBattle(playerSidePokemon[0], opposingSides[0][0]);
         }
 
-        public void SelectMove(PokemonMove move)
+        public BattleSide BattleSideFromParty(List<PokemonIndividualData> party)
         {
-            Debug.Log(_player.Party.GetSelectedPokemon().GetName() + " used " + move.Move.MoveName + "!");
+            throw new NotImplementedException();
         }
     }
 }

@@ -1,3 +1,4 @@
+using Assets.Scripts.Battle;
 using Assets.Scripts.Pokemon;
 using Assets.Scripts.Pokemon.Data;
 using System;
@@ -31,7 +32,7 @@ public class PokemonIndividualData
     [HideInInspector]
     public float hitboxWidth;
     public bool isShiny = false;
-    public Pokemon.PokemonGender gender = Pokemon.PokemonGender.MALE;
+    public PokemonNpc.PokemonGender gender = PokemonNpc.PokemonGender.MALE;
     [HideInInspector]
     public PokemonStats Stats = new PokemonStats(1, 1, 1, 1, 1, 1);
     [HideInInspector]
@@ -45,7 +46,8 @@ public class PokemonIndividualData
     public int friendship = 0;
     public List<Move> learnableMoves = new List<Move>();
     public bool isSavedPokemon = false;
-
+    [HideInInspector]
+    public PokemonBattleData BattleData = new PokemonBattleData();
     public string GetSpriteSuffix()
     {
         string suffix = "";
@@ -53,7 +55,7 @@ public class PokemonIndividualData
         {
             suffix += "_" + FormId;
         }
-        if (pokemonOrFormHasGenderDifferences(PokemonId, FormId) && gender == Pokemon.PokemonGender.FEMALE)
+        if (pokemonOrFormHasGenderDifferences(PokemonId, FormId) && gender == PokemonNpc.PokemonGender.FEMALE)
         {
             suffix += "_female";
         }

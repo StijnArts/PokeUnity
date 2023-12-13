@@ -16,9 +16,9 @@ public class PlayerCollisionManager : MonoBehaviour
             other.gameObject.GetComponent<GrassEncounterField>().RegisterToMovement(this.GetComponent<PlayerController>().StepsTakenInGrass);
         }
 
-        if(other.gameObject.GetComponent<Pokemon>() != null)
+        if(other.gameObject.GetComponent<PokemonNpc>() != null)
         {
-            var pokemon = other.gameObject.GetComponent<Pokemon>();
+            var pokemon = other.gameObject.GetComponent<PokemonNpc>();
             if (pokemon.IsWild && GameStateManager.CurrentGameState.Value == GameStateManager.GameStates.ROAMING && 
                 _player.Party.GetSelectedPokemon() != null)
             {

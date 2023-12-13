@@ -65,10 +65,10 @@
     <Compile Include="Assets\Scripts\Player\PlayerParty.cs" />
     <Compile Include="Assets\Scripts\World\Encounters\EncounterTable.cs" />
     <Compile Include="Assets\Scripts\Sprites\PokemonSprite.cs" />
-    <Compile Include="Assets\Scripts\Pokemon\Pokemon.cs" />
     <Compile Include="Assets\Scripts\Registries\PokemonRegistry.cs" />
     <Compile Include="Assets\Scripts\Pokemon\ExperienceGroup.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerData.cs" />
+    <Compile Include="Assets\Scripts\Battle\Effects\PseudoWeather.cs" />
     <Compile Include="Assets\Scripts\Registries\RegistryLoader.cs" />
     <Compile Include="Assets\Scripts\Registries\PokemonTypeRegistry.cs" />
     <Compile Include="Assets\Scripts\Pokemon\Data\Ability.cs" />
@@ -80,13 +80,16 @@
     <Compile Include="Assets\Scripts\World\Spawning\PokemonSpawnEntry.cs" />
     <Compile Include="Assets\Scripts\Player\Inventory\ItemTransferEntry.cs" />
     <Compile Include="Assets\Scripts\Pokemon\Data\PokemonSpecies.cs" />
+    <Compile Include="Assets\Scripts\Battle\PokemonBattleData.cs" />
     <Compile Include="Assets\Scripts\Pokemon\PokemonIndividualData.cs" />
     <Compile Include="Assets\Scripts\UI\BattleOptionsListController.cs" />
     <Compile Include="Assets\Scripts\Sprites\CameraFacingSprite.cs" />
     <Compile Include="Assets\Scripts\Settings.cs" />
     <Compile Include="Assets\Scripts\Pokemon\PokemonTypes\Bug.cs" />
+    <Compile Include="Assets\Scripts\Battle\Effects\BattleTerrain.cs" />
     <Compile Include="Assets\Scripts\ObservableClasses.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerController.cs" />
+    <Compile Include="Assets\Scripts\Pokemon\PokemonNpc.cs" />
     <Compile Include="Assets\Scripts\Pokemon\Abilities\None.cs" />
     <Compile Include="Assets\Scripts\Battle\BattleManager.cs" />
     <Compile Include="Assets\Scripts\Registries\EvolutionRegistry.cs" />
@@ -111,7 +114,7 @@
     <Compile Include="Assets\Scripts\Pokemon\PokemonTypes\Dragon.cs" />
     <Compile Include="Assets\Scripts\Registries\AbilityRegistry.cs" />
     <Compile Include="Assets\Scripts\Pokemon\PokemonGameObjectManager.cs" />
-    <Compile Include="Assets\Scripts\Trainer\HasParty.cs" />
+    <Compile Include="Assets\Scripts\Battle\BattleField.cs" />
     <Compile Include="Assets\Scripts\Pokemon\PokemonTypes\Fighting.cs" />
     <Compile Include="Assets\Scripts\Sprites\CameraFacingSpriteSheet.cs" />
     <Compile Include="Assets\Scripts\Pokemon\PokemonTypes\Fire.cs" />
@@ -127,6 +130,7 @@
     <Compile Include="Assets\Scripts\Pokemon\PokemonTypes\Water.cs" />
     <Compile Include="Assets\Scripts\Pokemon\PokemonGiftEntry.cs" />
     <Compile Include="Assets\Scripts\Pokemon\PokemonTypes\Ice.cs" />
+    <Compile Include="Assets\Scripts\Battle\BattleController.cs" />
     <Compile Include="Assets\Scripts\Pokemon\PokemonTypes\Grass.cs" />
     <Compile Include="Assets\Scripts\Dialog\Dialog.cs" />
     <Compile Include="Assets\Scripts\Pokemon\Species\Pikachu\PikachuMovesets.cs" />
@@ -134,12 +138,20 @@
     <Compile Include="Assets\Scripts\World\Spawning\SpawnConditions.cs" />
     <Compile Include="Assets\Scripts\Pokemon\Moves\Tackle.cs" />
     <Compile Include="Assets\Scripts\Pokemon\Data\Moves\Move.cs" />
+    <Compile Include="Assets\Scripts\Battle\FieldEffect.cs" />
+    <Compile Include="Assets\Scripts\Battle\NpcBattleController.cs" />
     <Compile Include="Assets\Scripts\Pokemon\PokemonMove.cs" />
     <Compile Include="Assets\Scripts\Pokemon\PokemonTypes\Flying.cs" />
     <Compile Include="Assets\Scripts\Dialog\DialogueManager.cs" />
     <Compile Include="Assets\Scripts\Dialog\DialogTextButton.cs" />
+    <Compile Include="Assets\Scripts\Battle\Target.cs" />
+    <Compile Include="Assets\Scripts\Battle\Battler.cs" />
+    <Compile Include="Assets\Scripts\Battle\ComputerBattleController.cs" />
     <Compile Include="Assets\Scripts\Pokemon\Data\Party.cs" />
+    <Compile Include="Assets\Scripts\Battle\Effects\BattleWeather.cs" />
     <Compile Include="Assets\Scripts\Pokemon\Abilities\LightningRod.cs" />
+    <Compile Include="Assets\Scripts\Battle\BattleSettings.cs" />
+    <Compile Include="Assets\Scripts\Battle\BattleSide.cs" />
     <Compile Include="Assets\Scripts\UI\PartyEntryController.cs" />
     <Compile Include="Assets\Scripts\Pokemon\HeldItem.cs" />
     <Compile Include="Assets\Scripts\UI\BattleUiManager.cs" />
@@ -148,12 +160,14 @@
     <Compile Include="Assets\Scripts\Pokemon\PokemonTypes\Psychic.cs" />
     <Compile Include="Assets\Scripts\World\Flags\Flag.cs" />
     <Compile Include="Assets\Scripts\Registries\MoveSetRegistry.cs" />
+    <Compile Include="Assets\Scripts\Battle\Battle.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerCollissionManager.cs" />
     <Compile Include="Assets\Scripts\Pokemon\PokemonTypes\Ghost.cs" />
     <Compile Include="Assets\Scripts\Pokemon\Data\Evolution.cs" />
     <Compile Include="Assets\Scripts\UI\PartyListController.cs" />
     <Compile Include="Assets\Scripts\Pokemon\Data\Moves\MoveCategories.cs" />
     <Compile Include="Assets\Scripts\Pokemon\Nature.cs" />
+    <Compile Include="Assets\Scripts\Battle\PlayerBattleController.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\UI\Standard HUD\MoveOption.uxml" />

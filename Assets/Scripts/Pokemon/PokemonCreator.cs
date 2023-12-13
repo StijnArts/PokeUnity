@@ -106,19 +106,19 @@ public class PokemonCreator
         return moves.Where(move => move != null).Select(move => new PokemonMove(move)).ToArray();
     }
 
-    private static Pokemon.PokemonGender DetermineGender(double maleRatio)
+    private static PokemonNpc.PokemonGender DetermineGender(double maleRatio)
     {
         if(maleRatio < 0)
         {
-            return Pokemon.PokemonGender.NONE;
+            return PokemonNpc.PokemonGender.NONE;
         }
         float randomNumber = UnityEngine.Random.Range(0.0f, 1.0f);
         if(randomNumber < maleRatio)
         {
-            return Pokemon.PokemonGender.MALE;
+            return PokemonNpc.PokemonGender.MALE;
         } else
         {
-            return Pokemon.PokemonGender.FEMALE; 
+            return PokemonNpc.PokemonGender.FEMALE; 
         }
     }
 

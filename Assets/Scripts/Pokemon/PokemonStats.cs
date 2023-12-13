@@ -2,6 +2,7 @@
 
 public class PokemonStats
 {
+    public enum StatTypes { Hp, Attack, Defence, SpecialAttack, SpecialDefence, Speed, Evasion, Accuracy}
     public int Hp;
     public int attack;
     public int defence;
