@@ -12,13 +12,20 @@ namespace Assets.Scripts.Battle
         public static double[] BoostTable = new double[]{ 1, 1.5, 2, 2.5, 3, 3.5, 4 };
         [HideInInspector]
         public bool HasMovedThisTurn = false;
-        public Dictionary<PokemonStats.StatTypes, int> StatModifiers;
+        public enum BoostableStats { Hp, Attack, Defence, SpecialAttack, SpecialDefence, Speed, Evasion, Accuracy }
+        public Dictionary<PokemonStats.StatTypes, int> Boosts;
         public int Priority = 0;
         public int TurnSpeed;
+        public BattleController BattleController;
+        public Battle Battle;
+        public PokemonBattleData(BattleController battleController, Battle battle)
+        {
+            BattleController = battleController;
+        }
         public void CalculateTurnSpeed(int baseSpeed, Battle battle, BattleController battleController)
         {
             double turnSpeed = baseSpeed;
-            int boost = Math.Clamp(StatModifiers[PokemonStats.StatTypes.Speed],-6, 6);
+            int boost = Math.Clamp(Boosts[PokemonStats.StatTypes.Speed],-6, 6);
             if (boost >= 0)
             {
                 turnSpeed = Math.Floor(turnSpeed * BoostTable[boost]);
@@ -38,6 +45,13 @@ namespace Assets.Scripts.Battle
             throw new NotImplementedException();
         }
 
-        public bool PerformAction
+        public bool PerformAction;
+
+        public int GetStat(PokemonStats.StatTypes statType, bool unboosted = true, bool unmodified = true)
+        {
+            if (stat == PokemonStats.StatTypes.Hp) throw new ArgumentException("Please only read maxHp directly");
+
+            var stat
+        }
     }
 }

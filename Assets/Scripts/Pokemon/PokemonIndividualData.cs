@@ -1,4 +1,7 @@
 using Assets.Scripts.Battle;
+using Assets.Scripts.Battle.Conditions;
+using Assets.Scripts.Battle.Effects;
+using Assets.Scripts.Battle.Events;
 using Assets.Scripts.Battle.Events.Sources;
 using Assets.Scripts.Pokemon;
 using Assets.Scripts.Pokemon.Data;
@@ -9,7 +12,7 @@ using System.Linq;
 using UnityEngine;
 
 [Serializable]
-public class PokemonIndividualData : Target, BattleEventSource
+public class PokemonIndividualData : Target, BattleEventSource, EffectHolder
 {
     [HideInInspector]
     public string PokemonName;
@@ -17,7 +20,7 @@ public class PokemonIndividualData : Target, BattleEventSource
     public ObservableClasses.ObservableInteger Level = new ObservableClasses.ObservableInteger() { Value = 1 };//TODO make move learning and evolutions subscribe to the level observable
     public string Nickname = null;
     [HideInInspector]
-    public int CurrentHp;
+    public int? CurrentHp;
     public string FormId = "";
     public PokemonMove[] Moves = new PokemonMove[Settings.MaxMoveSlots];
     public string AbilityData;
@@ -37,7 +40,7 @@ public class PokemonIndividualData : Target, BattleEventSource
     [HideInInspector]
     public PokemonStats Stats = new PokemonStats(1, 1, 1, 1, 1, 1);
     [HideInInspector]
-    public PokemonStats baseStats = new PokemonStats(1, 1, 1, 1, 1, 1);
+    public PokemonStats BaseStats = new PokemonStats(1, 1, 1, 1, 1, 1);
     public PokemonEVs EVs = new PokemonEVs();
     public PokemonIVs IVs = new PokemonIVs();
     public PokemonItem heldItem = null;
@@ -48,7 +51,10 @@ public class PokemonIndividualData : Target, BattleEventSource
     public List<Move> learnableMoves = new List<Move>();
     public bool isSavedPokemon = false;
     [HideInInspector]
-    public PokemonBattleData BattleData = new PokemonBattleData();
+    public PokemonBattleData BattleData;
+    public string Status;
+    public EffectState StatusState;
+    public Dictionary<string, EffectState> Volatiles;
     public string GetSpriteSuffix()
     {
         string suffix = "";
@@ -159,4 +165,74 @@ public class PokemonIndividualData : Target, BattleEventSource
     {
         return string.IsNullOrEmpty(Nickname) ? PokemonName : Nickname;
     }
+
+    public void SetBattleData(PokemonBattleData pokemonBattleData)
+    {
+        BattleData = pokemonBattleData;
+    }
+
+    public List<PokemonIndividualData> GetAllyAndSelf()
+    {
+        return BattleData.BattleController.ActivePokemon.Select(pokemon => pokemon.PokemonIndividualData).ToList();
+    }
+
+    public List<PokemonIndividualData> GetFoes(Dictionary<BattleController, List<PokemonNpc>> activePokemon)
+    {
+        return activePokemon.Where(pair=>pair.Key != BattleData.BattleController).SelectMany(pair => pair.Value).Select(pokemon => pokemon.PokemonIndividualData).ToList();
+    }
+
+    public Condition GetStatus()
+    {
+        return StatusRegistry.GetStatusById(Status);
+    }
+
+    public bool ClearStatus()
+    {
+        if(CurrentHp == null || Status == null) return false;
+        if (Status == "slp" && RemoveVolatile("nightmare")){
+            //TODO send message in battle dialog;
+        }
+        Status = "";
+        return true;
+    }
+
+    public bool RemoveVolatile(string volatileStatusId)
+    {
+        if(CurrentHp == null) return false;
+        var statusEffect = StatusRegistry.GetStatusById(volatileStatusId);
+        if (statusEffect == null) return false;
+        var volatileStatus = Volatiles[statusEffect.Id];
+        BattleData.Battle.SingleEvent("End", statusEffect, volatileStatus, this);
+        var linkedPokemon = volatileStatus["LinkedPokemon"];
+        var linkedStatus = volatileStatus["LinkedStatus"];
+        Volatiles.Remove(statusEffect.Id);
+        if( linkedPokemon != null)
+        {
+            this.RemoveLinkedVolatiles(linkedStatus, (List<PokemonIndividualData>)linkedPokemon);
+        }
+        return true;
+    }
+
+    public void RemoveLinkedVolatiles(object linkedStatus, List<PokemonIndividualData> linkedPokemon)
+    {
+        var linkedStatusResolver = (linkedStatus != null 
+            ? (linkedStatus is Effect ? linkedStatus.ToString() : 
+              (linkedStatus is string) ? linkedStatus : throw new ArgumentException("Linkedstatus must be of type string or Effect"))
+                                                      : throw new ArgumentNullException("linkedStatus cannot Be null"));
+        var linkedStatusResolved = linkedStatusResolver as string;
+        foreach(var linkedPoke in linkedPokemon)
+        {
+            var volatileData = linkedPoke.Volatiles[linkedStatusResolved];
+            if(volatileData == null) continue;
+            var volatileDataLinkedPokemon = (List<PokemonIndividualData>)volatileData["LinkedPokemon"];
+            volatileDataLinkedPokemon.Remove(this);
+            volatileData["LinkedPokemon"] = volatileDataLinkedPokemon;
+            if (volatileDataLinkedPokemon.Count == 0)
+            {
+                linkedPoke.RemoveVolatile(linkedStatusResolved);
+            }
+        }
+    }
+
+    public int GetStat(PokemonStats.StatTypes statType, bool unboosted, bool unmodified) => BattleData.GetStat(this, statType, unboosted, unmodified);
 }

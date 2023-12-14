@@ -55,7 +55,7 @@ public class PokemonCreator
         pokemonIndividualData.FormId = pokemonSpawnEntry.formId;
         pokemonIndividualData.Moves = DetermineMoves(pokemonSpawnEntry, pokemonSpecies, pokemonIndividualData.Level.Value);
         pokemonIndividualData.learnableMoves = DetermineLearnableMoves(pokemonSpawnEntry, pokemonSpecies, pokemonIndividualData.Level.Value);
-        pokemonIndividualData.baseStats = new PokemonStats(pokemonSpecies.BaseStats);
+        pokemonIndividualData.BaseStats = new PokemonStats(pokemonSpecies.BaseStats);
         pokemonIndividualData.Nickname = pokemonSpawnEntry.Nickname;
         pokemonIndividualData.Initialize();
 

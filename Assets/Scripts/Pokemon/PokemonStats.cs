@@ -1,35 +1,26 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 public class PokemonStats
 {
-    public enum StatTypes { Hp, Attack, Defence, SpecialAttack, SpecialDefence, Speed, Evasion, Accuracy}
-    public int Hp;
-    public int attack;
-    public int defence;
-    public int specialAttack;
-    public int specialdefence;
-    public int speed;
+    public enum StatTypes { Hp, Attack, Defence, SpecialAttack, SpecialDefence, Speed }
+    readonly public Dictionary<StatTypes, int> Stats;
 
-    public PokemonStats(int hp, int attack, int defence, int specialAttack, int specialdefence, int speed)
+    public PokemonStats(int hp, int attack, int defence, int specialAttack, int specialDefence, int speed)
     {
-        this.Hp = hp;
-        this.attack = attack;
-        this.defence = defence;
-        this.specialAttack = specialAttack;
-        this.specialdefence = specialdefence;
-        this.speed = speed;
+        Stats = new Dictionary<StatTypes, int>()
+        {
+            { StatTypes.Hp, hp },
+            { StatTypes.Attack, attack }, 
+            { StatTypes.Defence, defence},
+            { StatTypes.SpecialAttack, specialAttack },
+            { StatTypes.SpecialDefence, specialDefence},
+            { StatTypes.Speed, speed },
+        };
     }
 
-    public PokemonStats(BaseStats baseStats)
-    {
-        this.Hp = baseStats.Hp;
-        this.attack = baseStats.Attack;
-        this.defence = baseStats.Defence;
-        this.specialAttack = baseStats.SpecialAttack;
-        this.specialdefence = baseStats.SpecialDefence;
-        this.speed = baseStats.Speed;
-    }
-
+    public PokemonStats(BaseStats baseStats) : this(baseStats.Hp, baseStats.Attack, baseStats.Defence, baseStats.SpecialAttack, baseStats.SpecialDefence, baseStats.Speed) { }
     internal static int CalculateHp(int level, int baseHp, int hpEVs, int hpIVs)
     {
         int hp = (int)(Math.Floor((2 * baseHp + hpIVs + Math.Floor(hpEVs / 4D) * level) / 100) + level + 10);
@@ -50,8 +41,13 @@ public class PokemonStats
         return stat;
     }
 
-    public int calculateStatTotal()
+    public int CalculateStatTotal()
     {
-        return (Hp + attack + defence + specialAttack + specialdefence + speed);
+        return Stats.Values.Sum();
+    }
+
+    public int GetStat(StatTypes type)
+    {
+        return Stats[type];
     }
 }

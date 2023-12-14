@@ -23,10 +23,5 @@ namespace Assets.Scripts.Battle
             GameStateManager.SetState(GameStateManager.GameStates.BATTLE);
             _battleUiManager.StartBattle(playerSidePokemon[0], opposingSides[0][0]);
         }
-
-        public BattleSide BattleSideFromParty(List<PokemonIndividualData> party)
-        {
-            throw new NotImplementedException();
-        }
     }
 }
