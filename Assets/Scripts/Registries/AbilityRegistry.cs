@@ -16,7 +16,7 @@ public class AbilityRegistry
         Abilities.Add(id, ability);
     }
 
-    public static List<string> GetAbilityIds() => Abilities.Values.Select(ability => ability.AbilityId).ToList();
+    public static List<string> GetAbilityIds() => Abilities.Values.Select(ability => ability.Id).ToList();
 
     public static Ability GetAbility(string id)
     {
@@ -34,7 +34,7 @@ public class AbilityRegistry
         var abilities = SubTypeReflector<Ability>.FindSubTypeClasses();
         foreach (Ability ability in abilities)
         {
-            Abilities.Add(ability.AbilityId, ability);
+            Abilities.Add(ability.Id, ability);
             //TODO check for any modification files that target the ability and apply them
             foreach(var pokemonId in ability.ReceiverPokemonIds)
             {
@@ -64,7 +64,7 @@ public class AbilityRegistry
                         }
                         else
                         {
-                            Debug.LogWarning("Attempted to overwrite an already set hidden AbilityId with " + ability.AbilityId + " during AbilityId registration for " + species.PokemonId + "\n" +
+                            Debug.LogWarning("Attempted to overwrite an already set hidden Id with " + ability.Id + " during Id registration for " + species.PokemonId + "\n" +
                                 "Overwrites should be made with a PokemonOverwrites Class.");
                         }
                     } 
@@ -73,7 +73,7 @@ public class AbilityRegistry
                         species.HiddenAbility = ability;
                     } else
                     {
-                        Debug.LogWarning("Attempted to overwrite an already set hidden AbilityId with " + ability.AbilityId + " during AbilityId registration for " + species.PokemonId + "\n" +
+                        Debug.LogWarning("Attempted to overwrite an already set hidden Id with " + ability.Id + " during Id registration for " + species.PokemonId + "\n" +
                             "Overwrites should be made with a PokemonOverwrites Class.");
                     }
                 }

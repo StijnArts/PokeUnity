@@ -1,5 +1,7 @@
-﻿using UnityEngine;
+﻿using Assets.Scripts.Battle.Effects;
+using UnityEngine;
 
-public class PokemonItem: ScriptableObject
+public class Item : BasicEffect
 {
+    public bool IgnoresKlutz = false;
 }

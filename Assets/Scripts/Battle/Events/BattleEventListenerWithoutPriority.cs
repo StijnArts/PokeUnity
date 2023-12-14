@@ -18,5 +18,10 @@ namespace Assets.Scripts.Battle.Events
         public Func<object> End;
         public EffectHolder ListenerEffectHolder;
         public object[] EndCallArgs;
+
+        public BattleEventListenerWithoutPriority(EffectHolder effectHolder = null)
+        {
+            ListenerEffectHolder = effectHolder;
+        }
     }
 }

@@ -45,7 +45,7 @@ public class PokemonCreator
             pokemonIndividualData.Ability = AbilityRegistry.GetAbility(pokemonSpawnEntry.AbilityId);
         }
 
-        pokemonIndividualData.AbilityData = pokemonIndividualData.Ability.AbilityId;
+        pokemonIndividualData.AbilityData = pokemonIndividualData.Ability.Id;
         pokemonIndividualData.IVs = GenerateIVs();
         pokemonIndividualData.gender = DetermineGender(pokemonSpecies.MaleRatio);
         pokemonIndividualData.friendship = pokemonSpecies.BaseFriendship;

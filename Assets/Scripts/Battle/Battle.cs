@@ -1,12 +1,14 @@
 ﻿using Assets.Scripts.Battle.Effects;
 using Assets.Scripts.Battle.Events;
 using Assets.Scripts.Battle.Events.Sources;
+using Assets.Scripts.Registries;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.Tracing;
 using System.Linq;
 using System.Reflection;
+using System.Threading;
 using UnityEngine;
 
 namespace Assets.Scripts.Battle
@@ -19,8 +21,15 @@ namespace Assets.Scripts.Battle
         public List<BattleController> Participants;
         public Dictionary<BattleController, List<PokemonNpc>> ActivePokemon;
         public BattleField Field;
+        public Effect Effect;
+        public EffectState EffectState;
         private int _eventDepth = 0;
         public BattleManager BattleManager => ServiceLocator.Instance.BattleManager;
+
+        public BattleEvent Event;
+
+        public int AbilityOrder = 0;
+
         public bool StartOfPokemonTurn = true;
         private void Start()
         {
@@ -167,7 +176,88 @@ namespace Assets.Scripts.Battle
 
         }
 
-        public object RunEvent(string eventid, List<Target> target = null, BattleEventSource source = null, Effect sourceEffect = null, object relayVar = null, bool? onEffect = null, bool? fastExit = null)
+        public object SingleEvent(string eventid, Effect effect, EffectState state, Target target,
+            BattleEventSource source = null, Effect sourceEffect = null, object relayvar = null, object customCallback = null)
+        {
+            if (_eventDepth >= 8)
+            {
+                // oh fuck
+                //TOdo make it log this for both players in a log file if multiplayer
+                Debug.Log("STACK LIMIT EXCEEDED");
+                Debug.Log("PLEASE REPORT IN BUG THREAD");
+                Debug.Log("Event: " + eventid);
+                //Debug.Log("Parent event: " + this.event.id);
+                throw new StackOverflowException("Event Depth Exceeded 8");
+            }
+
+            var hasRelayValue = true;
+            if(relayvar == null)
+            {
+                relayvar = true;
+                hasRelayValue = false;
+            }
+
+            if(target is PokemonIndividualData)
+            {
+                var pokemonTarget = target as PokemonIndividualData;
+                if (effect.EffectType == EffectType.Status && !pokemonTarget.Status.Equals(effect.Id))
+                {
+                    return relayvar;
+                }
+                if (!eventid.Equals("Start") && !eventid.Equals("TakeItem") && !eventid.Equals("Primal") && effect.EffectType == EffectType.Item 
+                    && pokemonTarget.IgnoringItem()) 
+                {
+                    Debug.Log(eventid + " handler suppressed by Embargo, Klutz or Magic Room");
+                    return relayvar;
+                }
+                if (!eventid.Equals("End") && effect.EffectType == EffectType.Ability && pokemonTarget.IgnoringAbility())
+                {
+                    Debug.Log(eventid + " handler suppressed by Gastro Acid or Neutralizing Gas");
+                    return relayvar;
+                }
+            }
+
+            if (effect.EffectType == EffectType.Weather && !eventid.Equals("FieldStart") && !eventid.Equals("FieldResidual") 
+                && !eventid.Equals("FieldEnd") && Field.SuppressingWeather())
+            {
+                Debug.Log(eventid + " handler suppressed by Air Lock");
+                return relayvar;
+            }
+
+            var callback = (customCallback != null ? customCallback : effect.GetCallBack($"on{eventid}").Callback);
+            if(callback == null) return relayvar;
+
+            var parentEffect = this.Effect;
+            var parentEffectState = this.EffectState;
+            var parentEvent = this.Event;
+
+            Effect = effect;
+            EffectState = (state == null ? new EffectState() : state);
+            this.Event = new BattleEvent() { Id = eventid, Target = new List<Target>() { target }, Source = source, Effect = sourceEffect };
+            _eventDepth++;
+
+            var args = new List<object>() { target, source, sourceEffect };
+            if(hasRelayValue) args.Insert(0, relayvar);
+
+            object returnVal;
+            if(callback is Func<Battle, object[], object>)
+            {
+                returnVal = (callback as Func<Battle, object[], object>).Invoke(this, args.ToArray());
+            } else
+            {
+                returnVal = callback;
+            }
+
+            this._eventDepth--;
+            this.Effect = parentEffect;
+            this.EffectState = parentEffectState;
+            this.Event = parentEvent;
+
+            return returnVal == null ? relayvar : returnVal;
+        }
+
+        public object RunEvent(string eventid, List<Target> target = null, BattleEventSource source = null, Effect sourceEffect = null, object relayVar = null, 
+            bool? onEffect = null, bool? fastExit = null)
         {
             if (_eventDepth >= 8)
             {
@@ -271,31 +361,50 @@ namespace Assets.Scripts.Battle
             handlers.AddRange(this.FindBattleEventHandlers(this, $"on{eventName}"));
             return handlers;
         }
+        public BattleEventListener ResolvePriority(BattleEventListenerWithoutPriority handler, string callBackName)
+        {
+            var handlerAsListener = handler as BattleEventListener;
+            handlerAsListener.Order = new Tuple<int?, bool>(handler.Effect.GetCallBack(callBackName).Order, handler.Effect.GetCallBack(callBackName).Order != null);
+            handlerAsListener.Priority = (handler.Effect.GetCallBack(callBackName).Priority == null ? 0 : handler.Effect.GetCallBack(callBackName).Priority.Value);
+            handlerAsListener.SubOrder = (handler.Effect.GetCallBack(callBackName).SubOrder == null ? 0 : handler.Effect.GetCallBack(callBackName).SubOrder.Value);
+            if (handlerAsListener.ListenerEffectHolder != null && handlerAsListener.ListenerEffectHolder is PokemonIndividualData)
+            {
+                handlerAsListener.Speed = (handlerAsListener.ListenerEffectHolder as PokemonIndividualData).BattleData.BattleSpeed;
+            }
+            return handlerAsListener;
+        }
 
         public List<BattleEventListener> FindPokemonEventHandlers(PokemonIndividualData pokemon, string callbackName, string getKey = null)
         {
             if (getKey != null) getKey = "duration";
             var handlers = new List<BattleEventListener>();
             var status = pokemon.GetStatus();
-            var callback = status.Callbacks[callbackName];
-            if(callback != null || (getKey != null && pokemon.StatusState[getKey] != null))
+            var callback = status.GetCallBack(callbackName);
+            if(callback != null || (getKey != null && pokemon.BattleData.StatusState.ContainsKey(getKey) && pokemon.BattleData.StatusState[getKey] != null))
             {
-                handlers.Add(this.ResolvePriority(new BattleEventListenerWithoutPriority()
-                    { Effect = status, Callback = callback, State = pokemon.StatusState, End = () => pokemon.ClearStatus(), ListenerEffectHolder: pokemon}, callbackName));
+                handlers.Add(ResolvePriority(new BattleEventListenerWithoutPriority(pokemon)
+                    { Effect = status, Callback = callback, State = pokemon.BattleData.StatusState, End = () => pokemon.ClearStatus() }, callbackName));
+            }
+            foreach(var volatileId in pokemon.BattleData.Volatiles.Keys)
+            {
+                var volatileState = pokemon.BattleData.Volatiles[volatileId];
+                var volatileStatus = ConditionRegistry.GetConditionById(volatileId);
+                callback = volatileStatus.GetCallBack(callbackName);
+                if(callback != null || (getKey != null && volatileState.ContainsKey(getKey) && volatileState[getKey] != null))
+                {
+                    handlers.Add(ResolvePriority(new BattleEventListenerWithoutPriority(pokemon)
+                    { Effect = volatileStatus, Callback = callback, State = volatileState, End = () => pokemon.RemoveVolatile(volatileId) }, callbackName));
+                }
+            }
+            var ability = pokemon.Ability;
+            callback = ability.GetCallBack(callbackName);
+            if(callback != null || (getKey != null && pokemon.BattleData.AbilityState.ContainsKey(getKey) && pokemon.BattleData.AbilityState[getKey] != null))
+            {
+                handlers.Add(ResolvePriority(new BattleEventListenerWithoutPriority(pokemon)
+                { Effect = ability, Callback = callback, State = pokemon.BattleData.AbilityState, End = () => pokemon.ClearAbility() }, callbackName));
             }
         }
 
-        public BattleEventListener ResolvePriority(BattleEventListenerWithoutPriority handler, string callBackName)
-        {
-            var handlerAsListener = handler as BattleEventListener;
-            handlerAsListener.Order = new Tuple<int?, bool>(handler.Effect.GetCallBack(callBackName).Order, handler.Effect.GetCallBack(callBackName).Order != null);
-            handlerAsListener.Priority = (handler.Effect.GetCallBack(callBackName).Priority == null ? 0 : handler.Effect.GetCallBack(callBackName).Priority);
-            handlerAsListener.SubOrder = (handler.Effect.GetCallBack(callBackName).SubOrder == null ? 0 : handler.Effect.GetCallBack(callBackName).SubOrder);
-            if(handlerAsListener.ListenerEffectHolder != null && handlerAsListener.ListenerEffectHolder is PokemonIndividualData)
-            {
-                handlerAsListener.Speed = (handlerAsListener.ListenerEffectHolder as PokemonIndividualData).BattleSpeed;
-            }
-            return handlerAsListener;
-        }
+        
     }
 }

@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace Assets.Scripts.Battle.Effects
 {
-    public interface BasicEffect
+    public class BasicEffect
     {
-
+        public string Id;
     }
 }

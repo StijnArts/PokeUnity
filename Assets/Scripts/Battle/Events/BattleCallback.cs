@@ -8,11 +8,11 @@ namespace Assets.Scripts.Battle.Events
 {
     public class BattleCallback<T>
     {
-        public Func<T> Callback;
+        public Func<Battle, object[], T> Callback;
         public int? Order;
         public int? Priority;
         public int? SubOrder;
-        public BattleCallback(Func<object> callback, int? order = null, int? priority = null, int? subOrder = null) 
+        public BattleCallback(Func<Battle, object[], T> callback, int? order = null, int? priority = null, int? subOrder = null) 
         { 
             Callback = callback;
             Order = order;

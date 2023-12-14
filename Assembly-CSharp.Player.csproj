@@ -93,6 +93,7 @@
     <Compile Include="Assets\Scripts\Settings.cs" />
     <Compile Include="Assets\Scripts\Pokemon\PokemonTypes\Bug.cs" />
     <Compile Include="Assets\Scripts\Battle\Effects\BattleTerrain.cs" />
+    <Compile Include="Assets\Scripts\Registries\ItemRegistry.cs" />
     <Compile Include="Assets\Scripts\ObservableClasses.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerController.cs" />
     <Compile Include="Assets\Scripts\Pokemon\PokemonNpc.cs" />
@@ -118,6 +119,7 @@
     <Compile Include="Assets\Scripts\UI\HudUiManager.cs" />
     <Compile Include="Assets\Scripts\Pokemon\PokemonTypes\Poison.cs" />
     <Compile Include="Assets\Scripts\Pokemon\PokemonTypes\Electric.cs" />
+    <Compile Include="Assets\Scripts\Registries\ConditionRegistry.cs" />
     <Compile Include="Assets\Scripts\Registries\ScriptableObjectInstanceFinder.cs" />
     <Compile Include="Assets\Scripts\Pokemon\PokemonTypes\Dragon.cs" />
     <Compile Include="Assets\Scripts\Registries\AbilityRegistry.cs" />
@@ -148,7 +150,9 @@
     <Compile Include="Assets\Scripts\Pokemon\Species\Pikachu\PikachuMovesets.cs" />
     <Compile Include="Assets\Scripts\Pokemon\Data\Pokedex\PokedexEntry.cs" />
     <Compile Include="Assets\Scripts\World\Spawning\SpawnConditions.cs" />
+    <Compile Include="Assets\Scripts\Battle\Events\BattleEvent.cs" />
     <Compile Include="Assets\Scripts\Pokemon\Moves\Tackle.cs" />
+    <Compile Include="Assets\Scripts\Battle\Effects\EffectType.cs" />
     <Compile Include="Assets\Scripts\Battle\Conditions\Condition.cs" />
     <Compile Include="Assets\Scripts\Pokemon\Data\Moves\Move.cs" />
     <Compile Include="Assets\Scripts\Battle\FieldEffect.cs" />

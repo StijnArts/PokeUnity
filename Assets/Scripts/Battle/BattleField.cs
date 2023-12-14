@@ -16,5 +16,19 @@ namespace Assets.Scripts.Battle
         public string Weather;
         public string Terrain;
         public EffectState TerrainState;
+
+        public bool SuppressingWeather()
+        {
+            foreach(var side in Battle.Participants){
+                foreach(var activePokemon in side.ActivePokemon.Select(pokemonNpc=>pokemonNpc.PokemonIndividualData))
+                {
+                    if (activePokemon != null && !activePokemon.Fainted && activePokemon.IgnoringAbility() && activePokemon.GetAbility().SuppressWeather)
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
     }
 }

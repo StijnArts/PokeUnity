@@ -5,10 +5,12 @@ using Assets.Scripts.Battle.Events;
 using Assets.Scripts.Battle.Events.Sources;
 using Assets.Scripts.Pokemon;
 using Assets.Scripts.Pokemon.Data;
+using Assets.Scripts.Registries;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEditorInternal.Profiling.Memory.Experimental;
 using UnityEngine;
 
 [Serializable]
@@ -23,9 +25,8 @@ public class PokemonIndividualData : Target, BattleEventSource, EffectHolder
     public int? CurrentHp;
     public string FormId = "";
     public PokemonMove[] Moves = new PokemonMove[Settings.MaxMoveSlots];
-    public string AbilityData;
+    public string Ability;
     [HideInInspector]
-    public Ability Ability;
     public Nature.Natures Nature = global::Nature.Natures.Adamant;
     [HideInInspector]
     public Nature NatureData;
@@ -43,7 +44,7 @@ public class PokemonIndividualData : Target, BattleEventSource, EffectHolder
     public PokemonStats BaseStats = new PokemonStats(1, 1, 1, 1, 1, 1);
     public PokemonEVs EVs = new PokemonEVs();
     public PokemonIVs IVs = new PokemonIVs();
-    public PokemonItem heldItem = null;
+    public string Item;
     [HideInInspector]
     public bool isValid = false;
     public int currentExperience = 0;
@@ -53,8 +54,9 @@ public class PokemonIndividualData : Target, BattleEventSource, EffectHolder
     [HideInInspector]
     public PokemonBattleData BattleData;
     public string Status;
-    public EffectState StatusState;
-    public Dictionary<string, EffectState> Volatiles;
+
+    public bool Fainted => CurrentHp >= 0;
+
     public string GetSpriteSuffix()
     {
         string suffix = "";
@@ -132,7 +134,6 @@ public class PokemonIndividualData : Target, BattleEventSource, EffectHolder
         NatureData = PokemonNatureRegistry.GetNature((int)Nature);
 
         var species = PokemonRegistry.GetPokemonSpecies(new PokemonIdentifier(PokemonId, FormId));
-        Ability = AbilityRegistry.GetAbility(AbilityData);
         PrimaryType = PokemonTypeRegistry.GetType(species.PrimaryType);
         Stats = CalculateStats();
         if (species.SecondaryType != null)
@@ -183,7 +184,7 @@ public class PokemonIndividualData : Target, BattleEventSource, EffectHolder
 
     public Condition GetStatus()
     {
-        return StatusRegistry.GetStatusById(Status);
+        return ConditionRegistry.GetConditionById(Status);
     }
 
     public bool ClearStatus()
@@ -199,13 +200,13 @@ public class PokemonIndividualData : Target, BattleEventSource, EffectHolder
     public bool RemoveVolatile(string volatileStatusId)
     {
         if(CurrentHp == null) return false;
-        var statusEffect = StatusRegistry.GetStatusById(volatileStatusId);
+        var statusEffect = ConditionRegistry.GetConditionById(volatileStatusId);
         if (statusEffect == null) return false;
-        var volatileStatus = Volatiles[statusEffect.Id];
+        var volatileStatus = BattleData.Volatiles[statusEffect.Id];
         BattleData.Battle.SingleEvent("End", statusEffect, volatileStatus, this);
         var linkedPokemon = volatileStatus["LinkedPokemon"];
         var linkedStatus = volatileStatus["LinkedStatus"];
-        Volatiles.Remove(statusEffect.Id);
+        BattleData.Volatiles.Remove(statusEffect.Id);
         if( linkedPokemon != null)
         {
             this.RemoveLinkedVolatiles(linkedStatus, (List<PokemonIndividualData>)linkedPokemon);
@@ -222,7 +223,7 @@ public class PokemonIndividualData : Target, BattleEventSource, EffectHolder
         var linkedStatusResolved = linkedStatusResolver as string;
         foreach(var linkedPoke in linkedPokemon)
         {
-            var volatileData = linkedPoke.Volatiles[linkedStatusResolved];
+            var volatileData = linkedPoke.BattleData.Volatiles[linkedStatusResolved];
             if(volatileData == null) continue;
             var volatileDataLinkedPokemon = (List<PokemonIndividualData>)volatileData["LinkedPokemon"];
             volatileDataLinkedPokemon.Remove(this);
@@ -235,4 +236,102 @@ public class PokemonIndividualData : Target, BattleEventSource, EffectHolder
     }
 
     public int GetStat(PokemonStats.StatTypes statType, bool unboosted, bool unmodified) => BattleData.GetStat(this, statType, unboosted, unmodified);
+
+    public string ClearAbility()
+    {
+        return SetAbility("");
+    }
+
+    public string SetAbility(object abilityParam, PokemonIndividualData source = null, bool isFromFormeChange = false, bool isTransform = false)
+    {
+        if (CurrentHp < 1) return null;
+        var abilityResolver = (abilityParam != null
+            ? (abilityParam is Ability ? abilityParam :
+              (abilityParam is string) ? AbilityRegistry.GetAbility((string)abilityParam) : throw new ArgumentException("abilityParam must be of type string or Ability"))
+                                                      : throw new ArgumentNullException("abilityParam cannot Be null"));
+        var ability = (Ability)abilityResolver;
+        var oldAbility = Ability;
+        if (!isFromFormeChange)
+        {
+            if (ability.IsPermanent || GetAbility().IsPermanent) return null;
+        }
+        var battleEffect = BattleData.Battle.Effect;
+        if (!isFromFormeChange && !isTransform)
+        {
+            bool? setAbilityEvent = (bool?)BattleData.Battle.RunEvent("SetAbility", new List<Target>() { this }, source, battleEffect, ability);
+            if (!setAbilityEvent.HasValue || !setAbilityEvent.Value) return null;
+        }
+        BattleData.Battle.SingleEvent("End", AbilityRegistry.GetAbility(oldAbility), BattleData.AbilityState, this, source);
+        if(battleEffect != null && battleEffect.EffectType == EffectType.Move && !isFromFormeChange)
+        {
+            //TODO show message in dialog box
+        }
+        Ability = ability.Id;
+        BattleData.AbilityState.Add(ability.Id, this);
+        if(ability.Id != null && (!isTransform || oldAbility != ability.Id))
+        {
+            BattleData.Battle.SingleEvent("Start", ability, BattleData.AbilityState, this, source);
+        }
+        BattleData.AbilityOrder = BattleData.Battle.AbilityOrder++;
+        return oldAbility;
+    }
+
+    public bool IgnoringItem()
+    {
+        return !BattleData.Battle.GetActivePokemonIndividualData().Contains(this) 
+            //TODO replace check for klutz check for general disabled item check on ability
+            || (this.GetItem().IgnoresKlutz && HasAbility("klutz")) 
+            || BattleData.Volatiles.ContainsKey("embargo") 
+            || BattleData.Battle.Field.PseudoWeathers.ContainsKey("magicroom")
+            ;
+    }
+
+    private Item GetItem()
+    {
+        return ItemRegistry.GetItemById(Item);
+    }
+
+    public bool HasAbility(List<string> abilityId)
+    {
+        return abilityId.All(ability => ability.Equals(GetAbility().Id));
+    }
+
+    public bool HasAbility(string abilityId)
+    {
+        if(abilityId != GetAbility().Id) return false;
+        return !IgnoringAbility();
+    }
+
+    public bool IgnoringAbility()
+    {
+        if (GetAbility().IsPermanent) return false;
+        if (BattleData.Volatiles.ContainsKey("gastroacid")) return true;
+
+        if (HasItem("Ability Shield") || GetAbility().Id.Equals("neutralizinggas")) return false;
+        foreach(var pokemon in BattleData.Battle.GetActivePokemonIndividualData())
+        {
+            if(pokemon.GetAbility().Id.Equals("neutralizinggas") && !pokemon.BattleData.Volatiles.ContainsKey("gastroacid")
+                && !pokemon.BattleData.Transformed && !pokemon.BattleData.AbilityState.ContainsKey("ending") && !BattleData.Volatiles.ContainsKey("commanding"))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public bool HasItem(List<string> items)
+    {
+        return items.All(item => item.Equals(Item));
+    }
+
+    public bool HasItem(string item)
+    {
+        if(!item.Equals(Item)) return false;
+        return !IgnoringItem();
+    }
+
+    public Ability GetAbility()
+    {
+        return AbilityRegistry.GetAbility(Ability);
+    }
 }
