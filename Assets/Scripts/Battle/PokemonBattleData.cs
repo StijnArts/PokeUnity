@@ -22,10 +22,14 @@ namespace Assets.Scripts.Battle
         public EffectState StatusState;
         public Dictionary<string, EffectState> Volatiles;
         public EffectState AbilityState;
+        public EffectState ItemState;
         public int BattleSpeed;
         public int AbilityOrder = 0;
-
+        public PokemonSpecies Species;
+        public EffectState SpeciesState;
+        public int? SlotPosition;
         public bool Transformed = false;
+
 
         public PokemonBattleData(BattleController battleController, Battle battle)
         {

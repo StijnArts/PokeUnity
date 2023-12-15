@@ -9,5 +9,9 @@ namespace Assets.Scripts.Battle.Effects
     public class BasicEffect
     {
         public string Id;
+        public string Name;
+        public EffectType EffectType;
+        public bool Exists = true;
+
     }
 }

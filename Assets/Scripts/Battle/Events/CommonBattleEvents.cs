@@ -12,6 +12,7 @@ namespace Assets.Scripts.Battle.Events
             return null;
         }*/
         //Generic event to modify a move before it's used
+        //TODO declare the handlers as properties of type BattleCallback with generics for each input variable)
         public BattleCallback<double?> ModifierMove(Battle battle = null, double? relayVar = null, PokemonIndividualData target = null, PokemonIndividualData source = null, PokemonMove move = null) => null;
         //Generic event to modify the result of a move
         public BattleCallback<bool?> ResultMove(Battle battle = null, PokemonIndividualData target = null, PokemonIndividualData source = null, PokemonMove move = null) => () => false;

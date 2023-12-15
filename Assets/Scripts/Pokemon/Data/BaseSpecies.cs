@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Assets.Scripts.Battle;
+using Assets.Scripts.Battle.Effects;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,9 +8,8 @@ using System.Threading.Tasks;
 
 namespace Assets.Scripts.Pokemon.Data
 {
-    public class BaseSpecies
+    public class BaseSpecies : Effect
     {
-        public string PokemonId;
         public string PrimaryType;
         public string SecondaryType;
         public List<Ability> Abilities = new List<Ability>();
@@ -53,7 +54,7 @@ namespace Assets.Scripts.Pokemon.Data
         bool hasGenderDifferences = false,
         bool cannotDynamax = false)
         {
-            PokemonId = pokemonId;
+            Id = pokemonId;
             PrimaryType = primaryType;
             BaseStats = baseStats;
             CatchRate = catchRate;

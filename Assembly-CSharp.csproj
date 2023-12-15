@@ -8,7 +8,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <RootNamespace></RootNamespace>
+    <RootNamespace>
+    </RootNamespace>
     <ProjectGuid>{9FDF950E-CBD0-2321-C854-45BBFF036C1A}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
@@ -58,6 +59,7 @@
     <Analyzer Include="C:\Program Files\Unity\Hub\Editor\2022.3.7f1\Editor\Data\Tools\Unity.SourceGenerators\Unity.Properties.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Scripts\Battle\Events\DynamicInvokable.cs" />
     <Compile Include="Assets\Scripts\Pokemon\PokemonIVs.cs" />
     <Compile Include="Assets\Scripts\Pokemon\PokemonTypes\Ground.cs" />
     <Compile Include="Assets\Scripts\Drawers\DialogPropertyDrawer.cs" />
@@ -152,8 +154,8 @@
     <Compile Include="Assets\Scripts\World\Spawning\SpawnConditions.cs" />
     <Compile Include="Assets\Scripts\Battle\Events\BattleEvent.cs" />
     <Compile Include="Assets\Scripts\Pokemon\Moves\Tackle.cs" />
-    <Compile Include="Assets\Scripts\Battle\Effects\EffectType.cs" />
     <Compile Include="Assets\Scripts\Battle\Conditions\Condition.cs" />
+    <Compile Include="Assets\Scripts\Battle\Effects\EffectType.cs" />
     <Compile Include="Assets\Scripts\Pokemon\Data\Moves\Move.cs" />
     <Compile Include="Assets\Scripts\Battle\FieldEffect.cs" />
     <Compile Include="Assets\Scripts\Battle\NpcBattleController.cs" />

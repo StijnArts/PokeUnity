@@ -64,7 +64,7 @@ public class AbilityRegistry
                         }
                         else
                         {
-                            Debug.LogWarning("Attempted to overwrite an already set hidden Id with " + ability.Id + " during Id registration for " + species.PokemonId + "\n" +
+                            Debug.LogWarning("Attempted to overwrite an already set hidden Id with " + ability.Id + " during Id registration for " + species.Id + "\n" +
                                 "Overwrites should be made with a PokemonOverwrites Class.");
                         }
                     } 
@@ -73,7 +73,7 @@ public class AbilityRegistry
                         species.HiddenAbility = ability;
                     } else
                     {
-                        Debug.LogWarning("Attempted to overwrite an already set hidden Id with " + ability.Id + " during Id registration for " + species.PokemonId + "\n" +
+                        Debug.LogWarning("Attempted to overwrite an already set hidden Id with " + ability.Id + " during Id registration for " + species.Id + "\n" +
                             "Overwrites should be made with a PokemonOverwrites Class.");
                     }
                 }

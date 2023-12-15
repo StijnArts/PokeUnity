@@ -10,7 +10,7 @@ namespace Assets.Scripts.Battle.Conditions
 {
     public class Condition : Effect
     {
-        internal BattleCallback<object> GetCallBack(string callbackName)
+        internal DynamicInvokable GetCallBack(string callbackName)
         {
             throw new NotImplementedException();
         }

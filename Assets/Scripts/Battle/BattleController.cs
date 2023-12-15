@@ -27,5 +27,10 @@ namespace Assets.Scripts.Battle
 
         //TODO make it create pokemonNpc's for the amount of necessary active pokemon in the battle, and set the individual data of those npcs;
         public abstract bool CreateActivePokemon(int minimumAmountOfActivePokemon);
+
+        internal object RemoveSlotCondition(Target target, )
+        {
+            throw new NotImplementedException();
+        }
     }
 }

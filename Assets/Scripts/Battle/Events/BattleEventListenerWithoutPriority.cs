@@ -13,9 +13,9 @@ namespace Assets.Scripts.Battle.Events
         public Effect Effect;
         public PokemonIndividualData Target;
         public int? Index;
-        public BattleCallback<object> Callback;
+        public DynamicInvokable Callback;
         public EffectState State;
-        public Func<object> End;
+        public DynamicInvokable End;
         public EffectHolder ListenerEffectHolder;
         public object[] EndCallArgs;
 

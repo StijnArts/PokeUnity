@@ -152,8 +152,8 @@
     <Compile Include="Assets\Scripts\World\Spawning\SpawnConditions.cs" />
     <Compile Include="Assets\Scripts\Battle\Events\BattleEvent.cs" />
     <Compile Include="Assets\Scripts\Pokemon\Moves\Tackle.cs" />
-    <Compile Include="Assets\Scripts\Battle\Effects\EffectType.cs" />
     <Compile Include="Assets\Scripts\Battle\Conditions\Condition.cs" />
+    <Compile Include="Assets\Scripts\Battle\Effects\EffectType.cs" />
     <Compile Include="Assets\Scripts\Pokemon\Data\Moves\Move.cs" />
     <Compile Include="Assets\Scripts\Battle\FieldEffect.cs" />
     <Compile Include="Assets\Scripts\Battle\NpcBattleController.cs" />

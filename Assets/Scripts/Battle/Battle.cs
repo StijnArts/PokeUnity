@@ -224,7 +224,7 @@ namespace Assets.Scripts.Battle
                 return relayvar;
             }
 
-            var callback = (customCallback != null ? customCallback : effect.GetCallBack($"on{eventid}").Callback);
+            var callback = (customCallback != null ? customCallback : effect.GetCallBack($"on{eventid}"));
             if(callback == null) return relayvar;
 
             var parentEffect = this.Effect;
@@ -240,9 +240,9 @@ namespace Assets.Scripts.Battle
             if(hasRelayValue) args.Insert(0, relayvar);
 
             object returnVal;
-            if(callback is Func<Battle, object[], object>)
+            if(callback is DynamicInvokable)
             {
-                returnVal = (callback as Func<Battle, object[], object>).Invoke(this, args.ToArray());
+                returnVal = (callback as DynamicInvokable).Invoke(this, args.ToArray());
             } else
             {
                 returnVal = callback;
@@ -283,6 +283,18 @@ namespace Assets.Scripts.Battle
                 }
             }
             
+        }
+        public BattleEventListener ResolvePriority(BattleEventListenerWithoutPriority handler, string callBackName)
+        {
+            var handlerAsListener = handler as BattleEventListener;
+            handlerAsListener.Order = new Tuple<int?, bool>(handler.Effect.GetCallBack(callBackName).Order, handler.Effect.GetCallBack(callBackName).Order != null);
+            handlerAsListener.Priority = (handler.Effect.GetCallBack(callBackName).Priority == null ? 0 : handler.Effect.GetCallBack(callBackName).Priority.Value);
+            handlerAsListener.SubOrder = (handler.Effect.GetCallBack(callBackName).SubOrder == null ? 0 : handler.Effect.GetCallBack(callBackName).SubOrder.Value);
+            if (handlerAsListener.ListenerEffectHolder != null && handlerAsListener.ListenerEffectHolder is PokemonIndividualData)
+            {
+                handlerAsListener.Speed = (handlerAsListener.ListenerEffectHolder as PokemonIndividualData).BattleData.BattleSpeed;
+            }
+            return handlerAsListener;
         }
 
         public List<BattleEventListener> FindEventHandlers(List<Target> target, string eventName, PokemonIndividualData source = null)
@@ -361,18 +373,6 @@ namespace Assets.Scripts.Battle
             handlers.AddRange(this.FindBattleEventHandlers(this, $"on{eventName}"));
             return handlers;
         }
-        public BattleEventListener ResolvePriority(BattleEventListenerWithoutPriority handler, string callBackName)
-        {
-            var handlerAsListener = handler as BattleEventListener;
-            handlerAsListener.Order = new Tuple<int?, bool>(handler.Effect.GetCallBack(callBackName).Order, handler.Effect.GetCallBack(callBackName).Order != null);
-            handlerAsListener.Priority = (handler.Effect.GetCallBack(callBackName).Priority == null ? 0 : handler.Effect.GetCallBack(callBackName).Priority.Value);
-            handlerAsListener.SubOrder = (handler.Effect.GetCallBack(callBackName).SubOrder == null ? 0 : handler.Effect.GetCallBack(callBackName).SubOrder.Value);
-            if (handlerAsListener.ListenerEffectHolder != null && handlerAsListener.ListenerEffectHolder is PokemonIndividualData)
-            {
-                handlerAsListener.Speed = (handlerAsListener.ListenerEffectHolder as PokemonIndividualData).BattleData.BattleSpeed;
-            }
-            return handlerAsListener;
-        }
 
         public List<BattleEventListener> FindPokemonEventHandlers(PokemonIndividualData pokemon, string callbackName, string getKey = null)
         {
@@ -383,7 +383,7 @@ namespace Assets.Scripts.Battle
             if(callback != null || (getKey != null && pokemon.BattleData.StatusState.ContainsKey(getKey) && pokemon.BattleData.StatusState[getKey] != null))
             {
                 handlers.Add(ResolvePriority(new BattleEventListenerWithoutPriority(pokemon)
-                    { Effect = status, Callback = callback, State = pokemon.BattleData.StatusState, End = () => pokemon.ClearStatus() }, callbackName));
+                    { Effect = status, Callback = callback, State = pokemon.BattleData.StatusState, End = new BattleCallback<bool>(() => pokemon.ClearStatus()) }, callbackName));
             }
             foreach(var volatileId in pokemon.BattleData.Volatiles.Keys)
             {
@@ -392,16 +392,52 @@ namespace Assets.Scripts.Battle
                 callback = volatileStatus.GetCallBack(callbackName);
                 if(callback != null || (getKey != null && volatileState.ContainsKey(getKey) && volatileState[getKey] != null))
                 {
+                    var end = new BattleCallback<string, bool>((string volatileId) => pokemon.RemoveVolatile(volatileId));
                     handlers.Add(ResolvePriority(new BattleEventListenerWithoutPriority(pokemon)
-                    { Effect = volatileStatus, Callback = callback, State = volatileState, End = () => pokemon.RemoveVolatile(volatileId) }, callbackName));
+                    //TODO ask how this works without passing a variable to remove volatile
+                    { Effect = volatileStatus, Callback = callback, State = volatileState, End = end }, callbackName));
                 }
             }
-            var ability = pokemon.Ability;
+            var ability = pokemon.GetAbility();
             callback = ability.GetCallBack(callbackName);
             if(callback != null || (getKey != null && pokemon.BattleData.AbilityState.ContainsKey(getKey) && pokemon.BattleData.AbilityState[getKey] != null))
             {
                 handlers.Add(ResolvePriority(new BattleEventListenerWithoutPriority(pokemon)
-                { Effect = ability, Callback = callback, State = pokemon.BattleData.AbilityState, End = () => pokemon.ClearAbility() }, callbackName));
+                { Effect = ability, Callback = callback, State = pokemon.BattleData.AbilityState, End = new BattleCallback<string>(() => pokemon.ClearAbility()) }, callbackName));
+            }
+            var item = pokemon.GetItem();
+
+            callback = item.GetCallBack(callbackName);
+            if(callback != null || (getKey != null && pokemon.BattleData.ItemState.ContainsKey(getKey) && pokemon.BattleData.ItemState[getKey] != null))
+            {
+                handlers.Add(ResolvePriority(new BattleEventListenerWithoutPriority(pokemon)
+                { Effect = item, Callback = callback, State = pokemon.BattleData.ItemState, End = new BattleCallback<bool>(() => pokemon.ClearItem())}, callbackName));
+            }
+
+            var species = pokemon.BattleData.Species;
+            callback = species.GetCallBack(callbackName);
+            if( callback != null)
+            {
+                handlers.Add(ResolvePriority(new BattleEventListenerWithoutPriority(pokemon)
+                { Effect = species, Callback = callback, State = pokemon.BattleData.SpeciesState }, callbackName));
+            }
+
+            var side = pokemon.BattleData.BattleController;
+            foreach(var conditionId in side.SlotConditions[pokemon.BattleData.SlotPosition.Value].Keys)
+            {
+                var slotConditionState = side.SlotConditions[pokemon.BattleData.SlotPosition.Value][conditionId];
+                var slotCondition = ConditionRegistry.GetConditionById(conditionId);
+                callback = slotCondition.GetCallBack(callbackName);
+                if( callback != null || (getKey != null && slotConditionState.ContainsKey(getKey) && slotConditionState[getKey] != null))
+                {
+                    handlers.Add(ResolvePriority(new BattleEventListenerWithoutPriority(pokemon) {
+                        Effect = species, 
+                        Callback = callback, 
+                        State = pokemon.BattleData.SpeciesState,
+                        End = new BattleCallback<object>(() => side.RemoveSlotCondition()),
+                        EndCallArgs = new object[] {side, pokemon, slotCondition.Id}
+                    }, callbackName));
+                }
             }
         }
 

@@ -51,7 +51,7 @@ public static class PokemonRegistry
         {
             if (pokemonSpecies != null)
             {
-                PokemonDictionary.Add(pokemonSpecies.PokemonId, pokemonSpecies);
+                PokemonDictionary.Add(pokemonSpecies.Id, pokemonSpecies);
                 if(pokemonSpecies.NationalPokedexNumber != 0)
                 {
                     PokedexRegistry.NationalPokedexDictionary.Add(pokemonSpecies.NationalPokedexNumber, pokemonSpecies);
@@ -79,7 +79,7 @@ public static class PokemonRegistry
         {
             if (pokemonForm != null)
             {
-                GetPokemonSpecies(pokemonForm.PokemonId).Forms.Add(pokemonForm.FormId, pokemonForm);
+                GetPokemonSpecies(pokemonForm.Id).Forms.Add(pokemonForm.FormId, pokemonForm);
             }
         }
     }

@@ -12,13 +12,14 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEditorInternal.Profiling.Memory.Experimental;
 using UnityEngine;
+using static UnityEditor.Progress;
 
 [Serializable]
 public class PokemonIndividualData : Target, BattleEventSource, EffectHolder
 {
     [HideInInspector]
     public string PokemonName;
-    public string PokemonId;
+    public PokemonSpecies BaseSpecies;
     public ObservableClasses.ObservableInteger Level = new ObservableClasses.ObservableInteger() { Value = 1 };//TODO make move learning and evolutions subscribe to the level observable
     public string Nickname = null;
     [HideInInspector]
@@ -54,7 +55,6 @@ public class PokemonIndividualData : Target, BattleEventSource, EffectHolder
     [HideInInspector]
     public PokemonBattleData BattleData;
     public string Status;
-
     public bool Fainted => CurrentHp >= 0;
 
     public string GetSpriteSuffix()
@@ -267,8 +267,8 @@ public class PokemonIndividualData : Target, BattleEventSource, EffectHolder
             //TODO show message in dialog box
         }
         Ability = ability.Id;
-        BattleData.AbilityState.Add(ability.Id, this);
-        if(ability.Id != null && (!isTransform || oldAbility != ability.Id))
+        BattleData.AbilityState = new EffectState { { ability.Id, this } };
+        if (ability.Id != null && (!isTransform || oldAbility != ability.Id))
         {
             BattleData.Battle.SingleEvent("Start", ability, BattleData.AbilityState, this, source);
         }
@@ -286,7 +286,7 @@ public class PokemonIndividualData : Target, BattleEventSource, EffectHolder
             ;
     }
 
-    private Item GetItem()
+    public Item GetItem()
     {
         return ItemRegistry.GetItemById(Item);
     }
@@ -333,5 +333,33 @@ public class PokemonIndividualData : Target, BattleEventSource, EffectHolder
     public Ability GetAbility()
     {
         return AbilityRegistry.GetAbility(Ability);
+    }
+
+    public bool ClearItem()
+    {
+        return SetItem("");
+    }
+
+    public bool SetItem(object itemParam, PokemonIndividualData source = null, Effect effect = null)
+    {
+        if (CurrentHp < 1 || !BattleData.Battle.GetActivePokemonIndividualData().Contains(this)) return false;
+        if (BattleData.ItemState.ContainsKey("knockedOff")) return false;
+        var itemResolver = (itemParam != null
+            ? (itemParam is Item ? itemParam :
+              (itemParam is string) ? ItemRegistry.GetItemById((string)itemParam) : throw new ArgumentException("abilityParam must be of type string or Ability"))
+                                                      : throw new ArgumentNullException("abilityParam cannot Be null"));
+        var item = (Ability)itemResolver;
+        var effectId = (BattleData.Battle.Effect != null ? BattleData.Battle.Effect.Id : "");
+
+        var oldItem = this.GetItem();
+        var oldItemState = BattleData.ItemState;
+        Item = item.Id;
+        BattleData.ItemState = new EffectState { { item.Id, this } };
+        if (oldItem.Exists) BattleData.Battle.SingleEvent("End", oldItem, oldItemState, this);
+        if(item.Id != null)
+        {
+            BattleData.Battle.SingleEvent("Start", item, BattleData.ItemState, this, source, effect);
+        }
+        return true;
     }
 }
