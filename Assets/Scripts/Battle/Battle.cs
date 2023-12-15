@@ -2,6 +2,7 @@
 using Assets.Scripts.Battle.Events;
 using Assets.Scripts.Battle.Events.Sources;
 using Assets.Scripts.Registries;
+using Assets.Scripts.Utils;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -16,17 +17,16 @@ namespace Assets.Scripts.Battle
         public bool BattleIsReady;
         public bool PreparingBattle;
         public List<BattleController> Participants;
-        public Dictionary<BattleController, List<PokemonNpc>> ActivePokemon;
+        public Dictionary<BattleController, List<PokemonNpc>> ActivePokemonDictionary;
         public BattleField Field;
         public Effect Effect;
         public EffectState EffectState;
         private int _eventDepth = 0;
         public BattleManager BattleManager => ServiceLocator.Instance.BattleManager;
-
         public BattleEvent Event;
-
         public int AbilityOrder = 0;
-
+        public PokemonIndividualData ActivePokemon;
+        public PokemonIndividualData ActiveTarget;
         public bool StartOfPokemonTurn = true;
         private void Start()
         {
@@ -164,6 +164,13 @@ namespace Assets.Scripts.Battle
 
             return participantsHaveSelectedPokemon && participantsHaveActivePokemon;
         }
+
+        public bool SuppressingAbility(PokemonIndividualData target = null)
+        {
+            return ActivePokemon != null && GetActivePokemonIndividualData().Contains(ActivePokemon) && ActivePokemon != target
+                && ActiveMove != null && ActiveMove.IgnoreAbility && !target.HasItem("Ability Shield");
+        }
+
         //TODO find way to cancel effect with chat message and without;
 
         //TODO get event modifier and modify it, then save the truncated value to the executing event
@@ -171,6 +178,19 @@ namespace Assets.Scripts.Battle
         public void ChainModify(double modifier, double? denominator)
         {
 
+        }
+
+        public double Modify(double value, List<double> modifiers, double? denominator = null)
+        {
+            var numerator = modifiers[0];
+            if (denominator == null) denominator = 1;
+            if(modifiers.Count > 1)
+            {
+                denominator = modifiers[1];
+            }
+
+            var modifier = Math.Truncate(numerator * 4096 / denominator.Value);
+            return Math.Truncate((Math.Truncate(value * modifier) + 2048 - 1) / 4096);
         }
 
         public static Comparer<T> ComparePriority<T>() where T : SpeedSortable
@@ -204,7 +224,7 @@ namespace Assets.Scripts.Battle
                     var random = new Unity.Mathematics.Random();
                     return values[random.NextInt(0, 1)];
                 }
-                if(a is PokemonIndividualData && b is PokemonIndividualData)
+                if (a is PokemonIndividualData && b is PokemonIndividualData)
                 {
                     var pokemonA = a as PokemonIndividualData;
                     var pokemonB = b as PokemonIndividualData;
@@ -241,7 +261,8 @@ namespace Assets.Scripts.Battle
         {
             var actives = GetActivePokemonIndividualData();
             if (effect == null && Effect != null) effect = Effect;
-            SpeedSort(actives, Comparer<PokemonIndividualData>.Create((a, b) => {
+            SpeedSort(actives, Comparer<PokemonIndividualData>.Create((a, b) =>
+            {
                 if (a.GetSpeed() > b.GetSpeed()) return 1;
                 else if (a.GetSpeed() == b.GetSpeed())
                 {
@@ -251,7 +272,7 @@ namespace Assets.Scripts.Battle
                 }
                 return -1;
             }));
-            foreach(var pokemon in actives)
+            foreach (var pokemon in actives)
             {
                 RunEvent(eventid, new List<Target>() { pokemon }, null, effect, relayvar);
             }
@@ -365,7 +386,7 @@ namespace Assets.Scripts.Battle
             target = (target == null ? target = new List<Target>() { this } : target);
             PokemonIndividualData effectSource = (source is PokemonIndividualData ? (PokemonIndividualData)source : null);
             var handlers = FindEventHandlers(target, eventid, effectSource);
-            if ((bool)onEffect)
+            if (onEffect.HasValue && onEffect.Value)
             {
                 if (sourceEffect == null) throw new ArgumentNullException("onEffect passed without an effect");
                 var callback = sourceEffect.GetCallBack($"on{eventid}");
@@ -381,18 +402,198 @@ namespace Assets.Scripts.Battle
                 }
             }
 
-            if (new string[]{ "Invulnerability", "TryHit", "DamagingHit", "EntryHazard" }.Contains(eventid))
+            if (new string[] { "Invulnerability", "TryHit", "DamagingHit", "EntryHazard" }.Contains(eventid))
             {
-                handlers.Sort(CompareLeftToRightOrder());
-            } else if (fastExit.HasValue && fastExit.Value)
+                handlers.Sort(CompareLeftToRightOrder<BattleEventListener>());
+            }
+            else if (fastExit.HasValue && fastExit.Value)
             {
-                handlers.Sort(CompareRedirectOrder());
-            } else
+                handlers.Sort(CompareRedirectOrder<BattleEventListener>());
+            }
+            else
             {
                 SpeedSort(handlers);
             }
 
+            var hasRelayVar = 1;
+            var args = new List<object>() { target, source, sourceEffect };
+            if (relayVar == null)
+            {
+                relayVar = true;
+                hasRelayVar = 0;
+            }
+            else
+            {
+                args.Insert(0, relayVar);
+            }
+
+            var parentEvent = Event;
+            Event = new BattleEvent() { Id = eventid, Target = target, Source = source, Effect = sourceEffect, Modifier = 1 };
+            _eventDepth++;
+
+            var targetRelayVars = new List<object>();
+            if (target.Count > 1)
+            {
+                if (relayVar.GetType().IsArray)
+                {
+                    targetRelayVars = new List<object>((IEnumerable<object>)relayVar);
+                }
+                else
+                {
+                    target.ForEach(target => targetRelayVars.Add(true));
+                }
+            }
+
+            foreach (var handler in handlers)
+            {
+                if (handler.Index.HasValue)
+                {
+                    if (targetRelayVars[handler.Index.Value] is false && !(targetRelayVars[handler.Index.Value] is 0 && "DamagingHit".Equals(eventid))) continue;
+                    if (handler.Target != null)
+                    {
+                        args[hasRelayVar] = handler.Target;
+                        Event.Target = new List<Target>() { handler.Target };
+                    }
+                    if (hasRelayVar == 1)
+                    {
+                        args[0] = targetRelayVars[handler.Index.Value];
+                    }
+                }
+
+                var effect = handler.Effect;
+                var effectHolder = handler.ListenerEffectHolder;
+                if (effect.EffectType == EffectType.Status && effectHolder is PokemonIndividualData
+                    && !(effectHolder as PokemonIndividualData).Status.Equals(effect.Id)) continue;
+
+                if (effect.EffectType == EffectType.Ability && effect is Ability && (effect as Ability).IsBreakable != false &&
+                    effectHolder is PokemonIndividualData && SuppressingAbility(effectHolder as PokemonIndividualData))
+                {
+                    var ability = effect as Ability;
+                    if (ability.IsBreakable == true)
+                    {
+                        Debug.Log(eventid + " handler suppressed by Mold Breaker");
+                        continue;
+                    }
+
+                    if (effect.Num == null || effect.Num.Value == 0)
+                    {
+                        var attackingEvents = new List<string>()
+                        {
+                            "BeforeMove",
+                        "BasePower",
+                        "Immunity",
+                        "RedirectTarget",
+                        "Heal",
+                        "SetStatus",
+                        "CriticalHit",
+                        "ModifyAtk", "ModifyDef", "ModifySpA", "ModifySpD", "ModifySpe", "ModifyAccuracy",
+                        "ModifyBoost",
+                        "ModifyDamage",
+                        "ModifySecondaries",
+                        "ModifyWeight",
+                        "TryAddVolatile",
+                        "TryHit",
+                        "TryHitSide",
+                        "TryMove",
+                        "Boost",
+                        "DragOut",
+                        "Effectiveness",
+                        };
+                        if (attackingEvents.Contains(eventid))
+                        {
+                            Debug.Log(eventid + " handler suppressed by Mold Breaker");
+                            continue;
+                        }
+                        else if ("Damage".Equals(eventid) && sourceEffect != null && sourceEffect.EffectType == EffectType.Move)
+                        {
+                            Debug.Log(eventid + " handler suppressed by Mold Breaker");
+                            continue;
+                        }
+                    }
+                }
+
+                if (!"Start".Equals(eventid) && !"SwitchIn".Equals(eventid) && !"TakeItem".Equals(eventid) && effect.EffectType == EffectType.Item
+                    && effectHolder is PokemonIndividualData && (effectHolder as PokemonIndividualData).IgnoringItem())
+                {
+                    if (!"Update".Equals(eventid))
+                    {
+                        Debug.Log(eventid + " handler suppressed by Embargo, Klutz or Magic Room");
+                    }
+                    continue;
+                }
+                else if (!"End".Equals(eventid) && effect.EffectType == EffectType.Ability
+                    && effectHolder is PokemonIndividualData && (effectHolder as PokemonIndividualData).IgnoringAbility())
+                {
+                    if (!"Update".Equals(eventid))
+                    {
+                        Debug.Log(eventid + " handler suppressed by Gastro Acid or Neutralizing Gas");
+                    }
+                    continue;
+                }
+                if ((effect.EffectType == EffectType.Weather || "Weather".Equals(eventid)) && !"Residual".Equals(eventid) && !"End".Equals(eventid) && Field.SuppressingWeather())
+                {
+                    Debug.Log(eventid + " handler suppressed by Air Lock");
+                    continue;
+                }
+
+                object returnVal = null;
+                if (handler.Callback is DynamicInvokable)
+                {
+                    var parentEffect = Effect;
+                    var parentEffectState = EffectState;
+                    Effect = handler.Effect;
+                    EffectState = handler.State;
+                    if (EffectState.ContainsKey("target"))
+                    {
+                        EffectState["target"] = effectHolder;
+                    } else EffectState.Add("target", effectHolder);
+
+                    if (handler.Callback is VoidBattleCallback)
+                    {
+                        (handler.Callback as VoidBattleCallback).Invoke(this, args.ToArray());
+                    }
+                    else
+                    {
+                        returnVal = (handler.Callback as DynamicInvokable).Invoke(this, args.ToArray());
+                    }
+
+                    Effect = parentEffect;
+                    EffectState = parentEffectState;
+                }
+                else
+                {
+                    returnVal = handler.Callback;
+                }
+
+                if(returnVal != null)
+                {
+                    relayVar = returnVal;
+                    if (relayVar is false || fastExit.Value)
+                    {
+                        if (handler.Index != null)
+                        {
+                            targetRelayVars[handler.Index.Value] = relayVar;
+                            if (targetRelayVars.All(value => value is false)) break;
+                        }
+                        else break;
+                    }
+                    if(hasRelayVar == 1)
+                    {
+                        args[0] = relayVar;
+                    }
+                }
+            }
+
+            _eventDepth--;
+            if(relayVar != null && TypeUtils.IsNumber(relayVar) && (relayVar as double?).Value == Math.Abs(Math.Floor((relayVar as double?).Value)))
+            {
+                relayVar = Modify((relayVar as double?).Value, Event.Modifier);
+            }
+            Event = parentEvent;
+
+            return target.Count > 1 ? targetRelayVars : relayVar;
         }
+
         public BattleEventListener ResolvePriority(BattleEventListenerWithoutPriority handler, string callBackName)
         {
             var handlerAsListener = handler as BattleEventListener;

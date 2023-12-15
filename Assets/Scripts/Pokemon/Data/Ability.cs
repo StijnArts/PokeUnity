@@ -14,6 +14,7 @@ public class Ability : Effect
 
     public bool IsPermanent = false;
     public bool SuppressWeather = false;
+    public bool IsBreakable = true;
 
     public Ability(string id, string abilityName, List<PokemonIdentifier> receiverPokemonIds, List<PokemonIdentifier> hiddenReceiverPokemonIds)
     {

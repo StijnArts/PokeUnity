@@ -12,6 +12,6 @@ namespace Assets.Scripts.Battle.Effects
         public string Name;
         public EffectType EffectType;
         public bool Exists = true;
-
+        public int? Num = 0;
     }
 }

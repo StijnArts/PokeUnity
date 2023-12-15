@@ -67,6 +67,7 @@
     <Compile Include="Assets\Scripts\Drawers\DialogPropertyDrawer.cs" />
     <Compile Include="Assets\Scripts\Pokemon\Data\BaseSpecies.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerParty.cs" />
+    <Compile Include="Assets\Scripts\Utils\TypeUtils.cs" />
     <Compile Include="Assets\Scripts\World\Encounters\EncounterTable.cs" />
     <Compile Include="Assets\Scripts\Sprites\PokemonSprite.cs" />
     <Compile Include="Assets\Scripts\Battle\Events\EffectState.cs" />
