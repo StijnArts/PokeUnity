@@ -3,6 +3,30 @@ using System.Reflection;
 
 namespace Assets.Scripts.Battle.Events
 {
+    public class VoidBattleCallback : DynamicInvokable
+    {
+        public Action Callback;
+        public VoidBattleCallback(Action callback, int? order = null, int? priority = null, int? subOrder = null)
+        {
+            Callback = callback;
+            Order = order;
+            Priority = priority;
+            SubOrder = subOrder;
+        }
+
+        public void InvokeVoid(params object[] args)
+        {
+            ParameterInfo[] parameters = Callback.GetType().GetMethod("Invoke").GetParameters();
+            var dynamicParameters = GetDynamicParameters(parameters, args);
+            Callback.DynamicInvoke(dynamicParameters);
+        }
+
+        public override object Invoke(params object[] args)
+        {
+            return null;
+        }
+    }
+
     public class BattleCallback<T> : DynamicInvokable
     {
         public Func<T> Callback;

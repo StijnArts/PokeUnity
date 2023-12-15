@@ -8,7 +8,7 @@ using Unity.VisualScripting;
 
 namespace Assets.Scripts.Battle.Events
 {
-    public class BattleEventListenerWithoutPriority
+    public class BattleEventListenerWithoutPriority : IndexHaver
     {
         public Effect Effect;
         public PokemonIndividualData Target;
@@ -22,6 +22,11 @@ namespace Assets.Scripts.Battle.Events
         public BattleEventListenerWithoutPriority(EffectHolder effectHolder = null)
         {
             ListenerEffectHolder = effectHolder;
+        }
+
+        public int? GetIndex()
+        {
+            return Index;
         }
     }
 }

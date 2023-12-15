@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Assets.Scripts.Battle.Events
 {
-    public class BattleEventListener : BattleEventListenerWithoutPriority
+    public class BattleEventListener : BattleEventListenerWithoutPriority, SpeedSortable
     {
         public Tuple<int?, bool> Order;
         public int Priority;

@@ -15,10 +15,11 @@ using UnityEngine;
 using static UnityEditor.Progress;
 
 [Serializable]
-public class PokemonIndividualData : Target, BattleEventSource, EffectHolder
+public class PokemonIndividualData : Target, BattleEventSource, EffectHolder, SpeedSortable
 {
-    [HideInInspector]
+    public string PokemonId;
     public string PokemonName;
+    [HideInInspector]
     public PokemonSpecies BaseSpecies;
     public ObservableClasses.ObservableInteger Level = new ObservableClasses.ObservableInteger() { Value = 1 };//TODO make move learning and evolutions subscribe to the level observable
     public string Nickname = null;
@@ -60,11 +61,11 @@ public class PokemonIndividualData : Target, BattleEventSource, EffectHolder
     public string GetSpriteSuffix()
     {
         string suffix = "";
-        if (pokemonHasForm(PokemonId, FormId))
+        if (pokemonHasForm(BaseSpecies, FormId))
         {
             suffix += "_" + FormId;
         }
-        if (pokemonOrFormHasGenderDifferences(PokemonId, FormId) && gender == PokemonNpc.PokemonGender.FEMALE)
+        if (pokemonOrFormHasGenderDifferences(BaseSpecies, FormId) && gender == PokemonNpc.PokemonGender.FEMALE)
         {
             suffix += "_female";
         }
@@ -75,26 +76,26 @@ public class PokemonIndividualData : Target, BattleEventSource, EffectHolder
         return suffix;
     }
 
-    private bool pokemonOrFormHasGenderDifferences(string pokemonId, string formId)
+    private bool pokemonOrFormHasGenderDifferences(PokemonSpecies pokemonSpecies, string formId)
     {
-        if (pokemonHasForm(pokemonId, formId))
+        if (pokemonHasForm(pokemonSpecies, formId))
         {
-            return PokemonRegistry.GetPokemonSpecies(pokemonId).Forms[formId].HasGenderDifferences;
+            return pokemonSpecies.Forms[formId].HasGenderDifferences;
         }
         else
         {
-            return PokemonRegistry.GetPokemonSpecies(pokemonId).HasGenderDifferences;
+            return pokemonSpecies.HasGenderDifferences;
         }
     }
 
-    private static bool pokemonHasForm(string pokemonId, string formId)
+    private static bool pokemonHasForm(PokemonSpecies pokemonSpecies, string formId)
     {
-        return PokemonRegistry.GetPokemonSpecies(pokemonId).Forms.ContainsKey(formId);
+        return pokemonSpecies.Forms.ContainsKey(formId);
     }
 
     private PokemonStats CalculateStats(int level, PokemonEVs pokemonEVs, PokemonIVs pokemonIVs, Nature nature)
     {
-        BaseStats baseStats = PokemonRegistry.GetPokemonSpecies(PokemonId).BaseStats;
+        BaseStats baseStats = BaseSpecies.BaseStats;
 
         int hp = PokemonStats.CalculateHp(level, baseStats.Hp, pokemonEVs.hpEVs, pokemonIVs.hpIVs);
         int attack = PokemonStats.CalculateOtherStat(level, baseStats.Attack, pokemonEVs.attackEVs,
@@ -113,7 +114,7 @@ public class PokemonIndividualData : Target, BattleEventSource, EffectHolder
 
     private PokemonStats CalculateStats()
     {
-        BaseStats baseStats = PokemonRegistry.GetPokemonSpecies(PokemonId).BaseStats;
+        BaseStats baseStats = BaseSpecies.BaseStats;
         int hp = PokemonStats.CalculateHp(Level.Value, baseStats.Hp, EVs.hpEVs, IVs.hpIVs);
         int attack = PokemonStats.CalculateOtherStat(Level.Value, baseStats.Attack, EVs.attackEVs,
             IVs.attackIVs, NatureData, global::Nature.AffectedStats.ATTACK);
@@ -133,15 +134,15 @@ public class PokemonIndividualData : Target, BattleEventSource, EffectHolder
     {
         NatureData = PokemonNatureRegistry.GetNature((int)Nature);
 
-        var species = PokemonRegistry.GetPokemonSpecies(new PokemonIdentifier(PokemonId, FormId));
-        PrimaryType = PokemonTypeRegistry.GetType(species.PrimaryType);
+        BaseSpecies = PokemonRegistry.GetPokemonSpecies(new PokemonIdentifier(PokemonId, FormId));
+        PrimaryType = PokemonTypeRegistry.GetType(BaseSpecies.PrimaryType);
         Stats = CalculateStats();
-        if (species.SecondaryType != null)
+        if (BaseSpecies.SecondaryType != null)
         {
-            SecondaryType = PokemonTypeRegistry.GetType(species.SecondaryType);
+            SecondaryType = PokemonTypeRegistry.GetType(BaseSpecies.SecondaryType);
         }
 
-        if (!string.IsNullOrEmpty(FormId) && species.Forms.ContainsKey(FormId))
+        if (!string.IsNullOrEmpty(FormId) && BaseSpecies.Forms.ContainsKey(FormId))
         {
             //TODO overwrite species data where form data is not null
         }
@@ -209,28 +210,35 @@ public class PokemonIndividualData : Target, BattleEventSource, EffectHolder
         BattleData.Volatiles.Remove(statusEffect.Id);
         if( linkedPokemon != null)
         {
-            this.RemoveLinkedVolatiles(linkedStatus, (List<PokemonIndividualData>)linkedPokemon);
+            if(linkedStatus is string)
+            {
+                RemoveLinkedVolatiles((string)linkedStatus, null, (List<PokemonIndividualData>)linkedPokemon);
+            } else if(linkedStatus is Effect)
+            {
+                RemoveLinkedVolatiles(null, (Effect)linkedStatus, (List<PokemonIndividualData>)linkedPokemon);
+            }
+
         }
         return true;
     }
 
-    public void RemoveLinkedVolatiles(object linkedStatus, List<PokemonIndividualData> linkedPokemon)
+    public void RemoveLinkedVolatiles(string linkedStatusString = null, Effect linkedStatusEffect = null, List<PokemonIndividualData> linkedPokemon = null)
     {
-        var linkedStatusResolver = (linkedStatus != null 
-            ? (linkedStatus is Effect ? linkedStatus.ToString() : 
-              (linkedStatus is string) ? linkedStatus : throw new ArgumentException("Linkedstatus must be of type string or Effect"))
-                                                      : throw new ArgumentNullException("linkedStatus cannot Be null"));
-        var linkedStatusResolved = linkedStatusResolver as string;
+        if(linkedPokemon == null) throw new ArgumentNullException(nameof(linkedPokemon) + " cannot be null");
+        string linkedStatus = null;
+        if (linkedStatusString != null) linkedStatus = linkedStatusString;
+        else if (linkedStatusEffect != null) linkedStatus = linkedStatusEffect.Id;
+        else throw new ArgumentNullException("linkedStatus cannot be null");
         foreach(var linkedPoke in linkedPokemon)
         {
-            var volatileData = linkedPoke.BattleData.Volatiles[linkedStatusResolved];
+            var volatileData = linkedPoke.BattleData.Volatiles[linkedStatus];
             if(volatileData == null) continue;
             var volatileDataLinkedPokemon = (List<PokemonIndividualData>)volatileData["LinkedPokemon"];
             volatileDataLinkedPokemon.Remove(this);
             volatileData["LinkedPokemon"] = volatileDataLinkedPokemon;
             if (volatileDataLinkedPokemon.Count == 0)
             {
-                linkedPoke.RemoveVolatile(linkedStatusResolved);
+                linkedPoke.RemoveVolatile(linkedStatus);
             }
         }
     }
@@ -242,14 +250,14 @@ public class PokemonIndividualData : Target, BattleEventSource, EffectHolder
         return SetAbility("");
     }
 
-    public string SetAbility(object abilityParam, PokemonIndividualData source = null, bool isFromFormeChange = false, bool isTransform = false)
+    public string SetAbility(string abilityAsString = null, Ability abilityAsAbility = null, PokemonIndividualData source = null, bool isFromFormeChange = false, bool isTransform = false)
     {
         if (CurrentHp < 1) return null;
-        var abilityResolver = (abilityParam != null
-            ? (abilityParam is Ability ? abilityParam :
-              (abilityParam is string) ? AbilityRegistry.GetAbility((string)abilityParam) : throw new ArgumentException("abilityParam must be of type string or Ability"))
-                                                      : throw new ArgumentNullException("abilityParam cannot Be null"));
-        var ability = (Ability)abilityResolver;
+        Ability ability = null;
+        if (abilityAsAbility != null) ability = abilityAsAbility;
+        else if (abilityAsString != null) ability = AbilityRegistry.GetAbility(abilityAsString);
+        else throw new ArgumentNullException("ability cannot Be null");
+
         var oldAbility = Ability;
         if (!isFromFormeChange)
         {
@@ -340,16 +348,14 @@ public class PokemonIndividualData : Target, BattleEventSource, EffectHolder
         return SetItem("");
     }
 
-    public bool SetItem(object itemParam, PokemonIndividualData source = null, Effect effect = null)
+    public bool SetItem(string itemAsString = null, Item itemAsItem = null,  PokemonIndividualData source = null, Effect effect = null)
     {
         if (CurrentHp < 1 || !BattleData.Battle.GetActivePokemonIndividualData().Contains(this)) return false;
         if (BattleData.ItemState.ContainsKey("knockedOff")) return false;
-        var itemResolver = (itemParam != null
-            ? (itemParam is Item ? itemParam :
-              (itemParam is string) ? ItemRegistry.GetItemById((string)itemParam) : throw new ArgumentException("abilityParam must be of type string or Ability"))
-                                                      : throw new ArgumentNullException("abilityParam cannot Be null"));
-        var item = (Ability)itemResolver;
-        var effectId = (BattleData.Battle.Effect != null ? BattleData.Battle.Effect.Id : "");
+        Item item = null;
+        if (itemAsItem != null) item = itemAsItem;
+        else if (itemAsString != null) item = ItemRegistry.GetItemById(itemAsString);
+        else throw new ArgumentNullException("item cannot Be null");
 
         var oldItem = this.GetItem();
         var oldItemState = BattleData.ItemState;
@@ -361,5 +367,10 @@ public class PokemonIndividualData : Target, BattleEventSource, EffectHolder
             BattleData.Battle.SingleEvent("Start", item, BattleData.ItemState, this, source, effect);
         }
         return true;
+    }
+
+    public int GetSpeed()
+    {
+        return BattleData.BattleSpeed;
     }
 }

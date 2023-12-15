@@ -1,5 +1,7 @@
-﻿using Assets.Scripts.Battle.Effects;
+﻿using Assets.Scripts.Battle.Conditions;
+using Assets.Scripts.Battle.Effects;
 using Assets.Scripts.Battle.Events;
+using Assets.Scripts.Registries;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,6 +18,7 @@ namespace Assets.Scripts.Battle
         public string Weather;
         public string Terrain;
         public EffectState TerrainState;
+        public EffectState WeatherState;
 
         public bool SuppressingWeather()
         {
@@ -29,6 +32,53 @@ namespace Assets.Scripts.Battle
                 }
             }
             return false;
+        }
+
+        public bool RemovePseudoWeather(string statusAsString = null, Effect statusAsEffect = null)
+        {
+            Effect status = null;
+            if (statusAsEffect != null) status = statusAsEffect;
+            else if (statusAsString != null) status = ConditionRegistry.GetConditionById(statusAsString);
+            else throw new ArgumentNullException("pseudo weather status cannot be null");
+
+            if (!PseudoWeathers.Keys.Contains(status.Id)) return false;
+            var state = PseudoWeathers[status.Id];
+            Battle.SingleEvent("FieldEnd", status, state, this);
+            PseudoWeathers[status.Id].Remove(status.Id);
+
+            return true;
+        }
+
+        public Condition GetWeather()
+        {
+            return ConditionRegistry.GetConditionById(Weather);
+        }
+
+        public Condition GetTerrain()
+        {
+            return ConditionRegistry.GetConditionById(Terrain);
+        }
+
+        public bool ClearWeather()
+        {
+            if(string.IsNullOrEmpty(Weather)) return false;
+            var previousWeather = GetWeather();
+            Battle.SingleEvent("FieldEnd", previousWeather, WeatherState, this);
+            Weather = "";
+            WeatherState = new EffectState();
+            Battle.EachEvent("WeatherChange");
+            return true;
+        }
+
+        internal bool ClearTerrain()
+        {
+            if (string.IsNullOrEmpty(Terrain)) return false;
+            var previousTerrain = GetWeather();
+            Battle.SingleEvent("FieldEnd", previousTerrain, TerrainState, this);
+            Terrain = "";
+            TerrainState = new EffectState();
+            Battle.EachEvent("TerrainChange");
+            return true;
         }
     }
 }

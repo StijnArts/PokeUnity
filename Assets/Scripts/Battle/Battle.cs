@@ -5,10 +5,7 @@ using Assets.Scripts.Registries;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics.Tracing;
 using System.Linq;
-using System.Reflection;
-using System.Threading;
 using UnityEngine;
 
 namespace Assets.Scripts.Battle
@@ -87,7 +84,7 @@ namespace Assets.Scripts.Battle
             executingPokemon.BattleData.PlayTurn();
         }
 
-        private void DecideMoveOrder()
+        /*private void DecideMoveOrder()
         {
             GetActivePokemonWithBattleControllers().ForEach(activePokemon =>
                 activePokemon.Item1.BattleData.CalculateTurnSpeed(activePokemon.Item1.Stats.speed, this, activePokemon.Item2));
@@ -110,7 +107,7 @@ namespace Assets.Scripts.Battle
 
                 return -1;
             });
-        }
+        }*/
 
         private bool AllPokemonHaveMoved()
         {
@@ -176,6 +173,94 @@ namespace Assets.Scripts.Battle
 
         }
 
+        public static Comparer<T> ComparePriority<T>() where T : SpeedSortable
+        {
+            return Comparer<T>.Create((T a, T b) =>
+            {
+                if (a.GetOrder() < b.GetOrder()) return 1;
+                if (a.GetPriority() > b.GetPriority()) return 1;
+                if (a.GetSpeed() > b.GetSpeed()) return 1;
+                else if (a.GetSpeed() == b.GetSpeed())
+                {
+                    var values = new int[] { -1, 1 };
+                    var random = new Unity.Mathematics.Random();
+                    return values[random.NextInt(0, 1)];
+                }
+                if (a.GetSubOrder() < b.GetSubOrder()) return 1;
+                return -1;
+            });
+        }
+
+        public static Comparer<T> CompareRedirectOrder<T>() where T : SpeedSortable
+        {
+            return Comparer<T>.Create((T a, T b) =>
+            {
+                if (a.GetOrder() > b.GetOrder()) return 1;
+                if (a.GetPriority() > b.GetPriority()) return 1;
+                if (a.GetSpeed() > b.GetSpeed()) return 1;
+                else if (a.GetSpeed() == b.GetSpeed())
+                {
+                    var values = new int[] { -1, 1 };
+                    var random = new Unity.Mathematics.Random();
+                    return values[random.NextInt(0, 1)];
+                }
+                if(a is PokemonIndividualData && b is PokemonIndividualData)
+                {
+                    var pokemonA = a as PokemonIndividualData;
+                    var pokemonB = b as PokemonIndividualData;
+                    if (pokemonA.BattleData.AbilityOrder > pokemonB.BattleData.AbilityOrder) return 1;
+                }
+                return -1;
+            });
+        }
+
+        public static Comparer<T> CompareLeftToRightOrder<T>() where T : SpeedSortable
+        {
+            return Comparer<T>.Create((T a, T b) =>
+            {
+                if (a.GetOrder() < b.GetOrder()) return 1;
+                if (a.GetPriority() > b.GetPriority()) return 1;
+                if (a is IndexHaver && b is IndexHaver)
+                {
+                    var indexHaverA = a as IndexHaver;
+                    var indexHaverB = b as IndexHaver;
+                    if (indexHaverA.GetIndex() > indexHaverB.GetIndex()) return 1;
+                }
+                return -1;
+            });
+        }
+
+
+        public void SpeedSort<T>(List<T> sortables, Comparer<T> comparer = null) where T : SpeedSortable
+        {
+            comparer ??= ComparePriority<T>();
+            sortables.Sort(comparer);
+        }
+
+        public void EachEvent(string eventid, Effect effect = null, object relayvar = null)
+        {
+            var actives = GetActivePokemonIndividualData();
+            if (effect == null && Effect != null) effect = Effect;
+            SpeedSort(actives, Comparer<PokemonIndividualData>.Create((a, b) => {
+                if (a.GetSpeed() > b.GetSpeed()) return 1;
+                else if (a.GetSpeed() == b.GetSpeed())
+                {
+                    var values = new int[] { -1, 1 };
+                    var random = new Unity.Mathematics.Random();
+                    return values[random.NextInt(0, 1)];
+                }
+                return -1;
+            }));
+            foreach(var pokemon in actives)
+            {
+                RunEvent(eventid, new List<Target>() { pokemon }, null, effect, relayvar);
+            }
+            if (eventid.Equals("Weather"))
+            {
+                EachEvent("Update");
+            }
+        }
+
         public object SingleEvent(string eventid, Effect effect, EffectState state, Target target,
             BattleEventSource source = null, Effect sourceEffect = null, object relayvar = null, object customCallback = null)
         {
@@ -191,21 +276,21 @@ namespace Assets.Scripts.Battle
             }
 
             var hasRelayValue = true;
-            if(relayvar == null)
+            if (relayvar == null)
             {
                 relayvar = true;
                 hasRelayValue = false;
             }
 
-            if(target is PokemonIndividualData)
+            if (target is PokemonIndividualData)
             {
                 var pokemonTarget = target as PokemonIndividualData;
                 if (effect.EffectType == EffectType.Status && !pokemonTarget.Status.Equals(effect.Id))
                 {
                     return relayvar;
                 }
-                if (!eventid.Equals("Start") && !eventid.Equals("TakeItem") && !eventid.Equals("Primal") && effect.EffectType == EffectType.Item 
-                    && pokemonTarget.IgnoringItem()) 
+                if (!eventid.Equals("Start") && !eventid.Equals("TakeItem") && !eventid.Equals("Primal") && effect.EffectType == EffectType.Item
+                    && pokemonTarget.IgnoringItem())
                 {
                     Debug.Log(eventid + " handler suppressed by Embargo, Klutz or Magic Room");
                     return relayvar;
@@ -217,7 +302,7 @@ namespace Assets.Scripts.Battle
                 }
             }
 
-            if (effect.EffectType == EffectType.Weather && !eventid.Equals("FieldStart") && !eventid.Equals("FieldResidual") 
+            if (effect.EffectType == EffectType.Weather && !eventid.Equals("FieldStart") && !eventid.Equals("FieldResidual")
                 && !eventid.Equals("FieldEnd") && Field.SuppressingWeather())
             {
                 Debug.Log(eventid + " handler suppressed by Air Lock");
@@ -225,7 +310,7 @@ namespace Assets.Scripts.Battle
             }
 
             var callback = (customCallback != null ? customCallback : effect.GetCallBack($"on{eventid}"));
-            if(callback == null) return relayvar;
+            if (callback == null) return relayvar;
 
             var parentEffect = this.Effect;
             var parentEffectState = this.EffectState;
@@ -237,13 +322,21 @@ namespace Assets.Scripts.Battle
             _eventDepth++;
 
             var args = new List<object>() { target, source, sourceEffect };
-            if(hasRelayValue) args.Insert(0, relayvar);
+            if (hasRelayValue) args.Insert(0, relayvar);
 
-            object returnVal;
-            if(callback is DynamicInvokable)
+            object returnVal = null;
+            if (callback is DynamicInvokable)
             {
-                returnVal = (callback as DynamicInvokable).Invoke(this, args.ToArray());
-            } else
+                if (callback is VoidBattleCallback)
+                {
+                    (callback as VoidBattleCallback).Invoke(this, args.ToArray());
+                }
+                else
+                {
+                    returnVal = (callback as DynamicInvokable).Invoke(this, args.ToArray());
+                }
+            }
+            else
             {
                 returnVal = callback;
             }
@@ -256,7 +349,7 @@ namespace Assets.Scripts.Battle
             return returnVal == null ? relayvar : returnVal;
         }
 
-        public object RunEvent(string eventid, List<Target> target = null, BattleEventSource source = null, Effect sourceEffect = null, object relayVar = null, 
+        public object RunEvent(string eventid, List<Target> target = null, BattleEventSource source = null, Effect sourceEffect = null, object relayVar = null,
             bool? onEffect = null, bool? fastExit = null)
         {
             if (_eventDepth >= 8)
@@ -279,10 +372,26 @@ namespace Assets.Scripts.Battle
                 if (callback != null)
                 {
                     if (target.Count > 1) throw new Exception();
-                    handlers.Insert(0, ResolvePriority(new BattleEventListenerWithoutPriority(sourceEffect, callback, , null, target)));
+                    handlers.Insert(0, ResolvePriority(new BattleEventListenerWithoutPriority((EffectHolder)target[0])
+                    {
+                        Effect = sourceEffect,
+                        Callback = callback,
+                        State = new EffectState()
+                    }, $"on{eventid}"));
                 }
             }
-            
+
+            if (new string[]{ "Invulnerability", "TryHit", "DamagingHit", "EntryHazard" }.Contains(eventid))
+            {
+                handlers.Sort(CompareLeftToRightOrder());
+            } else if (fastExit.HasValue && fastExit.Value)
+            {
+                handlers.Sort(CompareRedirectOrder());
+            } else
+            {
+                SpeedSort(handlers);
+            }
+
         }
         public BattleEventListener ResolvePriority(BattleEventListenerWithoutPriority handler, string callBackName)
         {
@@ -304,7 +413,7 @@ namespace Assets.Scripts.Battle
                 throw new ArgumentException("no targets were passed");
             }
             var handlers = new List<BattleEventListener>();
-            if(target.Count > 1 && target.All(target => target is PokemonIndividualData))
+            if (target.Count > 1 && target.All(target => target is PokemonIndividualData))
             {
                 for (int i = 0; i < target.Count; i++)
                 {
@@ -318,11 +427,11 @@ namespace Assets.Scripts.Battle
                     handlers.AddRange(curHandlers);
                 }
             }
-            // events usually run through EachEvent should never have any handlers besides `on${eventName}` so don't check for them
+            // events usually run through EachEvent should never have any handlers besides `on${eventName}` so don"t check for them
             var eachEventEvents = new string[] { "BeforeTurn", "Update", "Weather", "WeatherChange", "TerrainChange" };
             var prefixedHandlers = !eachEventEvents.Any(evt => evt.Contains(eventName));
             var activePokemon = GetActivePokemonIndividualData();
-            if(target.Count == 1)
+            if (target.Count == 1)
             {
                 var singleTarget = target[0];
                 if (singleTarget is PokemonIndividualData && (activePokemon.Contains(singleTarget) || (source != null && activePokemon.Contains(source))))
@@ -352,17 +461,18 @@ namespace Assets.Scripts.Battle
                 if (singleTarget is BattleSide)
                 {
                     var targetSide = (BattleSide)singleTarget;
-                    foreach(var side in Participants)
+                    foreach (var side in Participants)
                     {
                         if (side.SlotNumber >= 2 && side.AllySide != null) break;
                         if (side == targetSide || side == targetSide.AllySide)
                         {
                             handlers.AddRange(this.FindSideEventHandlers(side, $"on{eventName}"));
-                        } else if (prefixedHandlers)
+                        }
+                        else if (prefixedHandlers)
                         {
                             handlers.AddRange(this.FindSideEventHandlers(side, $"onFoe{eventName}"));
                         }
-                        if(prefixedHandlers)
+                        if (prefixedHandlers)
                         {
                             handlers.AddRange(this.FindSideEventHandlers(side, $"onAny{eventName}"));
                         }
@@ -370,7 +480,7 @@ namespace Assets.Scripts.Battle
                 }
             }
             handlers.AddRange(this.FindFieldEventHandlers(this.Field, $"on{eventName}"));
-            handlers.AddRange(this.FindBattleEventHandlers(this, $"on{eventName}"));
+            handlers.AddRange(this.FindBattleEventHandlers($"on{eventName}"));
             return handlers;
         }
 
@@ -380,17 +490,17 @@ namespace Assets.Scripts.Battle
             var handlers = new List<BattleEventListener>();
             var status = pokemon.GetStatus();
             var callback = status.GetCallBack(callbackName);
-            if(callback != null || (getKey != null && pokemon.BattleData.StatusState.ContainsKey(getKey) && pokemon.BattleData.StatusState[getKey] != null))
+            if (callback != null || (getKey != null && pokemon.BattleData.StatusState.ContainsKey(getKey) && pokemon.BattleData.StatusState[getKey] != null))
             {
                 handlers.Add(ResolvePriority(new BattleEventListenerWithoutPriority(pokemon)
-                    { Effect = status, Callback = callback, State = pokemon.BattleData.StatusState, End = new BattleCallback<bool>(() => pokemon.ClearStatus()) }, callbackName));
+                { Effect = status, Callback = callback, State = pokemon.BattleData.StatusState, End = new BattleCallback<bool>(() => pokemon.ClearStatus()) }, callbackName));
             }
-            foreach(var volatileId in pokemon.BattleData.Volatiles.Keys)
+            foreach (var volatileId in pokemon.BattleData.Volatiles.Keys)
             {
                 var volatileState = pokemon.BattleData.Volatiles[volatileId];
                 var volatileStatus = ConditionRegistry.GetConditionById(volatileId);
                 callback = volatileStatus.GetCallBack(callbackName);
-                if(callback != null || (getKey != null && volatileState.ContainsKey(getKey) && volatileState[getKey] != null))
+                if (callback != null || (getKey != null && volatileState.ContainsKey(getKey) && volatileState[getKey] != null))
                 {
                     var end = new BattleCallback<string, bool>((string volatileId) => pokemon.RemoveVolatile(volatileId));
                     handlers.Add(ResolvePriority(new BattleEventListenerWithoutPriority(pokemon)
@@ -400,7 +510,7 @@ namespace Assets.Scripts.Battle
             }
             var ability = pokemon.GetAbility();
             callback = ability.GetCallBack(callbackName);
-            if(callback != null || (getKey != null && pokemon.BattleData.AbilityState.ContainsKey(getKey) && pokemon.BattleData.AbilityState[getKey] != null))
+            if (callback != null || (getKey != null && pokemon.BattleData.AbilityState.ContainsKey(getKey) && pokemon.BattleData.AbilityState[getKey] != null))
             {
                 handlers.Add(ResolvePriority(new BattleEventListenerWithoutPriority(pokemon)
                 { Effect = ability, Callback = callback, State = pokemon.BattleData.AbilityState, End = new BattleCallback<string>(() => pokemon.ClearAbility()) }, callbackName));
@@ -408,39 +518,133 @@ namespace Assets.Scripts.Battle
             var item = pokemon.GetItem();
 
             callback = item.GetCallBack(callbackName);
-            if(callback != null || (getKey != null && pokemon.BattleData.ItemState.ContainsKey(getKey) && pokemon.BattleData.ItemState[getKey] != null))
+            if (callback != null || (getKey != null && pokemon.BattleData.ItemState.ContainsKey(getKey) && pokemon.BattleData.ItemState[getKey] != null))
             {
                 handlers.Add(ResolvePriority(new BattleEventListenerWithoutPriority(pokemon)
-                { Effect = item, Callback = callback, State = pokemon.BattleData.ItemState, End = new BattleCallback<bool>(() => pokemon.ClearItem())}, callbackName));
+                { Effect = item, Callback = callback, State = pokemon.BattleData.ItemState, End = new BattleCallback<bool>(() => pokemon.ClearItem()) }, callbackName));
             }
 
             var species = pokemon.BattleData.Species;
             callback = species.GetCallBack(callbackName);
-            if( callback != null)
+            if (callback != null)
             {
                 handlers.Add(ResolvePriority(new BattleEventListenerWithoutPriority(pokemon)
                 { Effect = species, Callback = callback, State = pokemon.BattleData.SpeciesState }, callbackName));
             }
 
             var side = pokemon.BattleData.BattleController;
-            foreach(var conditionId in side.SlotConditions[pokemon.BattleData.SlotPosition.Value].Keys)
+            foreach (var conditionId in side.SlotConditions[pokemon.BattleData.BattleController.GetSlotNumber(pokemon).Value].Keys)
             {
-                var slotConditionState = side.SlotConditions[pokemon.BattleData.SlotPosition.Value][conditionId];
+                var slotConditionState = side.SlotConditions[pokemon.BattleData.BattleController.GetSlotNumber(pokemon).Value][conditionId];
                 var slotCondition = ConditionRegistry.GetConditionById(conditionId);
                 callback = slotCondition.GetCallBack(callbackName);
-                if( callback != null || (getKey != null && slotConditionState.ContainsKey(getKey) && slotConditionState[getKey] != null))
+                if (callback != null || (getKey != null && slotConditionState.ContainsKey(getKey) && slotConditionState[getKey] != null))
                 {
-                    handlers.Add(ResolvePriority(new BattleEventListenerWithoutPriority(pokemon) {
-                        Effect = species, 
-                        Callback = callback, 
+                    handlers.Add(ResolvePriority(new BattleEventListenerWithoutPriority(pokemon)
+                    {
+                        Effect = species,
+                        Callback = callback,
                         State = pokemon.BattleData.SpeciesState,
-                        End = new BattleCallback<object>(() => side.RemoveSlotCondition()),
-                        EndCallArgs = new object[] {side, pokemon, slotCondition.Id}
+                        End = new BattleCallback<int?, PokemonIndividualData, string, Effect, bool>(
+                            (int? slotAsInt, PokemonIndividualData slotAsPokemon, string statusAsString, Effect statusAsEffect) =>
+                            side.RemoveSlotCondition(slotAsInt, slotAsPokemon, statusAsString, statusAsEffect)),
+                        EndCallArgs = new object[] { side, pokemon, slotCondition.Id }
                     }, callbackName));
                 }
             }
+
+            return handlers;
         }
 
-        
+        public List<BattleEventListener> FindSideEventHandlers(BattleSide side, string callbackName, string getKey = null, PokemonIndividualData customHolder = null)
+        {
+            if (getKey != null) getKey = "duration";
+            var handlers = new List<BattleEventListener>();
+            foreach (var conditionId in side.SideConditions.Keys)
+            {
+                var sideConditionState = side.SideConditions[conditionId];
+                var sideCondition = ConditionRegistry.GetConditionById(conditionId);
+                var callback = sideCondition.GetCallBack(callbackName);
+                if (callback != null || (getKey != null && sideConditionState.ContainsKey(getKey) && sideConditionState[getKey] != null))
+                {
+                    handlers.Add(ResolvePriority(new BattleEventListenerWithoutPriority(customHolder != null ? customHolder : side)
+                    {
+                        Effect = sideCondition,
+                        Callback = callback,
+                        State = sideConditionState,
+                        End = customHolder != null ? null : new BattleCallback<string, Effect, bool>(
+                            (string statusAsString, Effect statusAsEffect) =>
+                            side.RemoveSideCondition(statusAsString, statusAsEffect))
+                    }, callbackName));
+                }
+            }
+            return handlers;
+        }
+
+        public List<BattleEventListener> FindBattleEventHandlers(string callbackName, string getKey = null)
+        {
+            if (getKey != null) getKey = "duration";
+            var handlers = new List<BattleEventListener>();
+            DynamicInvokable callback;
+            //TODO implement battle formats
+            return handlers;
+        }
+
+        public List<BattleEventListener> FindFieldEventHandlers(BattleField field, string callbackName, string getKey = null, PokemonIndividualData customHolder = null)
+        {
+            if (getKey != null) getKey = "duration";
+            var handlers = new List<BattleEventListener>();
+            DynamicInvokable callback;
+            foreach (var pseudoWeatherId in Field.PseudoWeathers.Keys)
+            {
+                var pseudoWeatherState = Field.PseudoWeathers[pseudoWeatherId];
+                var pseudoWeather = ConditionRegistry.GetConditionById(pseudoWeatherId);
+                callback = pseudoWeather.GetCallBack(callbackName);
+                if (callback != null || (getKey != null && pseudoWeatherState.ContainsKey(getKey) && pseudoWeatherState[getKey] != null))
+                {
+                    handlers.Add(ResolvePriority(new BattleEventListenerWithoutPriority(customHolder != null ? customHolder : field)
+                    {
+                        Effect = pseudoWeather,
+                        Callback = callback,
+                        State = pseudoWeatherState,
+                        End = customHolder != null ? null :
+                    new BattleCallback<string, Effect, bool>(
+                            (string statusAsString, Effect statusAsEffect) => field.RemovePseudoWeather(statusAsString, statusAsEffect))
+                    }, callbackName));
+                }
+            }
+
+            var weather = Field.GetWeather();
+            callback = weather.GetCallBack(callbackName);
+            if (callback != null || (getKey != null && Field.WeatherState.ContainsKey(getKey) && Field.WeatherState[getKey] != null))
+            {
+                handlers.Add(ResolvePriority(new BattleEventListenerWithoutPriority(customHolder != null ? customHolder : field)
+                {
+                    Effect = weather,
+                    Callback = callback,
+                    State = Field.WeatherState,
+                    End = customHolder != null ? null :
+                    new BattleCallback<bool>(
+                            () => field.ClearWeather())
+                }, callbackName));
+            }
+
+            var terrain = Field.GetTerrain();
+            callback = terrain.GetCallBack(callbackName);
+            if (callback != null || (getKey != null && Field.TerrainState.ContainsKey(getKey) && Field.TerrainState[getKey] != null))
+            {
+                handlers.Add(ResolvePriority(new BattleEventListenerWithoutPriority(customHolder != null ? customHolder : field)
+                {
+                    Effect = terrain,
+                    Callback = callback,
+                    State = Field.TerrainState,
+                    End = customHolder != null ? null :
+                    new BattleCallback<bool>(
+                            () => field.ClearTerrain())
+                }, callbackName));
+            }
+
+            return handlers;
+        }
     }
 }

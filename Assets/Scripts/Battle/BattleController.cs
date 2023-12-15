@@ -1,5 +1,6 @@
 ﻿using Assets.Scripts.Battle.Effects;
 using Assets.Scripts.Pokemon;
+using Assets.Scripts.Registries;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,9 +29,35 @@ namespace Assets.Scripts.Battle
         //TODO make it create pokemonNpc's for the amount of necessary active pokemon in the battle, and set the individual data of those npcs;
         public abstract bool CreateActivePokemon(int minimumAmountOfActivePokemon);
 
-        internal object RemoveSlotCondition(Target target, )
+        public bool RemoveSlotCondition(int? slotAsInt = null, PokemonIndividualData slotAsPokemon = null, string statusAsString = null, Effect statusAsEffect = null)
         {
-            throw new NotImplementedException();
+            int? target = null;
+            if (slotAsInt.HasValue) target = slotAsInt.Value;
+            else if (slotAsPokemon != null) target = GetSlotNumber(slotAsPokemon);
+            else throw new ArgumentNullException("linkedStatus cannot be null");
+            Effect status = null;
+            if (statusAsEffect != null) status = statusAsEffect;
+            else if (statusAsString != null) status = ConditionRegistry.GetConditionById(statusAsString);
+            else throw new ArgumentNullException("linkedStatus cannot be null");
+
+            if (!SlotConditions.Keys.Contains(target.Value) && !SlotConditions[target.Value].ContainsKey(status.Id)) return false;
+            var condition = SlotConditions[target.Value][status.Id];
+            battle.SingleEvent("End", status, condition, GetActivePokemonData()[target.Value]);
+            SlotConditions[target.Value].Remove(status.Id);
+
+            return true;
+        }
+
+        public int? GetSlotNumber(PokemonIndividualData slotAsPokemon)
+        {
+            List<PokemonIndividualData> activePokemon = GetActivePokemonData();
+            var indexOfPokemon = Enumerable.Range(0, NumberOfMaxActivePokemon).Where(iterator => activePokemon.Count - 1 <= iterator && activePokemon[iterator] == slotAsPokemon).ToList();
+            return indexOfPokemon.Count > 0 ? indexOfPokemon[0] : null;
+        }
+
+        private List<PokemonIndividualData> GetActivePokemonData()
+        {
+            return ActivePokemon.Select(pokemon => pokemon.PokemonIndividualData).ToList();
         }
     }
 }
