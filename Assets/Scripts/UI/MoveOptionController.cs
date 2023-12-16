@@ -14,7 +14,7 @@ namespace Assets.Scripts.UI
     {
         public enum BattleOption { Battle, Pokemon, Bag, Run }
         private PlayerController _playerController => GameObject.Find("Player").GetComponentInChildren<PlayerController>();
-        public List<PokemonMove> Moves => _playerController.Party.GetSelectedPokemon().Moves.ToList();
+        public List<ActiveMove> Moves => _playerController.Party.GetSelectedPokemon().Moves.ToList();
         public float OptionsEntryHeight = 55;
         private ListView _movesView;
         private VisualTreeAsset _movesEntry;

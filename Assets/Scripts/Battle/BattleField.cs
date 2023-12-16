@@ -13,12 +13,17 @@ namespace Assets.Scripts.Battle
     public class BattleField : Target, EffectHolder
     {
         readonly public Battle Battle;
-        readonly public string Id;
+        readonly public string Id = "";
         public Dictionary<string, EffectState> PseudoWeathers = new();
-        public string Weather;
-        public string Terrain;
-        public EffectState TerrainState;
-        public EffectState WeatherState;
+        public string Weather = "";
+        public string Terrain = "";
+        public EffectState TerrainState = new();
+        public EffectState WeatherState = new();
+
+        public BattleField(Battle battle)
+        {
+            Battle = battle;
+        }
 
         public bool SuppressingWeather()
         {

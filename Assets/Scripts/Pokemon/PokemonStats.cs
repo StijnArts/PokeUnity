@@ -23,7 +23,7 @@ public class PokemonStats
     public PokemonStats(BaseStats baseStats) : this(baseStats.Hp, baseStats.Attack, baseStats.Defence, baseStats.SpecialAttack, baseStats.SpecialDefence, baseStats.Speed) { }
     internal static int CalculateHp(int level, int baseHp, int hpEVs, int hpIVs)
     {
-        int hp = (int)(Math.Floor((2 * baseHp + hpIVs + Math.Floor(hpEVs / 4D) * level) / 100) + level + 10);
+        int hp = (int)(Math.Truncate(Math.Truncate(2 * baseHp + hpIVs + Math.Truncate(hpEVs / 4d) * level) / 100) + level + 10);
         return hp;
     }
 

@@ -59,9 +59,19 @@
     <Analyzer Include="C:\Program Files\Unity\Hub\Editor\2022.3.7f1\Editor\Data\Tools\Unity.SourceGenerators\Unity.Properties.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Scripts\Battle\BattleActions.cs" />
+    <Compile Include="Assets\Scripts\Battle\BattleQueue.cs" />
+    <Compile Include="Assets\Scripts\Battle\BattleType.cs" />
+    <Compile Include="Assets\Scripts\Battle\Conditions\ConditionData.cs" />
+    <Compile Include="Assets\Scripts\Battle\Controllers\TrainerBattleController.cs" />
     <Compile Include="Assets\Scripts\Battle\Events\DynamicInvokable.cs" />
     <Compile Include="Assets\Scripts\Battle\IndexHaver.cs" />
+    <Compile Include="Assets\Scripts\Battle\MoveHitData.cs" />
     <Compile Include="Assets\Scripts\Battle\SpeedSortable.cs" />
+    <Compile Include="Assets\Scripts\Pokemon\Data\Moves\MoveFlags.cs" />
+    <Compile Include="Assets\Scripts\Pokemon\Data\Moves\MoveSlot.cs" />
+    <Compile Include="Assets\Scripts\Pokemon\Data\Moves\SecondaryEffect.cs" />
+    <Compile Include="Assets\Scripts\Pokemon\Data\Moves\ZMove.cs" />
     <Compile Include="Assets\Scripts\Pokemon\PokemonIVs.cs" />
     <Compile Include="Assets\Scripts\Pokemon\PokemonTypes\Ground.cs" />
     <Compile Include="Assets\Scripts\Drawers\DialogPropertyDrawer.cs" />
@@ -147,7 +157,7 @@
     <Compile Include="Assets\Scripts\Pokemon\PokemonTypes\Water.cs" />
     <Compile Include="Assets\Scripts\Pokemon\PokemonGiftEntry.cs" />
     <Compile Include="Assets\Scripts\Pokemon\PokemonTypes\Ice.cs" />
-    <Compile Include="Assets\Scripts\Battle\BattleController.cs" />
+    <Compile Include="Assets\Scripts\Battle\Controllers\BattleController.cs" />
     <Compile Include="Assets\Scripts\Pokemon\PokemonTypes\Grass.cs" />
     <Compile Include="Assets\Scripts\Battle\Events\Sources\BooleanEventSource.cs" />
     <Compile Include="Assets\Scripts\PrimitiveContainers\BoolContainer.cs" />
@@ -161,15 +171,14 @@
     <Compile Include="Assets\Scripts\Battle\Effects\EffectType.cs" />
     <Compile Include="Assets\Scripts\Pokemon\Data\Moves\Move.cs" />
     <Compile Include="Assets\Scripts\Battle\FieldEffect.cs" />
-    <Compile Include="Assets\Scripts\Battle\NpcBattleController.cs" />
-    <Compile Include="Assets\Scripts\Pokemon\PokemonMove.cs" />
+    <Compile Include="Assets\Scripts\Battle\Controllers\NpcBattleController.cs" />
+    <Compile Include="Assets\Scripts\Battle\ActiveMove.cs" />
     <Compile Include="Assets\Scripts\Pokemon\PokemonTypes\Flying.cs" />
     <Compile Include="Assets\Scripts\Dialog\DialogueManager.cs" />
     <Compile Include="Assets\Scripts\Dialog\DialogTextButton.cs" />
     <Compile Include="Assets\Scripts\Battle\Events\CommonBattleEvents.cs" />
     <Compile Include="Assets\Scripts\Battle\Target.cs" />
     <Compile Include="Assets\Scripts\Battle\Battler.cs" />
-    <Compile Include="Assets\Scripts\Battle\ComputerBattleController.cs" />
     <Compile Include="Assets\Scripts\Pokemon\Data\Party.cs" />
     <Compile Include="Assets\Scripts\Battle\Effects\BattleWeather.cs" />
     <Compile Include="Assets\Scripts\Pokemon\Abilities\LightningRod.cs" />
@@ -191,7 +200,7 @@
     <Compile Include="Assets\Scripts\Battle\Events\BattleCallback.cs" />
     <Compile Include="Assets\Scripts\Pokemon\Data\Moves\MoveCategories.cs" />
     <Compile Include="Assets\Scripts\Pokemon\Nature.cs" />
-    <Compile Include="Assets\Scripts\Battle\PlayerBattleController.cs" />
+    <Compile Include="Assets\Scripts\Battle\Controllers\PlayerBattleController.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\UI\Standard HUD\MoveOption.uxml" />

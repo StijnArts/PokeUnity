@@ -1,6 +1,7 @@
 ﻿using Assets.Scripts.Battle.Effects;
 using Assets.Scripts.Battle.Events;
 using Assets.Scripts.Battle.Events.Sources;
+using Assets.Scripts.Pokemon;
 using Assets.Scripts.Registries;
 using Assets.Scripts.Utils;
 using System;
@@ -11,35 +12,63 @@ using UnityEngine;
 
 namespace Assets.Scripts.Battle
 {
-    public class Battle : MonoBehaviour, Target, EffectHolder
+    public class Battle : Target, EffectHolder
     {
-        public BattleSettings _battleSettings;
-        public bool BattleIsReady;
-        public bool PreparingBattle;
+        public enum RequestState { Empty, TeamPreview, Move, Switch }
+        public BattleSettings BattleSettings;
+        public BattleQueue Queue;
+        public BattleActions Actions;
+        public Queue<PokemonIndividualData> FaintQueue;
+        public int Turn = 1;
+        public bool MidTurn = false;
+        public bool Started = false;
+        public bool Ended = false;
+        public string Winnner = null;
         public List<BattleController> Participants;
         public Dictionary<BattleController, List<PokemonNpc>> ActivePokemonDictionary;
         public BattleField Field;
-        public Effect Effect;
-        public EffectState EffectState;
-        private int _eventDepth = 0;
+        public Effect Effect = new();
+        public EffectState EffectState = new();
         public BattleManager BattleManager => ServiceLocator.Instance.BattleManager;
-        public BattleEvent Event;
+        public DialogManager DialogManager => ServiceLocator.Instance.DialogManager;
+        public BattleEvent Event = new();
+        public Dictionary<string, DynamicInvokable> Events = null;
+        private int _eventDepth = 0;
         public int AbilityOrder = 0;
-        public PokemonIndividualData ActivePokemon;
-        public PokemonIndividualData ActiveTarget;
+        public int ActivePerHalf;
+
+        public PokemonIndividualData ActivePokemon = null;
+        public PokemonIndividualData ActiveTarget = null;
+        public ActiveMove ActiveMove = null;
+
         public bool StartOfPokemonTurn = true;
-        private void Start()
+        public bool IsFourPlayer => BattleSettings.GameType == (BattleType.Multi | BattleType.FreeForAll);
+        public Battle(BattleSettings battleSettings, List<BattleController> participants)
         {
-            enabled = false;
+            BattleSettings = battleSettings;
+            Field = new BattleField(this);
+            if (participants.Count < 4 && IsFourPlayer) throw new ArgumentException("There must be at least 4 players present for a Multi or Free For All Battle");
+            participants.ForEach(participant => {
+                participant.NumberOfMaxActivePokemon = (
+                participant is NpcBattleController && BattleSettings.GameType == BattleType.Wild ? (
+                    BattleSettings.GameType == BattleType.Triples ? 3 : BattleSettings.GameType == BattleType.Doubles || IsFourPlayer ? 2 : 1)
+                : participant.ParticipatingPokemon.Count);
+
+                participant.ParticipatingPokemon.ForEach(pokemon => pokemon.SetBattleData(participant, this));
+            });
+            ActivePerHalf = BattleSettings.GameType == BattleType.Triples ? 3 : BattleSettings.GameType == BattleType.Doubles || IsFourPlayer ? 2 : 1;
+            Queue = new BattleQueue(this);
+            Actions = new BattleActions(this);
+            FaintQueue = new Queue<PokemonIndividualData>();
+
         }
 
-        public void PrepareBattle(List<BattleController> participants)
+        public void PrepareBattle()
         {
             Participants = participants;
-            enabled = true;
         }
 
-        private void Update()
+        public void Update()
         {
 
             if (!BattleIsReady)
@@ -116,13 +145,13 @@ namespace Assets.Scripts.Battle
 
         public List<PokemonIndividualData> GetActivePokemonIndividualData()
         {
-            return ActivePokemon.SelectMany(value => value.Value).Select(pokemonNpc => pokemonNpc.PokemonIndividualData).ToList();
+            return ActivePokemonDictionary.SelectMany(value => value.Value).Select(pokemonNpc => pokemonNpc.PokemonIndividualData).ToList();
         }
 
         public List<Tuple<PokemonIndividualData, BattleController>> GetActivePokemonWithBattleControllers()
         {
             var activePokemonWithControllers = new List<Tuple<PokemonIndividualData, BattleController>>();
-            foreach (var activePokemon in ActivePokemon)
+            foreach (var activePokemon in ActivePokemonDictionary)
             {
                 var controller = activePokemon.Key;
                 foreach (var pokemon in activePokemon.Value)
@@ -168,29 +197,66 @@ namespace Assets.Scripts.Battle
         public bool SuppressingAbility(PokemonIndividualData target = null)
         {
             return ActivePokemon != null && GetActivePokemonIndividualData().Contains(ActivePokemon) && ActivePokemon != target
-                && ActiveMove != null && ActiveMove.IgnoreAbility && !target.HasItem("Ability Shield");
+                && ActiveMove != null && ActiveMove.Move.IgnoreAbility && !target.HasItem("Ability Shield");
         }
 
         //TODO find way to cancel effect with chat message and without;
 
-        //TODO get event modifier and modify it, then save the truncated value to the executing event
-        //https://github.com/smogon/pokemon-showdown/blob/d88ccc2107ec890515edd3db8aa95edba615e5e4/SIM_EVENTS.md#the-chainmodify-pattern
-        public void ChainModify(double modifier, double? denominator)
+        public double Chain(List<double> previousMods, List<double> nextMods)
         {
+            var previousMod = Math.Truncate(previousMods[0] * 4096);
+            if (previousMods.Count > 1)
+            {
+                previousMod = Math.Truncate(previousMods[0] * 4096 / previousMods[1]);
+            }
 
+            var nextMod = Math.Truncate(nextMods[0] * 4096);
+            if (nextMods.Count > 1)
+            {
+                nextMod = Math.Truncate(nextMods[0] * 4096 / nextMods[1]);
+            }
+
+            return Math.Truncate(((previousMod * nextMod) + 2048) / Math.Pow(2, 12)) / 4096;
+        }
+
+        public void ChainModify(List<double> modifiers, double? denominator = null)
+        {
+            var previousMod = Math.Truncate(Event.Modifier.Value * 4096);
+
+            var numerator = modifiers[0];
+            if (denominator == null) denominator = 1;
+            if (modifiers.Count > 1)
+            {
+                denominator = modifiers[1];
+            }
+
+            var nextMod = Math.Truncate(numerator * 4096 / denominator.Value);
+            Event.Modifier = Math.Truncate(((previousMod * nextMod) + 2048) / Math.Pow(2, 12)) / 4096;
         }
 
         public double Modify(double value, List<double> modifiers, double? denominator = null)
         {
             var numerator = modifiers[0];
             if (denominator == null) denominator = 1;
-            if(modifiers.Count > 1)
+            if (modifiers.Count > 1)
             {
                 denominator = modifiers[1];
             }
 
             var modifier = Math.Truncate(numerator * 4096 / denominator.Value);
             return Math.Truncate((Math.Truncate(value * modifier) + 2048 - 1) / 4096);
+        }
+
+        public double FinalModify(double relayVar)
+        {
+            relayVar = Modify(relayVar, new List<double> { Event.Modifier.Value });
+            Event.Modifier = 1;
+            return relayVar;
+        }
+
+        public double Randomizer(int baseDamage)
+        {
+            return Math.Truncate(Math.Truncate(baseDamage * (100d - UnityEngine.Random.Range(0, 16))) / 100);
         }
 
         public static Comparer<T> ComparePriority<T>() where T : SpeedSortable
@@ -546,7 +612,8 @@ namespace Assets.Scripts.Battle
                     if (EffectState.ContainsKey("target"))
                     {
                         EffectState["target"] = effectHolder;
-                    } else EffectState.Add("target", effectHolder);
+                    }
+                    else EffectState.Add("target", effectHolder);
 
                     if (handler.Callback is VoidBattleCallback)
                     {
@@ -565,7 +632,7 @@ namespace Assets.Scripts.Battle
                     returnVal = handler.Callback;
                 }
 
-                if(returnVal != null)
+                if (returnVal != null)
                 {
                     relayVar = returnVal;
                     if (relayVar is false || fastExit.Value)
@@ -577,7 +644,7 @@ namespace Assets.Scripts.Battle
                         }
                         else break;
                     }
-                    if(hasRelayVar == 1)
+                    if (hasRelayVar == 1)
                     {
                         args[0] = relayVar;
                     }
@@ -585,7 +652,7 @@ namespace Assets.Scripts.Battle
             }
 
             _eventDepth--;
-            if(relayVar != null && TypeUtils.IsNumber(relayVar) && (relayVar as double?).Value == Math.Abs(Math.Floor((relayVar as double?).Value)))
+            if (relayVar != null && TypeUtils.IsNumber(relayVar) && (relayVar as double?).Value == Math.Abs(Math.Floor((relayVar as double?).Value)))
             {
                 relayVar = Modify((relayVar as double?).Value, Event.Modifier);
             }

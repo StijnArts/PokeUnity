@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Assets.Scripts.Pokemon.Data.Conditions
 {
-    public class PokemonConditionData : Condition, PokemonEventMethods
+    public class PokemonConditionData : Condition, PokemonEventMethods, ConditionData
     {
     }
 }

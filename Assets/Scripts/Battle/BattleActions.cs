@@ -6,9 +6,13 @@ using System.Threading.Tasks;
 
 namespace Assets.Scripts.Battle
 {
-    public class BattleSettings
+    public class BattleActions
     {
-        public GameType GameType;
-        public int MinimumAmountOfActivePokemon = 1;
+        public Battle Battle;
+
+        public BattleActions(Battle battle)
+        {
+            this.Battle = battle;
+        }
     }
 }

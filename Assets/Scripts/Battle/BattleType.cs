@@ -6,8 +6,14 @@ using System.Threading.Tasks;
 
 namespace Assets.Scripts.Battle
 {
-    public class ComputerBattleController : BattleController
+    public enum BattleType
     {
-
+        Singles,
+        Doubles,
+        Triples,
+        Rotation,
+        Multi,
+        FreeForAll,
+        Wild
     }
 }

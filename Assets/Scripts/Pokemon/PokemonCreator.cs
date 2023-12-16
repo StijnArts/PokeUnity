@@ -74,7 +74,7 @@ public class PokemonCreator
         return learnableMoves;
     }
 
-    private static PokemonMove[] DetermineMoves(PokemonSpawnEntry pokemonSpawnEntry, PokemonSpecies pokemonSpecies, int level)
+    private static ActiveMove[] DetermineMoves(PokemonSpawnEntry pokemonSpawnEntry, PokemonSpecies pokemonSpecies, int level)
     {
         //TODO make movepool size adhere to global setting
         Move[] moves = new Move[4];
@@ -103,7 +103,7 @@ public class PokemonCreator
             }
             moveCursor++;
         }
-        return moves.Where(move => move != null).Select(move => new PokemonMove(move)).ToArray();
+        return moves.Where(move => move != null).Select(move => new ActiveMove(move)).ToArray();
     }
 
     private static PokemonNpc.PokemonGender DetermineGender(double maleRatio)

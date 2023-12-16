@@ -5,6 +5,7 @@ using Assets.Scripts.Battle.Events;
 using Assets.Scripts.Battle.Events.Sources;
 using Assets.Scripts.Pokemon;
 using Assets.Scripts.Pokemon.Data;
+using Assets.Scripts.Pokemon.Data.Moves;
 using Assets.Scripts.Registries;
 using System;
 using System.Collections;
@@ -26,7 +27,7 @@ public class PokemonIndividualData : Target, BattleEventSource, EffectHolder, Sp
     [HideInInspector]
     public int? CurrentHp;
     public string FormId = "";
-    public PokemonMove[] Moves = new PokemonMove[Settings.MaxMoveSlots];
+    public MoveSlot[] Moves = new MoveSlot[Settings.MaxMoveSlots];
     public string Ability;
     [HideInInspector]
     public Nature.Natures Nature = global::Nature.Natures.Adamant;
@@ -168,9 +169,9 @@ public class PokemonIndividualData : Target, BattleEventSource, EffectHolder, Sp
         return string.IsNullOrEmpty(Nickname) ? PokemonName : Nickname;
     }
 
-    public void SetBattleData(PokemonBattleData pokemonBattleData)
+    public void SetBattleData(BattleController controller, Battle battle)
     {
-        BattleData = pokemonBattleData;
+        BattleData = new PokemonBattleData(controller, battle);
     }
 
     public List<PokemonIndividualData> GetAllyAndSelf()

@@ -13,7 +13,7 @@ namespace Assets.Scripts.Pokemon.Moves
     {
         public static string MoveIdentifier = "tackle";
 
-        public Tackle() : base(MoveIdentifier, "Tackle", Normal.TypeName, MoveCategories.Physical, 40)
+        public Tackle() : base(MoveIdentifier, "Tackle", Normal.TypeName, MoveCategories.Physical, 40, Battle.Target.TargettingType.Normal)
         {
             BasePower = 40;
             

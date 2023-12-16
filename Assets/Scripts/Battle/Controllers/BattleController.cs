@@ -22,7 +22,7 @@ namespace Assets.Scripts.Battle
         public PokemonIndividualData FaintedThisTurn;
         public int TotalFainted => ParticipatingPokemon.Where(pokemon => pokemon.CurrentHp <= 0).Count();
         public int PokemonLeft => ParticipatingPokemon.Where(pokemon => pokemon.CurrentHp >= 1).Count();
-        public abstract void SelectMove(PokemonIndividualData pokemonToMove, PokemonMove move, List<Target> targets);
+        public abstract void SelectMove(PokemonIndividualData pokemonToMove, ActiveMove move, List<Target> targets);
 
         public abstract bool SelectParticipatingPokemon(int numberAllowed = 0);
 

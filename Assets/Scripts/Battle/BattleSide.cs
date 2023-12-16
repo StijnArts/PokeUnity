@@ -11,9 +11,8 @@ namespace Assets.Scripts.Battle
 {
     public class BattleSide : Target, EffectHolder
     {
-        public enum SideId { P1, P2, P3, P4 }
         readonly public Battle battle;
-        readonly public SideId id;
+        readonly public int Id;
         readonly public int SlotNumber;
 
         public BattleController AllySide;
