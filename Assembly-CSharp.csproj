@@ -61,13 +61,17 @@
   <ItemGroup>
     <Compile Include="Assets\Scripts\Battle\BattleActions.cs" />
     <Compile Include="Assets\Scripts\Battle\BattleQueue.cs" />
+    <Compile Include="Assets\Scripts\Battle\BattleRequestState.cs" />
     <Compile Include="Assets\Scripts\Battle\BattleType.cs" />
     <Compile Include="Assets\Scripts\Battle\Conditions\ConditionData.cs" />
     <Compile Include="Assets\Scripts\Battle\Controllers\TrainerBattleController.cs" />
+    <Compile Include="Assets\Scripts\Battle\Effects\HitEffect.cs" />
     <Compile Include="Assets\Scripts\Battle\Events\DynamicInvokable.cs" />
     <Compile Include="Assets\Scripts\Battle\IndexHaver.cs" />
     <Compile Include="Assets\Scripts\Battle\MoveHitData.cs" />
     <Compile Include="Assets\Scripts\Battle\SpeedSortable.cs" />
+    <Compile Include="Assets\Scripts\Pokemon\Data\Moves\ContestCategories.cs" />
+    <Compile Include="Assets\Scripts\Pokemon\Data\Moves\ContestData.cs" />
     <Compile Include="Assets\Scripts\Pokemon\Data\Moves\MoveFlags.cs" />
     <Compile Include="Assets\Scripts\Pokemon\Data\Moves\MoveSlot.cs" />
     <Compile Include="Assets\Scripts\Pokemon\Data\Moves\SecondaryEffect.cs" />

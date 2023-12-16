@@ -1,11 +1,9 @@
 ﻿using Assets.Scripts.Battle.Effects;
 using Assets.Scripts.Battle.Events;
 using Assets.Scripts.Battle.Events.Sources;
-using Assets.Scripts.Pokemon;
 using Assets.Scripts.Registries;
 using Assets.Scripts.Utils;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -14,11 +12,11 @@ namespace Assets.Scripts.Battle
 {
     public class Battle : Target, EffectHolder
     {
-        public enum RequestState { Empty, TeamPreview, Move, Switch }
         public BattleSettings BattleSettings;
         public BattleQueue Queue;
         public BattleActions Actions;
         public Queue<PokemonIndividualData> FaintQueue;
+        public BattleRequestState RequestState = BattleRequestState.Empty;
         public int Turn = 1;
         public bool MidTurn = false;
         public bool Started = false;
@@ -41,14 +39,19 @@ namespace Assets.Scripts.Battle
         public PokemonIndividualData ActiveTarget = null;
         public ActiveMove ActiveMove = null;
 
+        public ActiveMove LastMove = null;
+        public string LastSuccesfulMoveThisTurn;
+        public bool QuickClawRoll = false;
         public bool StartOfPokemonTurn = true;
+        public int HitSubstitute = 0;
         public bool IsFourPlayer => BattleSettings.GameType == (BattleType.Multi | BattleType.FreeForAll);
         public Battle(BattleSettings battleSettings, List<BattleController> participants)
         {
             BattleSettings = battleSettings;
             Field = new BattleField(this);
             if (participants.Count < 4 && IsFourPlayer) throw new ArgumentException("There must be at least 4 players present for a Multi or Free For All Battle");
-            participants.ForEach(participant => {
+            participants.ForEach(participant =>
+            {
                 participant.NumberOfMaxActivePokemon = (
                 participant is NpcBattleController && BattleSettings.GameType == BattleType.Wild ? (
                     BattleSettings.GameType == BattleType.Triples ? 3 : BattleSettings.GameType == BattleType.Doubles || IsFourPlayer ? 2 : 1)
@@ -61,82 +64,10 @@ namespace Assets.Scripts.Battle
             Actions = new BattleActions(this);
             FaintQueue = new Queue<PokemonIndividualData>();
 
+            SetParticipants(participants);
+
+            Start();
         }
-
-        public void PrepareBattle()
-        {
-            Participants = participants;
-        }
-
-        public void Update()
-        {
-
-            if (!BattleIsReady)
-            {
-                StartCoroutine(PrepareBattle());
-            }
-            else
-            {
-                if (ParticipantsAreReady())
-                {
-                    if (AllPokemonHaveMoved())
-                    {
-                        ResetParticipantTurnState();
-                    }
-                    else
-                    {
-                        PlayTurn();
-                    }
-                }
-                else
-                {
-
-                }
-
-            }
-        }
-
-        IEnumerator PrepareBattle()
-        {
-            yield return new WaitUntil(BattleIsPrepared);
-            BattleIsReady = true;
-        }
-
-        public void PlayTurn()
-        {
-            var executingPokemon = GetActivePokemonIndividualData().Where(pokemon => !pokemon.BattleData.HasMovedThisTurn).First();
-            if (StartOfPokemonTurn)
-            {
-                DecideMoveOrder();
-                StartOfPokemonTurn = false;
-            }
-            executingPokemon.BattleData.PlayTurn();
-        }
-
-        /*private void DecideMoveOrder()
-        {
-            GetActivePokemonWithBattleControllers().ForEach(activePokemon =>
-                activePokemon.Item1.BattleData.CalculateTurnSpeed(activePokemon.Item1.Stats.speed, this, activePokemon.Item2));
-            GetActivePokemonIndividualData().Sort((PokemonIndividualData a, PokemonIndividualData b) =>
-            {
-                if (a.BattleData.Priority > b.BattleData.Priority)
-                {
-                    return 1;
-                }
-                else if (a.BattleData.TurnSpeed > b.BattleData.TurnSpeed)
-                {
-                    return 1;
-                }
-                else if (a.BattleData.TurnSpeed == b.BattleData.TurnSpeed)
-                {
-                    var values = new int[] { -1, 1 };
-                    var random = new Unity.Mathematics.Random();
-                    return values[random.NextInt(0, 1)];
-                }
-
-                return -1;
-            });
-        }*/
 
         private bool AllPokemonHaveMoved()
         {
@@ -173,25 +104,6 @@ namespace Assets.Scripts.Battle
             {
                 participant.FinishedTurn = false;
             }
-        }
-
-        private bool BattleIsPrepared()
-        {
-            var participantsHaveSelectedPokemon = !Participants
-                .Where(participant => participant.ParticipatingPokemon == null && !participant.IsSelectingParticipatingPokemon)
-                .Select(participant => participant.SelectParticipatingPokemon())
-                .Any();
-            var participantsHaveActivePokemon = false;
-            if (participantsHaveSelectedPokemon && !participantsHaveActivePokemon)
-            {
-                participantsHaveActivePokemon = !Participants
-                .Where(participant => participant.ActivePokemon == null && !participant.HasActivePokemon)
-                .Select(participant => participant.CreateActivePokemon(_battleSettings.MinimumAmountOfActivePokemon))
-                .Any();
-            }
-
-
-            return participantsHaveSelectedPokemon && participantsHaveActivePokemon;
         }
 
         public bool SuppressingAbility(PokemonIndividualData target = null)
@@ -654,7 +566,7 @@ namespace Assets.Scripts.Battle
             _eventDepth--;
             if (relayVar != null && TypeUtils.IsNumber(relayVar) && (relayVar as double?).Value == Math.Abs(Math.Floor((relayVar as double?).Value)))
             {
-                relayVar = Modify((relayVar as double?).Value, Event.Modifier);
+                relayVar = Modify((relayVar as double?).Value, new List<double> { Event.Modifier.Value });
             }
             Event = parentEvent;
 
@@ -713,7 +625,7 @@ namespace Assets.Scripts.Battle
                             handlers.AddRange(this.FindPokemonEventHandlers(allyActive, $"onAlly{eventName}"));
                             handlers.AddRange(this.FindPokemonEventHandlers(allyActive, $"onAny{eventName}"));
                         }
-                        foreach (var foeActive in pokemon.GetFoes(ActivePokemon))
+                        foreach (var foeActive in pokemon.GetFoes(ActivePokemonDictionary))
                         {
                             handlers.AddRange(this.FindPokemonEventHandlers(foeActive, $"onFoe{eventName}"));
                             handlers.AddRange(this.FindPokemonEventHandlers(foeActive, $"onAny{eventName}"));
@@ -913,6 +825,87 @@ namespace Assets.Scripts.Battle
             }
 
             return handlers;
+        }
+
+        public void SetParticipant(int slotNumber, BattleController participant)
+        {
+            participant.SetBattleData(this, slotNumber);
+        }
+
+        public void SetParticipantAllyAndFoes(BattleController participant, List<BattleController> Foes, BattleController ally = null)
+        {
+            participant.SetAlliesAndFoes(Foes, ally);   
+        }
+
+        public void SetParticipants(List<BattleController> participants)
+        {
+            Participants = participants;
+
+            for (int i = 0; i < Participants.Count; i++)
+            {
+                SetParticipant(i, Participants[i]);
+            }
+            if (BattleSettings.GameType != (BattleType.Wild | BattleType.FreeForAll))
+            {
+                if (BattleSettings.GameType == BattleType.Multi)
+                {
+                    SetParticipantAllyAndFoes(Participants[0], new List<BattleController> { Participants[2], Participants[3] }, Participants[1]);
+                    SetParticipantAllyAndFoes(Participants[1], new List<BattleController> { Participants[2], Participants[3] }, Participants[0]);
+                    SetParticipantAllyAndFoes(Participants[2], new List<BattleController> { Participants[0], Participants[1] }, Participants[3]);
+                    SetParticipantAllyAndFoes(Participants[3], new List<BattleController> { Participants[0], Participants[1] }, Participants[2]);
+                }
+                else
+                {
+                    SetParticipantAllyAndFoes(Participants[0], new List<BattleController> { Participants[1] });
+                    SetParticipantAllyAndFoes(Participants[1], new List<BattleController> { Participants[0] });
+                }
+            }
+            else
+            {
+                for (int i = 0; i < Participants.Count; i++)
+                {
+                    //This enables scenarios where wild pokemon can attack other groups of wild pokemon during a wild battle EG Seviper vs Zangoose in XY Horde Battles
+                    SetParticipantAllyAndFoes(Participants[i], Participants.Where(participant => participant != Participants[i]).ToList());
+                }
+            }
+        }
+
+        public void Start()
+        {
+            //if(Deserialized) return;
+
+            if (Started) throw new Exception("Battle has already started");
+
+            if (Participants.Any(participant => participant.ParticipatingPokemon.Count < 1)) throw new Exception("Battle not started, a participant has no participating pokemon");
+
+            //Adds an Action to the queue with choice start
+            Queue.AddChoice(new List<ActionChoice>() { Choice = "Start" });
+            this.MidTurn = true;
+            if (RequestState == BattleRequestState.Empty) Go();
+        }
+
+        public void Go()
+        {
+            if(RequestState != BattleRequestState.Empty) RequestState = BattleRequestState.Empty;
+            //Adds a before turn action to the queue and expects it to be called. This puts the battle on hold while the participants pick their actions and
+            //should only resume when the players have picked their actions for the turn
+            if(!MidTurn)
+            {
+                Queue.InsertChoice(new List<ActionChoice>() { Choice = "BeforeTurn" });
+                Queue.AddChoice(new List<ActionChoice>() { Choice = "Residual" });
+                MidTurn = true;
+            }
+            var queue = Queue.Actions;
+            while (queue.Count > 1)
+            {
+                var action = queue.Dequeue();
+                RunAction(action);
+                if (RequestState != BattleRequestState.Empty || Ended) return;
+            }
+
+            NextTurn();
+            MidTurn = false;
+            queue.Clear();
         }
     }
 }

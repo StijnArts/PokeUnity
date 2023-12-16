@@ -9,7 +9,7 @@ namespace Assets.Scripts.Battle
     public class BattleQueue
     {
         public Battle Battle;
-        public List<Action> actions;
+        public Queue<BattleAction> Actions = new();
 
         public BattleQueue(Battle battle)
         {

@@ -18,6 +18,7 @@ namespace Assets.Scripts.Battle
         public int NumberOfMaxActivePokemon = 1;
         public bool IsSelectingParticipatingPokemon = false;
         public bool HasActivePokemon = false;
+        public bool Ready = false;
         public PokemonIndividualData FaintedLastTurn;
         public PokemonIndividualData FaintedThisTurn;
         public int TotalFainted => ParticipatingPokemon.Where(pokemon => pokemon.CurrentHp <= 0).Count();
@@ -42,7 +43,7 @@ namespace Assets.Scripts.Battle
 
             if (!SlotConditions.Keys.Contains(target.Value) && !SlotConditions[target.Value].ContainsKey(status.Id)) return false;
             var condition = SlotConditions[target.Value][status.Id];
-            battle.SingleEvent("End", status, condition, GetActivePokemonData()[target.Value]);
+            Battle.SingleEvent("End", status, condition, GetActivePokemonData()[target.Value]);
             SlotConditions[target.Value].Remove(status.Id);
 
             return true;
@@ -58,6 +59,24 @@ namespace Assets.Scripts.Battle
         private List<PokemonIndividualData> GetActivePokemonData()
         {
             return ActivePokemon.Select(pokemon => pokemon.PokemonIndividualData).ToList();
+        }
+
+        public void SetBattle(Battle Battle)
+        {
+            base.Battle = Battle;
+        }
+
+        public void SetBattleData(Battle battle, int slotNumber)
+        {
+            base.Battle = battle;
+            base.SlotNumber = slotNumber;
+        }
+
+        public void SetAlliesAndFoes(List<BattleController> foes, BattleController ally = null)
+        {
+            base.Foes = foes;
+            base.AllySide = ally;
+            Ready = true;
         }
     }
 }

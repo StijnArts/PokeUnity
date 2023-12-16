@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Assets.Scripts.Battle
 {
-    public class ActiveMove : BasicEffect
+    public class ActiveMove : Effect
     {
         public Move Move;
         public string Weather = null;
@@ -46,9 +46,9 @@ namespace Assets.Scripts.Battle
         public ActiveMove(Move move)
         {
             Move = move;
-            EffectType = EffectType.Move;
-            Name = move.MoveName;
-            Id = move.MoveId;
+            EffectType = move.EffectType;
+            Name = move.Name;
+            Id = move.Id;
         }
     }
 }

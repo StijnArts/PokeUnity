@@ -14,7 +14,7 @@ namespace Assets.Scripts.Registries
             MovesDictionary.Add(id, ability);
         }
 
-        public static List<string> GetMoveIds() => MovesDictionary.Values.Select(move => move.MoveId).ToList();
+        public static List<string> GetMoveIds() => MovesDictionary.Values.Select(move => move.Id).ToList();
 
         public static Move GetMove(string id)
         {
@@ -32,7 +32,7 @@ namespace Assets.Scripts.Registries
             var moves = SubTypeReflector<Move>.FindSubTypeClasses();
             foreach (Move move in moves)
             {
-                MovesDictionary.Add(move.MoveId, move);
+                MovesDictionary.Add(move.Id, move);
             }
         }
 

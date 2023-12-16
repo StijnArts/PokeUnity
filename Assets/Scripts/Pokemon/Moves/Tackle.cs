@@ -1,4 +1,5 @@
 ﻿using Assets.Scripts.Pokemon.Data;
+using Assets.Scripts.Battle;
 using Assets.Scripts.Pokemon.Data.Moves;
 using Assets.Scripts.Pokemon.PokemonTypes;
 using System;
@@ -13,7 +14,7 @@ namespace Assets.Scripts.Pokemon.Moves
     {
         public static string MoveIdentifier = "tackle";
 
-        public Tackle() : base(MoveIdentifier, "Tackle", Normal.TypeName, MoveCategories.Physical, 40, Battle.Target.TargettingType.Normal)
+        public Tackle() : base(MoveIdentifier, "Tackle", Normal.TypeName, MoveCategories.Physical, 40, Target.TargettingType.Normal, 100)
         {
             BasePower = 40;
             

@@ -11,16 +11,15 @@ namespace Assets.Scripts.Battle
 {
     public class BattleSide : Target, EffectHolder
     {
-        readonly public Battle battle;
-        readonly public int Id;
-        readonly public int SlotNumber;
+        public Battle Battle;
+        public int SlotNumber;
 
         public BattleController AllySide;
-        public BattleController Foe;
-        public List<FieldEffect> FieldEffects;
-        public Dictionary<string, bool> GimmickUsed;
-        public Dictionary<string, EffectState> SideConditions;
-        public Dictionary<int, Dictionary<string, EffectState>> SlotConditions;
+        public List<BattleController> Foes;
+        public List<FieldEffect> FieldEffects = new();
+        public Dictionary<string, bool> GimmickUsed = new();
+        public Dictionary<string, EffectState> SideConditions = new();
+        public Dictionary<int, Dictionary<string, EffectState>> SlotConditions = new();
 
         public bool RemoveSideCondition(string statusAsString = null, Effect statusAsEffect = null)
         {
@@ -31,7 +30,7 @@ namespace Assets.Scripts.Battle
 
             if (!SideConditions.Keys.Contains(status.Id)) return false;
             var condition = SideConditions[status.Id];
-            battle.SingleEvent("SideEnd", status, condition, this);
+            Battle.SingleEvent("SideEnd", status, condition, this);
             SideConditions[status.Id].Remove(status.Id);
 
             return true;
