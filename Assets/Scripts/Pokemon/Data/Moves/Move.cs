@@ -3,11 +3,13 @@ using Assets.Scripts.Battle.Conditions;
 using Assets.Scripts.Battle.Effects;
 using Assets.Scripts.Pokemon.Data.Conditions;
 using Assets.Scripts.Pokemon.Data.Moves;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using static Assets.Scripts.Battle.ActiveMove;
 
+[Serializable]
 public abstract class Move : Effect, HitEffect
 {
     public enum SelfDestructStates
@@ -129,4 +131,9 @@ public abstract class Move : Effect, HitEffect
     public string GetPseudoWeather() => null;
     public string GetTerrain() => null;
     public string GetWeather() => null;
+
+    public Move DeepCopy()
+    {
+        throw new NotImplementedException();
+    }
 }

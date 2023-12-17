@@ -6,11 +6,13 @@ using Assets.Scripts.Battle.Events.Sources;
 using Assets.Scripts.Pokemon;
 using Assets.Scripts.Pokemon.Data;
 using Assets.Scripts.Pokemon.Data.Moves;
+using Assets.Scripts.Pokemon.PokemonTypes;
 using Assets.Scripts.Registries;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEditorInternal.Profiling.Memory.Experimental;
 using UnityEngine;
 using static UnityEditor.Progress;
@@ -33,13 +35,11 @@ public class PokemonIndividualData : Target, BattleEventSource, EffectHolder, Sp
     public Nature.Natures Nature = global::Nature.Natures.Adamant;
     [HideInInspector]
     public Nature NatureData;
-    public PokemonType PrimaryType;
-    public PokemonType SecondaryType = null;
     [HideInInspector]
-    public float hitboxHeight;
+    public float HitboxHeight;
     [HideInInspector]
-    public float hitboxWidth;
-    public bool isShiny = false;
+    public float HitboxWidth;
+    public bool IsShiny = false;
     public PokemonNpc.PokemonGender gender = PokemonNpc.PokemonGender.MALE;
     [HideInInspector]
     public PokemonStats Stats = new PokemonStats(1, 1, 1, 1, 1, 1);
@@ -49,11 +49,11 @@ public class PokemonIndividualData : Target, BattleEventSource, EffectHolder, Sp
     public PokemonIVs IVs = new PokemonIVs();
     public string Item;
     [HideInInspector]
-    public bool isValid = false;
-    public int currentExperience = 0;
-    public int friendship = 0;
-    public List<Move> learnableMoves = new List<Move>();
-    public bool isSavedPokemon = false;
+    public bool IsValid = false;
+    public int CurrentExperience = 0;
+    public int Friendship = 0;
+    public List<Move> LearnableMoves = new List<Move>();
+    public bool IsSavedPokemon = false;
     [HideInInspector]
     public PokemonBattleData BattleData;
     public string Status;
@@ -70,7 +70,7 @@ public class PokemonIndividualData : Target, BattleEventSource, EffectHolder, Sp
         {
             suffix += "_female";
         }
-        if (isShiny)
+        if (IsShiny)
         {
             suffix += "_shiny";
         }
@@ -136,12 +136,8 @@ public class PokemonIndividualData : Target, BattleEventSource, EffectHolder, Sp
         NatureData = PokemonNatureRegistry.GetNature((int)Nature);
 
         BaseSpecies = PokemonRegistry.GetPokemonSpecies(new PokemonIdentifier(PokemonId, FormId));
-        PrimaryType = PokemonTypeRegistry.GetType(BaseSpecies.PrimaryType);
+        
         Stats = CalculateStats();
-        if (BaseSpecies.SecondaryType != null)
-        {
-            SecondaryType = PokemonTypeRegistry.GetType(BaseSpecies.SecondaryType);
-        }
 
         if (!string.IsNullOrEmpty(FormId) && BaseSpecies.Forms.ContainsKey(FormId))
         {
@@ -171,7 +167,7 @@ public class PokemonIndividualData : Target, BattleEventSource, EffectHolder, Sp
 
     public void SetBattleData(BattleController controller, Battle battle)
     {
-        BattleData = new PokemonBattleData(controller, battle);
+        BattleData = new PokemonBattleData(this, controller, battle);
     }
 
     public List<PokemonIndividualData> GetAllyAndSelf()
@@ -244,7 +240,7 @@ public class PokemonIndividualData : Target, BattleEventSource, EffectHolder, Sp
         }
     }
 
-    public int GetStat(PokemonStats.StatTypes statType, bool unboosted, bool unmodified) => BattleData.GetStat(this, statType, unboosted, unmodified);
+    public double GetStat(PokemonStats.StatTypes statType, bool unboosted, bool unmodified) => BattleData.GetStat(this, statType, unboosted, unmodified);
 
     public string ClearAbility()
     {
@@ -373,5 +369,28 @@ public class PokemonIndividualData : Target, BattleEventSource, EffectHolder, Sp
     public int GetSpeed()
     {
         return BattleData.BattleSpeed;
+    }
+
+    public void UpdateSpeed()
+    {
+        BattleData.UpdateSpeed(this);
+    }
+
+    public void DisableMove(string moveId, bool? isHidden = null, Effect sourceEffect = null)
+    {
+        BattleData.DisableMove(moveId, isHidden, sourceEffect);
+    }
+
+    public string[] GetTypes(bool? excludeAdded = null, bool? preterastallized = null)
+    {
+        if (preterastallized == false && BattleData.IsTerastallized) return new string[] { BattleData.Terastallized };
+        var types = (string[])BattleData.Battle.RunEvent("Type", new List<Target>() { this }, null, null, BattleData.Types);
+        if (excludeAdded == false && BattleData.AddedType != null)
+        {
+            types.AddRange(BattleData.AddedType);
+            return types.ToArray();
+        }
+        if (types.Length > 0) return types;
+        return new string[] { Normal.TypeName };
     }
 }

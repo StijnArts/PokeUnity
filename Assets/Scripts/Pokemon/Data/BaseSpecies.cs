@@ -10,8 +10,7 @@ namespace Assets.Scripts.Pokemon.Data
 {
     public class BaseSpecies : Effect
     {
-        public string PrimaryType;
-        public string SecondaryType;
+        public string[] Types = new string[Settings.MaxTypes];
         public List<Ability> Abilities = new List<Ability>();
         public Ability HiddenAbility;
         public BaseStats BaseStats;
@@ -36,7 +35,7 @@ namespace Assets.Scripts.Pokemon.Data
 
         public BaseSpecies(
         string pokemonId,
-        string primaryType,
+        string[] types,
         BaseStats baseStats,
         int catchRate,
         double maleRatio,
@@ -55,7 +54,7 @@ namespace Assets.Scripts.Pokemon.Data
         bool cannotDynamax = false)
         {
             Id = pokemonId;
-            PrimaryType = primaryType;
+            Types = types;
             BaseStats = baseStats;
             CatchRate = catchRate;
             MaleRatio = maleRatio;
@@ -72,31 +71,6 @@ namespace Assets.Scripts.Pokemon.Data
             SpriteWidth = spriteWidth;
             SpriteResolution = spriteResolution;
             SpriteAnimationSpeed = spriteAnimationSpeed;
-        }
-
-        public BaseSpecies(
-            string pokemonId,
-            string primaryType,
-            string secondaryType,
-            BaseStats baseStats,
-            int catchRate,
-            double maleRatio,
-            int baseExperienceYield,
-            string experienceGroup,
-            int eggCycles,
-            List<string> eggGroups,
-            int baseFriendship,
-            EvYield evYield,
-            double heightInCm,
-            double weightInGrams,
-            int spriteWidth,
-            int spriteResolution,
-            int spriteAnimationSpeed,
-            bool hasGenderDifferences = false,
-            bool cannotDynamax = false) :
-                this(pokemonId, primaryType, baseStats, catchRate, maleRatio, baseExperienceYield, experienceGroup, eggCycles, eggGroups, baseFriendship, evYield, heightInCm, weightInGrams, spriteWidth, spriteResolution, spriteAnimationSpeed, cannotDynamax, hasGenderDifferences)
-        {
-            SecondaryType = secondaryType;
         }
     }
 }

@@ -48,13 +48,13 @@ public class PokemonCreator
         pokemonIndividualData.AbilityData = pokemonIndividualData.Ability.Id;
         pokemonIndividualData.IVs = GenerateIVs();
         pokemonIndividualData.gender = DetermineGender(pokemonSpecies.MaleRatio);
-        pokemonIndividualData.friendship = pokemonSpecies.BaseFriendship;
-        pokemonIndividualData.isValid = true;
+        pokemonIndividualData.Friendship = pokemonSpecies.BaseFriendship;
+        pokemonIndividualData.IsValid = true;
         pokemonIndividualData.EVs = new PokemonEVs();
         pokemonIndividualData.PokemonId = pokemonSpawnEntry.pokemonId;
         pokemonIndividualData.FormId = pokemonSpawnEntry.formId;
         pokemonIndividualData.Moves = DetermineMoves(pokemonSpawnEntry, pokemonSpecies, pokemonIndividualData.Level.Value);
-        pokemonIndividualData.learnableMoves = DetermineLearnableMoves(pokemonSpawnEntry, pokemonSpecies, pokemonIndividualData.Level.Value);
+        pokemonIndividualData.LearnableMoves = DetermineLearnableMoves(pokemonSpawnEntry, pokemonSpecies, pokemonIndividualData.Level.Value);
         pokemonIndividualData.BaseStats = new PokemonStats(pokemonSpecies.BaseStats);
         pokemonIndividualData.Nickname = pokemonSpawnEntry.Nickname;
         pokemonIndividualData.Initialize();

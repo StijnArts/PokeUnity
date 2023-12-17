@@ -75,7 +75,7 @@ namespace Assets.Scripts.Battle
             return true;
         }
 
-        internal bool ClearTerrain()
+        public bool ClearTerrain()
         {
             if (string.IsNullOrEmpty(Terrain)) return false;
             var previousTerrain = GetWeather();
@@ -84,6 +84,16 @@ namespace Assets.Scripts.Battle
             TerrainState = new EffectState();
             Battle.EachEvent("TerrainChange");
             return true;
+        }
+
+        public Condition GetPseudoWeather(string conditionAsString = null, Effect conditionAsEffect = null)
+        {
+            Condition status;
+            if (conditionAsEffect != null) conditionAsString = conditionAsEffect.Id;
+            if (conditionAsString != null) status = ConditionRegistry.GetConditionById(conditionAsString);
+            else throw new ArgumentNullException("pseudo weather status cannot be null");
+
+            return PseudoWeathers.ContainsKey(status.Id) ? status : null;
         }
     }
 }

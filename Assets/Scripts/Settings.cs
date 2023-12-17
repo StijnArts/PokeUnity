@@ -8,4 +8,6 @@ public static class Settings
     public static int MaxPartySize = 6;
 
     public static int MaxMoveSlots = 4;
+
+    public static int MaxTypes = 2;
 }

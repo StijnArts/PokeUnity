@@ -12,7 +12,7 @@ namespace Assets.Scripts.Battle
         public Move Move;
         public string Weather = null;
         public string Status = null;
-        public int hit;
+        public int Hit;
         public MoveHitData MoveHitData;
         public Ability Ability;
         public List<PokemonIndividualData> Allies;

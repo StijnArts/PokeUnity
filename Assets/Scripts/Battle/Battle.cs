@@ -1,6 +1,7 @@
 ﻿using Assets.Scripts.Battle.Effects;
 using Assets.Scripts.Battle.Events;
 using Assets.Scripts.Battle.Events.Sources;
+using Assets.Scripts.Pokemon.Data.Moves;
 using Assets.Scripts.Registries;
 using Assets.Scripts.Utils;
 using System;
@@ -169,6 +170,14 @@ namespace Assets.Scripts.Battle
         public double Randomizer(int baseDamage)
         {
             return Math.Truncate(Math.Truncate(baseDamage * (100d - UnityEngine.Random.Range(0, 16))) / 100);
+        }
+
+        public void UpdateSpeed()
+        {
+            foreach(var pokemon in GetActivePokemonIndividualData())
+            {
+                pokemon.UpdateSpeed();
+            }
         }
 
         public static Comparer<T> ComparePriority<T>() where T : SpeedSortable
@@ -896,9 +905,8 @@ namespace Assets.Scripts.Battle
                 MidTurn = true;
             }
             var queue = Queue.Actions;
-            while (queue.Count > 1)
+            foreach (var action in queue)
             {
-                var action = queue.Dequeue();
                 RunAction(action);
                 if (RequestState != BattleRequestState.Empty || Ended) return;
             }
@@ -907,5 +915,101 @@ namespace Assets.Scripts.Battle
             MidTurn = false;
             queue.Clear();
         }
+
+        public void NextTurn()
+        {
+            Turn++;
+            LastSuccesfulMoveThisTurn = null;
+
+            List<PokemonIndividualData> dynamaxEnding = new();
+            foreach (var pokemon in GetActivePokemonIndividualData())
+            {
+                if(pokemon.BattleData.Volatiles.ContainsKey("dynamax") && pokemon.BattleData.Volatiles["dynamax"].ContainsKey("turns") 
+                    && (pokemon.BattleData.Volatiles["dynamax"]["turns"] as int?) == 3)
+                {
+                    dynamaxEnding.Add(pokemon);
+                }
+            }
+            if(dynamaxEnding.Count > 1)
+            {
+                UpdateSpeed();
+                SpeedSort(dynamaxEnding);
+            }
+            foreach (var pokemon in dynamaxEnding)
+            {
+                pokemon.RemoveVolatile("dynamax");
+            }
+
+            List<PokemonIndividualData> trappedBySide = new();
+            foreach(var side in Participants)
+            {
+                var sideTrapped = true;
+                foreach(var pokemon in side.ActivePokemon.Select(pokemon => pokemon.PokemonIndividualData))
+                {
+                    if(pokemon == null) continue;
+                    if(Turn != 1)
+                    {
+                        pokemon.BattleData.MoveThisTurn = "";
+                        pokemon.BattleData.NewlySwitched = false;
+                        pokemon.BattleData.StatRaisedThisTurn = false;
+                        pokemon.BattleData.StatLoweredThisTurn = false;
+                        pokemon.BattleData.HurtThisTurn = false;
+                    }
+                    pokemon.BattleData.MaybeDisabled = false;
+                    foreach (var moveSlot in pokemon.BattleData.MoveSlots)
+                    {
+                        moveSlot.Disabled = false;
+                        moveSlot.DisabledSource = null;
+                    }
+
+                    RunEvent("DisableMove", new List<Target>() { pokemon });
+                    foreach (var moveSlot in pokemon.BattleData.MoveSlots)
+                    {
+                        var activeMove = MoveRegistry.GetActiveMove(moveSlot.Move);
+                        SingleEvent("DisableMove", activeMove, null, pokemon);
+                        if (activeMove.Move.MoveFlags.Contains(MoveFlags.CantUseTwice) && pokemon.BattleData.LastMove != null && pokemon.BattleData.LastMove.Id == moveSlot.Move)
+                        {
+                            pokemon.DisableMove(pokemon.BattleData.LastMove.Id);
+                        } 
+                    }
+
+                    if (pokemon.BattleData.GetLastAttackedBy() != null) pokemon.BattleData.KnownType = true;
+
+                    for(int i = pokemon.BattleData.AttackedBy.Count -1; i >= 0; i--)
+                    {
+                        var attack = pokemon.BattleData.AttackedBy[i];
+                        if (GetActivePokemonIndividualData().Contains(attack.source))
+                        {
+                            attack.ThisTurn = false;
+                        } else
+                        {
+                            pokemon.BattleData.AttackedBy.Remove(attack);
+                        }
+                    }
+
+                    if (!pokemon.BattleData.IsTerastallized)
+                    {
+                        var seenPokemon = pokemon.BattleData.Illusion != null ? pokemon.BattleData.Illusion : pokemon;
+                        var realTypeString = string.Join("/", seenPokemon.GetTypes(true));
+                        if (!realTypeString.Equals(seenPokemon.BattleData.ApparentType))
+                        {
+                            seenPokemon.BattleData.ApparentType = realTypeString;
+/*                            if(pokemon.BattleData.AddedType != null)
+                            {
+                                //TODO sent message 
+                            }*/
+                        }
+                    }
+
+                    pokemon.BattleData.Trapped = pokemon.BattleData.MaybeTrapped = false;
+                    RunEvent("TrapPokemon", new List<Target> { pokemon });
+                    if(!pokemon.BattleData.KnownType || PokemonTypeRegistry.)
+                }
+
+
+            }
+        }
+
+        public bool RunAction();
     }
 }

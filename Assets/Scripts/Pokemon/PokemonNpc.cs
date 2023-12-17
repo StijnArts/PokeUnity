@@ -16,7 +16,7 @@ public class PokemonNpc : MonoBehaviour
     public bool IsWild = false;
     void Start()
     {
-        if (PokemonIndividualData.isSavedPokemon)
+        if (PokemonIndividualData.IsSavedPokemon)
         {
             if (GameStateManager.GetState() != GameStateManager.GameStates.LOADING)
             {

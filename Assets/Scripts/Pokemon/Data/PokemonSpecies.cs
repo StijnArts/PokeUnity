@@ -17,7 +17,7 @@ public abstract class PokemonSpecies : BaseSpecies
     internal PokemonSpecies(
         string pokemonName,
         string pokemonId,
-        string primaryType,
+        string[] types,
         BaseStats baseStats,
         int catchRate,
         double maleRatio,
@@ -34,7 +34,7 @@ public abstract class PokemonSpecies : BaseSpecies
         int spriteAnimationSpeed,
         bool hasGenderDifferences = false,
         bool cannotDynamax = false) :
-            base(pokemonId, primaryType, baseStats, catchRate, maleRatio, baseExperienceYield, experienceGroup, eggCycles, eggGroups, baseFriendship, evYield, heightInCm, weightInGrams, spriteWidth, spriteResolution, spriteAnimationSpeed, cannotDynamax, hasGenderDifferences)
+            base(pokemonId, types, baseStats, catchRate, maleRatio, baseExperienceYield, experienceGroup, eggCycles, eggGroups, baseFriendship, evYield, heightInCm, weightInGrams, spriteWidth, spriteResolution, spriteAnimationSpeed, cannotDynamax, hasGenderDifferences)
     {
         PokemonName = pokemonName;
     }
@@ -43,7 +43,7 @@ public abstract class PokemonSpecies : BaseSpecies
         string pokemonName,
         string pokemonId,
         int nationalPokedexNumber,
-        string primaryType,
+        string[] types,
         BaseStats baseStats,
         int catchRate,
         double maleRatio,
@@ -60,60 +60,7 @@ public abstract class PokemonSpecies : BaseSpecies
         int spriteAnimationSpeed,
         bool hasGenderDifferences = false,
         bool cannotDynamax = false) :
-            this(pokemonName, pokemonId, primaryType, baseStats, catchRate, maleRatio, baseExperienceYield, experienceGroup, eggCycles, eggGroups, baseFriendship, evYield, heightInCm, weightInGrams, spriteWidth, spriteResolution, spriteAnimationSpeed, cannotDynamax, hasGenderDifferences)
-    {
-        NationalPokedexNumber = nationalPokedexNumber;
-    }
-
-    public PokemonSpecies(
-        string pokemonName,
-        string pokemonId,
-        string primaryType,
-        string secondaryType,
-        BaseStats baseStats,
-        int catchRate,
-        double maleRatio,
-        int baseExperienceYield,
-        string experienceGroup,
-        int eggCycles,
-        List<string> eggGroups,
-        int baseFriendship,
-        EvYield evYield,
-        double heightInCm,
-        double weightInGrams,
-        int spriteWidth,
-        int spriteResolution,
-        int spriteAnimationSpeed,
-        bool hasGenderDifferences = false,
-        bool cannotDynamax = false) :
-            this(pokemonName, pokemonId, primaryType, baseStats, catchRate, maleRatio, baseExperienceYield, experienceGroup, eggCycles, eggGroups, baseFriendship, evYield, heightInCm, weightInGrams, spriteWidth, spriteResolution, spriteAnimationSpeed, cannotDynamax, hasGenderDifferences)
-    {
-        SecondaryType = secondaryType;
-    }
-
-    internal PokemonSpecies(
-        string pokemonName,
-        string pokemonId,
-        int nationalPokedexNumber,
-        string primaryType,
-        string secondaryType,
-        BaseStats baseStats,
-        int catchRate,
-        double maleRatio,
-        int baseExperienceYield,
-        string experienceGroup,
-        int eggCycles,
-        List<string> eggGroups,
-        int baseFriendship,
-        EvYield evYield,
-        double heightInCm,
-        double weightInGrams,
-        int spriteWidth,
-        int spriteResolution,
-        int spriteAnimationSpeed,
-        bool hasGenderDifferences = false,
-        bool cannotDynamax = false) :
-            this(pokemonName, pokemonId, primaryType, secondaryType, baseStats, catchRate, maleRatio, baseExperienceYield, experienceGroup, eggCycles, eggGroups, baseFriendship, evYield, heightInCm, weightInGrams, spriteWidth, spriteResolution, spriteAnimationSpeed, cannotDynamax, hasGenderDifferences)
+            this(pokemonName, pokemonId, types, baseStats, catchRate, maleRatio, baseExperienceYield, experienceGroup, eggCycles, eggGroups, baseFriendship, evYield, heightInCm, weightInGrams, spriteWidth, spriteResolution, spriteAnimationSpeed, cannotDynamax, hasGenderDifferences)
     {
         NationalPokedexNumber = nationalPokedexNumber;
     }

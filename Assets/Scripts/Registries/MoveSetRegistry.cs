@@ -1,6 +1,9 @@
-﻿using Assets.Scripts.Pokemon.Data;
+﻿using Assets.Scripts.Battle;
+using Assets.Scripts.Pokemon.Data;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 
 namespace Assets.Scripts.Registries
 {
@@ -77,6 +80,19 @@ namespace Assets.Scripts.Registries
                 moveSetsPerIdentifier[moveset.PokemonIdentifier].Add(moveset);
             }
             return true;
+        }
+
+        public static ActiveMove GetActiveMove(string moveId)
+        {
+            var move = GetMove(moveId);
+            var moveCopy = new ActiveMove(move.DeepCopy());
+            moveCopy.Hit = 0;
+            return moveCopy;
+        }
+
+        public static ActiveMove GetActiveMove(Move move)
+        {
+            return new ActiveMove(move);
         }
     }
 }
