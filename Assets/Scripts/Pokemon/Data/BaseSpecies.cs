@@ -11,8 +11,8 @@ namespace Assets.Scripts.Pokemon.Data
     public class BaseSpecies : Effect
     {
         public string[] Types = new string[Settings.MaxTypes];
-        public List<Ability> Abilities = new List<Ability>();
-        public Ability HiddenAbility;
+        public List<string> Abilities = new List<string>();
+        public string HiddenAbility;
         public BaseStats BaseStats;
         public int CatchRate;
         public double MaleRatio;

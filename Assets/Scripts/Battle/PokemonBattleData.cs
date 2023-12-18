@@ -14,6 +14,7 @@ namespace Assets.Scripts.Battle
         public static double[] BoostTable = new double[]{ 1, 1.5, 2, 2.5, 3, 3.5, 4 };
         [HideInInspector]
         public bool HasMovedThisTurn = false;
+        public PokemonIndividualData Pokemon;
         public enum BoostableStats { Hp, Attack, Defence, SpecialAttack, SpecialDefence, Speed, Evasion, Accuracy }
         public Dictionary<PokemonStats.StatTypes, int> Boosts;
         public int Priority = 0;
@@ -47,6 +48,9 @@ namespace Assets.Scripts.Battle
         public string ApparentType;
         public bool MaybeTrapped;
         public bool Trapped;
+        public int ActiveTurns;
+
+        public string SwitchFlag;
 
         public PokemonBattleData(PokemonIndividualData pokemon, BattleController battleController, Battle battle)
         {
@@ -55,6 +59,7 @@ namespace Assets.Scripts.Battle
             Species = pokemon.BaseSpecies;
             MoveSlots = (MoveSlot[])pokemon.Moves.Clone();
             this.Types = pokemon.BaseSpecies.Types;
+            Pokemon = pokemon;
         }
         public void CalculateTurnSpeed(int baseSpeed, Battle battle, BattleController battleController)
         {
@@ -158,6 +163,14 @@ namespace Assets.Scripts.Battle
         {
             if(AttackedBy.Count == 0) return null;
             return AttackedBy.Last();
+        }
+
+        public bool IsAdjacent(PokemonIndividualData pokemon2)
+        {
+            if(Pokemon.Fainted || pokemon2.Fainted) return false;
+            if(Battle.ActivePerHalf <=2) return Pokemon != pokemon2;
+            if (BattleController == pokemon2.BattleData.BattleController) return Math.Abs(SlotPosition.Value - pokemon2.BattleData.SlotPosition.Value) == 1;
+            return Math.Abs(SlotPosition.Value + pokemon2.BattleData.SlotPosition.Value + 1 - BattleController.ActivePokemon.Where(pokemon => pokemon.PokemonIndividualData != null).ToList().Count) <= 1; 
         }
     }
 }

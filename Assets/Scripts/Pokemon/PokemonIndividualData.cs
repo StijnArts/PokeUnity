@@ -18,7 +18,7 @@ using UnityEngine;
 using static UnityEditor.Progress;
 
 [Serializable]
-public class PokemonIndividualData : Target, BattleEventSource, EffectHolder, SpeedSortable
+public class PokemonIndividualData : Target, BattleEventSource, EffectHolder, SpeedSortable, TypeHaver
 {
     public string PokemonId;
     public string PokemonName;
@@ -392,5 +392,10 @@ public class PokemonIndividualData : Target, BattleEventSource, EffectHolder, Sp
         }
         if (types.Length > 0) return types;
         return new string[] { Normal.TypeName };
+    }
+
+    public string[] GetTypes()
+    {
+        return GetTypes(null, null);
     }
 }

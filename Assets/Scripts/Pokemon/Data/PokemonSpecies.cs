@@ -70,15 +70,16 @@ public abstract class PokemonSpecies : BaseSpecies
         string stringOfData = "{" +
             "\npokemonName: " + PokemonName + ",";
         stringOfData += "\nnationalPokedexNumber:" + NationalPokedexNumber + ",";
-        stringOfData += "\nprimaryType:" + PrimaryType + ",";
-        stringOfData += "\nsecondaryType:" + SecondaryType + ",";
+        stringOfData += "\nprimaryType:" + Types[0] + ",";
+
+        if (Types.Length > 1) stringOfData += "\nsecondaryType:" + Types[1] + ",";
         stringOfData += "\nabilities: [";
         foreach (var ability in Abilities)
         {
-            stringOfData += "\n" + ability.AbilityName;
+            stringOfData += "\n" + ability;
         }
         stringOfData += "\n]," +
-            "\nhiddenAbility:" + HiddenAbility.AbilityName + ",";
+            "\nhiddenAbility:" + HiddenAbility + ",";
         stringOfData += "\nbaseStats: {" +
         "\nhp:" + BaseStats.Hp + ",";
         stringOfData += "\nattack:" + BaseStats.Attack + ",";
@@ -150,6 +151,14 @@ public abstract class PokemonSpecies : BaseSpecies
             }
         }
         return latestLevelUpMoves;
+    }
+
+    public List<string> GetPossibleAbilities()
+    {
+        var list = new List<string>();
+        list.AddRange(Abilities);
+        list.Add(HiddenAbility);
+        return list;
     }
 }
 [Serializable]

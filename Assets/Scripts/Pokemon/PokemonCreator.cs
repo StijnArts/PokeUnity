@@ -139,9 +139,9 @@ public class PokemonCreator
             UnityEngine.Random.Range(0, 32));
     }
 
-    private static Ability GenerateAbility(PokemonSpecies pokemonSpecies, SpawnConditions conditions)
+    private static @string GenerateAbility(PokemonSpecies pokemonSpecies, SpawnConditions conditions)
     {
-        var abilityPool = new List<Ability>(pokemonSpecies.Abilities);
+        var abilityPool = new List<@string>(pokemonSpecies.Abilities);
         if(conditions.canHaveHiddenAbility == true)
         {
             abilityPool.Add(pokemonSpecies.HiddenAbility);

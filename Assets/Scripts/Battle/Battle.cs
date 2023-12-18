@@ -174,7 +174,7 @@ namespace Assets.Scripts.Battle
 
         public void UpdateSpeed()
         {
-            foreach(var pokemon in GetActivePokemonIndividualData())
+            foreach (var pokemon in GetActivePokemonIndividualData())
             {
                 pokemon.UpdateSpeed();
             }
@@ -357,6 +357,12 @@ namespace Assets.Scripts.Battle
             return returnVal == null ? relayvar : returnVal;
         }
 
+        public object RunEvent(string eventid, Target target = null, BattleEventSource source = null, Effect sourceEffect = null, object relayVar = null,
+            bool? onEffect = null, bool? fastExit = null)
+        {
+            return RunEvent(eventid, new List<Target>() { target }, source, sourceEffect, relayVar, onEffect, fastExit);
+        }
+
         public object RunEvent(string eventid, List<Target> target = null, BattleEventSource source = null, Effect sourceEffect = null, object relayVar = null,
             bool? onEffect = null, bool? fastExit = null)
         {
@@ -530,11 +536,11 @@ namespace Assets.Scripts.Battle
                     var parentEffectState = EffectState;
                     Effect = handler.Effect;
                     EffectState = handler.State;
-                    if (EffectState.ContainsKey("target"))
+                    if (EffectState.ContainsKey("targetTyping"))
                     {
-                        EffectState["target"] = effectHolder;
+                        EffectState["targetTyping"] = effectHolder;
                     }
-                    else EffectState.Add("target", effectHolder);
+                    else EffectState.Add("targetTyping", effectHolder);
 
                     if (handler.Callback is VoidBattleCallback)
                     {
@@ -843,7 +849,7 @@ namespace Assets.Scripts.Battle
 
         public void SetParticipantAllyAndFoes(BattleController participant, List<BattleController> Foes, BattleController ally = null)
         {
-            participant.SetAlliesAndFoes(Foes, ally);   
+            participant.SetAlliesAndFoes(Foes, ally);
         }
 
         public void SetParticipants(List<BattleController> participants)
@@ -895,10 +901,10 @@ namespace Assets.Scripts.Battle
 
         public void Go()
         {
-            if(RequestState != BattleRequestState.Empty) RequestState = BattleRequestState.Empty;
+            if (RequestState != BattleRequestState.Empty) RequestState = BattleRequestState.Empty;
             //Adds a before turn action to the queue and expects it to be called. This puts the battle on hold while the participants pick their actions and
             //should only resume when the players have picked their actions for the turn
-            if(!MidTurn)
+            if (!MidTurn)
             {
                 Queue.InsertChoice(new List<ActionChoice>() { Choice = "BeforeTurn" });
                 Queue.AddChoice(new List<ActionChoice>() { Choice = "Residual" });
@@ -924,13 +930,13 @@ namespace Assets.Scripts.Battle
             List<PokemonIndividualData> dynamaxEnding = new();
             foreach (var pokemon in GetActivePokemonIndividualData())
             {
-                if(pokemon.BattleData.Volatiles.ContainsKey("dynamax") && pokemon.BattleData.Volatiles["dynamax"].ContainsKey("turns") 
+                if (pokemon.BattleData.Volatiles.ContainsKey("dynamax") && pokemon.BattleData.Volatiles["dynamax"].ContainsKey("turns")
                     && (pokemon.BattleData.Volatiles["dynamax"]["turns"] as int?) == 3)
                 {
                     dynamaxEnding.Add(pokemon);
                 }
             }
-            if(dynamaxEnding.Count > 1)
+            if (dynamaxEnding.Count > 1)
             {
                 UpdateSpeed();
                 SpeedSort(dynamaxEnding);
@@ -940,14 +946,14 @@ namespace Assets.Scripts.Battle
                 pokemon.RemoveVolatile("dynamax");
             }
 
-            List<PokemonIndividualData> trappedBySide = new();
-            foreach(var side in Participants)
+            List<bool> trappedBySide = new();
+            foreach (var side in Participants)
             {
                 var sideTrapped = true;
-                foreach(var pokemon in side.ActivePokemon.Select(pokemon => pokemon.PokemonIndividualData))
+                foreach (var pokemon in side.ActivePokemon.Select(pokemon => pokemon.PokemonIndividualData))
                 {
-                    if(pokemon == null) continue;
-                    if(Turn != 1)
+                    if (pokemon == null) continue;
+                    if (Turn != 1)
                     {
                         pokemon.BattleData.MoveThisTurn = "";
                         pokemon.BattleData.NewlySwitched = false;
@@ -970,18 +976,19 @@ namespace Assets.Scripts.Battle
                         if (activeMove.Move.MoveFlags.Contains(MoveFlags.CantUseTwice) && pokemon.BattleData.LastMove != null && pokemon.BattleData.LastMove.Id == moveSlot.Move)
                         {
                             pokemon.DisableMove(pokemon.BattleData.LastMove.Id);
-                        } 
+                        }
                     }
 
                     if (pokemon.BattleData.GetLastAttackedBy() != null) pokemon.BattleData.KnownType = true;
 
-                    for(int i = pokemon.BattleData.AttackedBy.Count -1; i >= 0; i--)
+                    for (int i = pokemon.BattleData.AttackedBy.Count - 1; i >= 0; i--)
                     {
                         var attack = pokemon.BattleData.AttackedBy[i];
                         if (GetActivePokemonIndividualData().Contains(attack.source))
                         {
                             attack.ThisTurn = false;
-                        } else
+                        }
+                        else
                         {
                             pokemon.BattleData.AttackedBy.Remove(attack);
                         }
@@ -994,20 +1001,138 @@ namespace Assets.Scripts.Battle
                         if (!realTypeString.Equals(seenPokemon.BattleData.ApparentType))
                         {
                             seenPokemon.BattleData.ApparentType = realTypeString;
-/*                            if(pokemon.BattleData.AddedType != null)
-                            {
-                                //TODO sent message 
-                            }*/
+                            /*                            if(pokemon.BattleData.AddedType != null)
+                                                        {
+                                                            //TODO sent message 
+                                                        }*/
                         }
                     }
 
                     pokemon.BattleData.Trapped = pokemon.BattleData.MaybeTrapped = false;
                     RunEvent("TrapPokemon", new List<Target> { pokemon });
-                    if(!pokemon.BattleData.KnownType || PokemonTypeRegistry.)
+                    if (!pokemon.BattleData.KnownType || !CheckImmunity("trapped", pokemon))
+                    {
+                        RunEvent("MaybeTrapPokemon", new List<Target> { pokemon });
+                    }
+
+                    foreach (var source in side.GetFoePokemon())
+                    {
+                        var species = (source.BattleData.Illusion != null ? source.BattleData.Illusion : source).BattleData.Species;
+                        if (species.Abilities == null || species.Abilities.Count == 0) continue;
+                        foreach (var abilityName in species.GetPossibleAbilities())
+                        {
+                            //pokemon event was already run above so we don't need to run it again.
+                            if (source.Ability.Equals(abilityName)) continue;
+
+                            var ability = AbilityRegistry.GetAbility(abilityName);
+                            if (pokemon.BattleData.KnownType && CheckImmunity("trapped", pokemon)) continue;
+                            SingleEvent("FoeMaybeTrapPokemon", ability, new EffectState(), pokemon, source);
+                        }
+                    }
+
+                    if (pokemon.Fainted) continue;
+
+                    sideTrapped = sideTrapped && pokemon.BattleData.Trapped;
+                    pokemon.BattleData.ActiveTurns++;
                 }
-
-
+                trappedBySide.Add(sideTrapped);
+                side.FaintedLastTurn = side.FaintedThisTurn;
+                side.FaintedThisTurn = null;
             }
+
+            if (BattleSettings.GameType == BattleType.Triples && Participants.All(participant => participant.PokemonLeft == 1))
+            {
+                var actives = GetActivePokemonIndividualData();
+                if (actives.Count > 1 && !actives[0].BattleData.IsAdjacent(actives[1]))
+                {
+                    SwapPosition(actives[0], 1);
+                    SwapPosition(actives[1], 1);
+                }
+            }
+
+            if (BattleSettings.GameType == BattleType.Multi)
+            {
+                foreach (var side in Participants)
+                {
+                    if (side.CanDynamaxNow())
+                    {
+                        //TODO send message that player can dynamax now
+                    }
+                }
+            }
+
+            MakeRequest(BattleRequestState.Move);
+        }
+
+        private void MakeRequest(BattleRequestState? type = null)
+        {
+            if(type != null)
+            {
+                RequestState = type.Value;
+                foreach(var side in Participants)
+                {
+                    side.ClearChoice();
+                }
+            }
+        }
+
+        public bool SwapPosition(PokemonIndividualData pokemon, int newPosition, bool isSilent = true)
+        {
+            var side = pokemon.BattleData.BattleController;
+            if (newPosition > side.ActivePokemon.Count) throw new Exception("Invalid Swap Position");
+            //TODO make pokemon npc check if it has pokemondata in order to be rendered and have a hitbox in the fixedupdate method
+            var target = side.ActivePokemon[newPosition].PokemonIndividualData;
+            if (newPosition != 1 && (target != null || target.Fainted)) return false;
+
+            if (!isSilent)
+            {
+                //TODO send message in console with the reason the pokemon swapped
+            }
+
+            side.ParticipatingPokemon[pokemon.BattleData.SlotPosition.Value] = target;
+            side.ParticipatingPokemon[newPosition] = pokemon;
+            side.ActivePokemon[pokemon.BattleData.SlotPosition.Value].PokemonIndividualData = target;
+            side.ActivePokemon[newPosition].PokemonIndividualData = pokemon;
+            if (target != null) target.BattleData.SlotPosition = pokemon.BattleData.SlotPosition;
+            pokemon.BattleData.SlotPosition = newPosition;
+            RunEvent("Swap", target, pokemon);
+            RunEvent("Swap", pokemon, target);
+            return true;
+        }
+
+        public bool CheckImmunity(TypeHaver source, TypeHaver target)
+        {
+            return CheckImmunity(source.GetTypes()[0], target.GetTypes());
+        }
+
+        public bool CheckImmunity(string source, TypeHaver target)
+        {
+            return CheckImmunity(source, target.GetTypes());
+        }
+
+        public bool CheckImmunity(TypeHaver source, string[] targetTyping)
+        {
+            return CheckImmunity(source.GetTypes()[0], targetTyping);
+        }
+        //Inversed the result so also inverse all usages of this method when referencing it
+        public bool CheckImmunity(string source, string[] targetTyping)
+        {
+            if (targetTyping.Length > 1)
+            {
+                foreach (var type in targetTyping)
+                {
+                    if (CheckImmunity(type, source)) { return true; }
+                }
+                return false;
+            }
+            return CheckImmunity(source, targetTyping[0]);
+        }
+        //Inversed the result so also inverse all usages of this method when referencing it
+        public bool CheckImmunity(string source, string targetType)
+        {
+            var typeData = PokemonTypeRegistry.GetType(targetType);
+            if (typeData != null && typeData.Interactions.ContainsKey(source) && typeData.Interactions[source] == PokemonType.TypeInteraction.HAS_IMMUNITY) return true;
+            return false;
         }
 
         public bool RunAction();

@@ -24,7 +24,7 @@ namespace Assets.Scripts.Battle
         public int TotalFainted => ParticipatingPokemon.Where(pokemon => pokemon.CurrentHp <= 0).Count();
         public int PokemonLeft => ParticipatingPokemon.Where(pokemon => pokemon.CurrentHp >= 1).Count();
         public abstract void SelectMove(PokemonIndividualData pokemonToMove, ActiveMove move, List<Target> targets);
-
+        public BattleChoice Choice;
         public abstract bool SelectParticipatingPokemon(int numberAllowed = 0);
 
         //TODO make it create pokemonNpc's for the amount of necessary active pokemon in the battle, and set the individual data of those npcs;
@@ -77,6 +77,39 @@ namespace Assets.Scripts.Battle
             base.Foes = foes;
             base.AllySide = ally;
             Ready = true;
+        }
+
+        public List<PokemonIndividualData> GetFoePokemon()
+        {
+            return Foes.SelectMany(side => side.ActivePokemon).Select(pokemon => pokemon.PokemonIndividualData).ToList();
+        }
+
+        public bool CanDynamaxNow()
+        {
+            var positions = new int[] { 1, 1, 0, 0 };
+            if (Battle.BattleSettings.GameType == BattleType.Multi && Battle.Turn % 2 != positions[this.SlotNumber]) return false;
+            return !GimmickUsed.ContainsKey("Dynamax") || GimmickUsed["Dynamax"] == false;
+        }
+
+        public void ClearChoice()
+        {
+            var forcedSwitches = 0;
+            var forcedPasses = 0;
+            if(Battle.RequestState == BattleRequestState.Switch)
+            {
+                var canSwitchOut = ActivePokemon.Where(pokemon => !string.IsNullOrEmpty(pokemon.PokemonIndividualData.BattleData.SwitchFlag)).Count();
+                var canSwitchIn =  ParticipatingPokemon.Where(pokemon => !GetActivePokemonData().Contains(pokemon)).Where(pokemon => pokemon != null && !pokemon.Fainted).Count();
+                forcedSwitches = Math.Min(canSwitchOut, canSwitchIn);
+                forcedPasses = canSwitchOut - forcedSwitches;
+            }
+            Choice = new BattleChoice()
+            {
+                Error = null,
+                Actions = new List<ChosenAction>(),
+                forcedSwitchesLeft = forcedSwitches,
+                forcedPassesLeft = forcedPasses,
+                SwitchIns = new List<PokemonIndividualData>()
+            };
         }
     }
 }

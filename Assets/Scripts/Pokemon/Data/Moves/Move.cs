@@ -10,7 +10,7 @@ using UnityEngine;
 using static Assets.Scripts.Battle.ActiveMove;
 
 [Serializable]
-public abstract class Move : Effect, HitEffect
+public abstract class Move : Effect, HitEffect, TypeHaver
 {
     public enum SelfDestructStates
     {
@@ -135,5 +135,10 @@ public abstract class Move : Effect, HitEffect
     public Move DeepCopy()
     {
         throw new NotImplementedException();
+    }
+
+    string[] TypeHaver.GetTypes()
+    {
+        return new string[] { MoveType };
     }
 }
