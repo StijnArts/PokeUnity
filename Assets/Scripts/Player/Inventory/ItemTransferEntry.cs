@@ -7,5 +7,5 @@ using UnityEngine;
 public class ItemTransferEntry
 {
     public int itemQuantity = 0;
-    public PokemonItem item;
+    public Item item;
 }

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class None : Ability
+public class None : @string
 {
     public None() : base("none", "", new List<PokemonIdentifier>(), new List<PokemonIdentifier>())
     {

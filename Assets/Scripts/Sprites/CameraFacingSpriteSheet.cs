@@ -15,6 +15,11 @@ public class CameraFacingSpriteSheet
     public int SpriteWidth = 0;
     public bool FlipSpriteForWest = false;
     public bool FlipSpriteForEast = false;
+    public CameraFacingSpriteSheet(ref int width)
+    {
+        SpriteWidth = width;
+    }
+
     public CameraFacingSpriteSheet(int width)
     {
         SpriteWidth = width;

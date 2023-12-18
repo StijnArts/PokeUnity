@@ -8,6 +8,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 859979391489200784, guid: 92b1e6d1ae4f2984f90bbea8c1419810, type: 3}
+      propertyPath: m_Name
+      value: PokemonSprite
+      objectReference: {fileID: 0}
     - target: {fileID: 1551931558103415739, guid: 92b1e6d1ae4f2984f90bbea8c1419810, type: 3}
       propertyPath: m_Name
       value: Pokemon Npc Variant
@@ -68,8 +72,39 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 7709583819088428586, guid: 92b1e6d1ae4f2984f90bbea8c1419810, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 859979391489200784, guid: 92b1e6d1ae4f2984f90bbea8c1419810, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1256163132403390662}
   m_SourcePrefab: {fileID: 100100000, guid: 92b1e6d1ae4f2984f90bbea8c1419810, type: 3}
+--- !u!1 &5438537258375775696 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 859979391489200784, guid: 92b1e6d1ae4f2984f90bbea8c1419810, type: 3}
+  m_PrefabInstance: {fileID: 4654138580479366976}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1256163132403390662
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5438537258375775696}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 700a37b512a4f6d43869d0ed0c1a14f7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SpriteRenderer: {fileID: 0}
+  SpriteSuffix: 
+  SpriteGroup: 
+  MillisecondPerFrame: 50
+  yOffset: 0
+  SpriteWidth: 16
+  PixelsPerUnit: 16
+  CurrentFrame: 0
+  Facing: 180
+  TypeOfSprite: 0

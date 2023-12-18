@@ -8,13 +8,16 @@ public class GrassEncounterField : MonoBehaviour
 {
     public GrassEncounterTable GrassEncounterTable;
     public SpawnConditions SpawnConditions;
-    public GameObject pokemonPrefab;
-    public GameObject player;
-    public GameObject pokemonGameObject;
+    [HideInInspector]
+    public GameObject PokemonPrefab;
+    [HideInInspector]
+    public GameObject Player;
+    [HideInInspector]
+    public GameObject PokemonGameObject;
     public void Start()
     {
-        pokemonPrefab = Resources.Load("Prefabs/Npc's/Pokemon/Pokemon", typeof(GameObject)) as GameObject;
-        player = GameObject.Find("Player");
+        PokemonPrefab = Resources.Load("Prefabs/Npc's/Pokemon/Pokemon", typeof(GameObject)) as GameObject;
+        Player = GameObject.Find("Player");
     }
 
     public void RegisterToMovement(ObservableClasses.ObservableFloat stepsTakenInGrass)
@@ -27,15 +30,15 @@ public class GrassEncounterField : MonoBehaviour
         return () => {
             if (GameStateManager.GetState() == GameStateManager.GameStates.ROAMING)
             {
-                if (stepsTakenInGrass.Value > 1 && pokemonGameObject.IsDestroyed())
+                if (stepsTakenInGrass.Value > 1 && PokemonGameObject.IsDestroyed())
                 {
                     Debug.Log("Player took " + stepsTakenInGrass.Value + "steps.");
                     stepsTakenInGrass.SetValue(0);
                     PokemonSpawnEntry spawnEntry = GrassEncounterTable.pickFromSpawnEntries();
-                    pokemonGameObject = Instantiate(pokemonPrefab, player.transform.position, Quaternion.identity);
-                    pokemonGameObject.GetComponent<Pokemon>().PokemonIndividualData = PokemonCreator.InstantiatePokemonForSpawn(spawnEntry, SpawnConditions);
-                    pokemonGameObject.GetComponent<Pokemon>().InitializeSelf();
-                    pokemonGameObject.GetComponent<BoxCollider>().enabled = false;//set location at player
+                    PokemonGameObject = Instantiate(PokemonPrefab, Player.transform.position, Quaternion.identity);
+                    PokemonGameObject.GetComponent<PokemonNpc>().PokemonIndividualData = PokemonCreator.InstantiatePokemonForSpawn(spawnEntry, SpawnConditions);
+                    PokemonGameObject.GetComponent<PokemonNpc>().InitializeSelf();
+                    PokemonGameObject.GetComponent<BoxCollider>().enabled = false;//set location at player
                 }
             }
             

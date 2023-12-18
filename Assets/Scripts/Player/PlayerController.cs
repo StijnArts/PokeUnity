@@ -1,3 +1,4 @@
+using Assets.Scripts.Player;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -32,7 +33,7 @@ public class PlayerController : MonoBehaviour
     public ObservableClasses.ObservableBoolean SubmitPressedAndReleased = new ObservableClasses.ObservableBoolean() { Value = false };
     public List<Flag> Flags = new List<Flag>();
     [SerializeField]
-    public static Party Party = new Party();
+    public PlayerParty Party;
     
     // Start is called before the first frame update
     void Start()
@@ -42,11 +43,16 @@ public class PlayerController : MonoBehaviour
         HandleInteractions();
     }
 
+    private void Awake()
+    {
+        Party = new PlayerParty(this);
+    }
+
     // Update is called once per frame
     void FixedUpdate()
     {
         HandleInput();
-        if (GameStateManager.GetState() == GameStateManager.GameStates.ROAMING)
+        if (GameStateManager.GetState() != (GameStateManager.GameStates.LOADING | GameStateManager.GameStates.DIALOG))
         {
             HandleMovement();
         }
@@ -126,8 +132,9 @@ public class PlayerController : MonoBehaviour
     {
         HandleGravity();
         HandleRotation();
+        var oldPosition = new Vector3(transform.position.x, transform.position.y, transform.position.z);
         _characterController.Move(_direction * Time.deltaTime * (IsRunning ? RunSpeed : WalkSpeed));
-        TrackMovement();
+        TrackMovement(oldPosition);
     }
 
     private void HandleGravity()
@@ -155,9 +162,8 @@ public class PlayerController : MonoBehaviour
         _cameraFacingSprite.ApplyRotation(angle);
     }
 
-    private void TrackMovement()
+    private void TrackMovement(Vector3 oldPosition)
     {
-        var oldPosition = new Vector3(transform.position.x, transform.position.y, transform.position.z);
         float moved = Math.Abs(transform.position.x - oldPosition.x) + Math.Abs(transform.position.z - oldPosition.z);
         if (moved > 0)
         {
@@ -175,8 +181,21 @@ public class PlayerController : MonoBehaviour
         Debug.Log("Player Entered my Dialog range");
     }
 
-    internal void ExitDialogRange(DialogInteractable dialogInteractable)
+    public void ExitDialogRange(DialogInteractable dialogInteractable)
     {
         ObjectsInDialogRange.Remove(dialogInteractable);
+    }
+
+    public List<PokemonIndividualData> SelectPokemon()
+    {
+        var selectedPokemon = new List<PokemonIndividualData>() { Party.GetSelectedPokemon() };
+        foreach(var partyPokemon in Party.PartyPokemon)
+        {
+            if(partyPokemon != Party.GetSelectedPokemon() && partyPokemon != null)
+            {
+                selectedPokemon.Add(partyPokemon);
+            }
+        }
+        return selectedPokemon;
     }
 }

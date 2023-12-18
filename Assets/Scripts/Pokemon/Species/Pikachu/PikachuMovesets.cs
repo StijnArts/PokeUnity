@@ -15,7 +15,7 @@ namespace Assets.Scripts.Pokemon.Species.Pikachu
                 Pikachu.Identifier,
                 new Dictionary<int, string>()
                 {
-                    {1,  Tackle.MoveId}
+                    {1,  Tackle.MoveIdentifier}
                 })
         {
         }

@@ -26,3 +26,35 @@
     left: 0;
     top: 3%;
 }
+
+.BattleWidget {
+    flex-grow: 1;
+    width: 20%;
+    height: 20%;
+    min-height: auto;
+    max-height: 6%;
+    max-width: 20%;
+    min-width: auto;
+    position: relative;
+    top: 4%;
+    left: 70%;
+    bottom: auto;
+    right: auto;
+    background-color: rgba(132, 132, 132, 0);
+}
+
+.BattleWidgetPlayer {
+    flex-grow: 1;
+    width: 20%;
+    height: 20%;
+    min-height: auto;
+    max-height: 6%;
+    max-width: 20%;
+    min-width: auto;
+    position: relative;
+    top: 80%;
+    left: 4%;
+    bottom: auto;
+    right: auto;
+    background-color: rgb(132, 132, 132);
+}

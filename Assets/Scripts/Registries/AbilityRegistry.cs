@@ -9,18 +9,18 @@ using UnityEngine;
 public class AbilityRegistry
 {
     //TODO create abilities
-    public static Dictionary<string, Ability> Abilities = new Dictionary<string, Ability>();
+    public static Dictionary<string, @string> Abilities = new Dictionary<string, @string>();
 
-    public static void RegisterAbility(string id, Ability ability)
+    public static void RegisterAbility(string id, @string ability)
     {
         Abilities.Add(id, ability);
     }
 
-    public static List<string> GetAbilityIds() => Abilities.Values.Select(ability => ability.AbilityId).ToList();
+    public static List<string> GetAbilityIds() => Abilities.Values.Select(ability => ability.Id).ToList();
 
-    public static Ability GetAbility(string id)
+    public static @string GetAbility(string id)
     {
-        Ability value;
+        @string value;
         Abilities.TryGetValue(id, out value);
         if (value == null)
         {
@@ -31,10 +31,10 @@ public class AbilityRegistry
 
     public static void RegisterAbilities()
     {
-        var abilities = SubTypeReflector<Ability>.FindSubTypeClasses();
-        foreach (Ability ability in abilities)
+        var abilities = SubTypeReflector<@string>.FindSubTypeClasses();
+        foreach (@string ability in abilities)
         {
-            Abilities.Add(ability.AbilityId, ability);
+            Abilities.Add(ability.Id, ability);
             //TODO check for any modification files that target the ability and apply them
             foreach(var pokemonId in ability.ReceiverPokemonIds)
             {
@@ -64,7 +64,7 @@ public class AbilityRegistry
                         }
                         else
                         {
-                            Debug.LogWarning("Attempted to overwrite an already set hidden AbilityId with " + ability.AbilityId + " during AbilityId registration for " + species.PokemonId + "\n" +
+                            Debug.LogWarning("Attempted to overwrite an already set hidden Id with " + ability.Id + " during Id registration for " + species.Id + "\n" +
                                 "Overwrites should be made with a PokemonOverwrites Class.");
                         }
                     } 
@@ -73,7 +73,7 @@ public class AbilityRegistry
                         species.HiddenAbility = ability;
                     } else
                     {
-                        Debug.LogWarning("Attempted to overwrite an already set hidden AbilityId with " + ability.AbilityId + " during AbilityId registration for " + species.PokemonId + "\n" +
+                        Debug.LogWarning("Attempted to overwrite an already set hidden Id with " + ability.Id + " during Id registration for " + species.Id + "\n" +
                             "Overwrites should be made with a PokemonOverwrites Class.");
                     }
                 }

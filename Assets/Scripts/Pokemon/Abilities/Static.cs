@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class Static : Ability
+public class Static : @string
 {
     public Static() : base(
         "static", "Static",

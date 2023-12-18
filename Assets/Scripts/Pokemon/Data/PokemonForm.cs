@@ -26,9 +26,12 @@ namespace Assets.Scripts.Pokemon.Data
             int baseFriendship, 
             EvYield evYield, 
             double heightInCm, 
-            double weightInGrams, 
+            double weightInGrams,
+            int spriteWidth,
+            int spriteResolution,
+            int spriteAnimationSpeed,
             bool hasGenderDifferences = false, 
-            bool cannotDynamax = false) : base(originalPokemonId.SpeciesId, primaryType, baseStats, catchRate, maleRatio, baseExperienceYield, experienceGroup, eggCycles, eggGroups, baseFriendship, evYield, heightInCm, weightInGrams, hasGenderDifferences, cannotDynamax)
+            bool cannotDynamax = false) : base(originalPokemonId.SpeciesId, primaryType, baseStats, catchRate, maleRatio, baseExperienceYield, experienceGroup, eggCycles, eggGroups, baseFriendship, evYield, heightInCm, weightInGrams, spriteWidth, spriteResolution, spriteAnimationSpeed, cannotDynamax, hasGenderDifferences)
         {
             FormName = formName;
             FormId = formId;
@@ -50,9 +53,12 @@ namespace Assets.Scripts.Pokemon.Data
             int baseFriendship, 
             EvYield evYield, 
             double heightInCm, 
-            double weightInGrams, 
+            double weightInGrams,
+            int spriteWidth,
+            int spriteResolution,
+            int spriteAnimationSpeed,
             bool hasGenderDifferences = false, 
-            bool cannotDynamax = false) : base(originalPokemonId.SpeciesId, primaryType, secondaryType, baseStats, catchRate, maleRatio, baseExperienceYield, experienceGroup, eggCycles, eggGroups, baseFriendship, evYield, heightInCm, weightInGrams, hasGenderDifferences, cannotDynamax)
+            bool cannotDynamax = false) : base(originalPokemonId.SpeciesId, primaryType, secondaryType, baseStats, catchRate, maleRatio, baseExperienceYield, experienceGroup, eggCycles, eggGroups, baseFriendship, evYield, heightInCm, weightInGrams, spriteWidth, spriteResolution, spriteAnimationSpeed, cannotDynamax, hasGenderDifferences)
         {
             FormName = formName;
             FormId = formId;
