@@ -13,7 +13,7 @@ namespace Assets.Scripts.Battle
     {
         //TODO add to Ability | Item | ActiveMove | Species | Condition | Format
         //https://stackoverflow.com/questions/540066/calling-a-function-from-a-string-in-c-sharp get callback method with reflection
-        public BattleCallback<object> GetCallBack(string callBackName)
+        public DynamicInvokable GetCallBack(string callBackName)
         {
             throw new NotImplementedException();
         }

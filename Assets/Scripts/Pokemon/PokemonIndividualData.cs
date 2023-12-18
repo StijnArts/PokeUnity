@@ -59,6 +59,14 @@ public class PokemonIndividualData : Target, BattleEventSource, EffectHolder, Sp
     public string Status;
     public bool Fainted => CurrentHp >= 0;
 
+    public string TeraType;
+
+    public string PokeBall;
+
+    //TODO check hiddenpower values when initializing
+    public string HiddenPowerType;
+    public int HiddenPowerPower;
+
     public string GetSpriteSuffix()
     {
         string suffix = "";

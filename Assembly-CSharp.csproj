@@ -64,6 +64,7 @@
     <Compile Include="Assets\Scripts\Battle\BattleActionTypes.cs" />
     <Compile Include="Assets\Scripts\Battle\BattleChoice.cs" />
     <Compile Include="Assets\Scripts\Battle\BattleQueue.cs" />
+    <Compile Include="Assets\Scripts\Battle\BattleRequest.cs" />
     <Compile Include="Assets\Scripts\Battle\BattleRequestState.cs" />
     <Compile Include="Assets\Scripts\Battle\BattleType.cs" />
     <Compile Include="Assets\Scripts\Battle\ChosenAction.cs" />

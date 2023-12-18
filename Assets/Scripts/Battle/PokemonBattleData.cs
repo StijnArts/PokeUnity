@@ -1,17 +1,16 @@
 ﻿using Assets.Scripts.Battle.Events;
 using Assets.Scripts.Pokemon.Data.Moves;
+using Assets.Scripts.Registries;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 
 namespace Assets.Scripts.Battle
 {
     public class PokemonBattleData
     {
-        public static double[] BoostTable = new double[]{ 1, 1.5, 2, 2.5, 3, 3.5, 4 };
+        public static double[] BoostTable = new double[] { 1, 1.5, 2, 2.5, 3, 3.5, 4 };
         [HideInInspector]
         public bool HasMovedThisTurn = false;
         public PokemonIndividualData Pokemon;
@@ -49,8 +48,11 @@ namespace Assets.Scripts.Battle
         public bool MaybeTrapped;
         public bool Trapped;
         public int ActiveTurns;
-
+        public string Item;
         public string SwitchFlag;
+        public string Ability;
+
+        public string Details;
 
         public PokemonBattleData(PokemonIndividualData pokemon, BattleController battleController, Battle battle)
         {
@@ -60,14 +62,16 @@ namespace Assets.Scripts.Battle
             MoveSlots = (MoveSlot[])pokemon.Moves.Clone();
             this.Types = pokemon.BaseSpecies.Types;
             Pokemon = pokemon;
+            Item = pokemon.Item;
+            this.Ability = pokemon.Ability;
         }
         public void CalculateTurnSpeed(int baseSpeed, Battle battle, BattleController battleController)
         {
             double turnSpeed = baseSpeed;
-            
-            
 
-             //TODO implement event system to modify the stat here
+
+
+            //TODO implement event system to modify the stat here
 
 
             BattleSpeed = turnSpeed > 10000 ? 10000 : (int)turnSpeed;
@@ -84,12 +88,13 @@ namespace Assets.Scripts.Battle
 
             double stat = pokemon.BaseStats.GetStat(statType);
 
-            if(unmodified && Battle.Field.PseudoWeathers.ContainsKey("wonderroom"))
+            if (unmodified && Battle.Field.PseudoWeathers.ContainsKey("wonderroom"))
             {
-                if(statType == PokemonStats.StatTypes.Defence)
+                if (statType == PokemonStats.StatTypes.Defence)
                 {
                     statType = PokemonStats.StatTypes.SpecialDefence;
-                } else if (statType == PokemonStats.StatTypes.SpecialDefence)
+                }
+                else if (statType == PokemonStats.StatTypes.SpecialDefence)
                 {
                     statType = PokemonStats.StatTypes.Defence;
                 }
@@ -143,12 +148,12 @@ namespace Assets.Scripts.Battle
 
         public void DisableMove(string moveId, bool? isHidden = null, Effect sourceEffect = null)
         {
-            if(sourceEffect == null && Battle.Event != null) 
-            { 
+            if (sourceEffect == null && Battle.Event != null)
+            {
                 sourceEffect = Battle.Effect;
             }
-            
-            foreach(var moveSlot in MoveSlots)
+
+            foreach (var moveSlot in MoveSlots)
             {
                 if (moveSlot == null) continue;
                 if (moveSlot.Move.Equals(moveId) && !moveSlot.Disabled)
@@ -161,16 +166,57 @@ namespace Assets.Scripts.Battle
 
         public Attacker GetLastAttackedBy()
         {
-            if(AttackedBy.Count == 0) return null;
+            if (AttackedBy.Count == 0) return null;
             return AttackedBy.Last();
         }
 
         public bool IsAdjacent(PokemonIndividualData pokemon2)
         {
-            if(Pokemon.Fainted || pokemon2.Fainted) return false;
-            if(Battle.ActivePerHalf <=2) return Pokemon != pokemon2;
+            if (Pokemon.Fainted || pokemon2.Fainted) return false;
+            if (Battle.ActivePerHalf <= 2) return Pokemon != pokemon2;
             if (BattleController == pokemon2.BattleData.BattleController) return Math.Abs(SlotPosition.Value - pokemon2.BattleData.SlotPosition.Value) == 1;
-            return Math.Abs(SlotPosition.Value + pokemon2.BattleData.SlotPosition.Value + 1 - BattleController.ActivePokemon.Where(pokemon => pokemon.PokemonIndividualData != null).ToList().Count) <= 1; 
+            return Math.Abs(SlotPosition.Value + pokemon2.BattleData.SlotPosition.Value + 1 - BattleController.ActivePokemon.Where(pokemon => pokemon.PokemonIndividualData != null).ToList().Count) <= 1;
+        }
+
+        public SwitchRequestData GetSwitchRequestData(bool? forAlly)
+        {
+            var entry = new SwitchRequestData()
+            {
+                Identity = Pokemon.GetName(),
+                Details = Details,
+                Condition = Pokemon.CurrentHp.Value,
+                Active = Battle.GetActivePokemonIndividualData().Contains(Pokemon),
+                Stats = Pokemon.Stats,
+                Moves = (forAlly == true ? Pokemon.Moves : MoveSlots).Select(moveSlot => moveSlot.Move).Select(move =>
+                {
+                    if ("hiddenpower".Equals(move))
+                    {
+                        return move + Pokemon.HiddenPowerType + Pokemon.HiddenPowerPower;
+                    }
+                    if ("frustration".Equals(move) || "return".Equals(move))
+                    {
+                        var basePowerCallback = MoveRegistry.GetMove(move).GetCallBack("BasePowerCallback");
+                        return move + basePowerCallback.Invoke(this);
+                    }
+                    return move;
+                }).ToList(),
+                BaseAbility = Pokemon.Ability,
+                Item = Item,
+                Pokeball = Pokemon.PokeBall
+            };
+            entry.Ability = Ability;
+            entry.Commanding = Volatiles.ContainsKey("commanding") && !Pokemon.Fainted;
+            entry.Reviving = Battle.GetActivePokemonIndividualData().Contains(Pokemon) && BattleController.SlotConditions.ContainsKey(SlotPosition.Value)
+                && BattleController.SlotConditions[SlotPosition.Value].TryGetValue("revivalblessing", out _);
+            entry.TeraType = Pokemon.TeraType;
+            entry.Terastallized = Terastallized;
+
+            return entry;
+        }
+
+        public MoveRequestData GetMoveRequestData()
+        {
+            throw new NotImplementedException();
         }
     }
 }

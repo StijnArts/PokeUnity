@@ -46,6 +46,9 @@ namespace Assets.Scripts.Battle
         public bool StartOfPokemonTurn = true;
         public int HitSubstitute = 0;
         public bool IsFourPlayer => BattleSettings.GameType == (BattleType.Multi | BattleType.FreeForAll);
+
+        public bool SupportCancel = false;
+
         public Battle(BattleSettings battleSettings, List<BattleController> participants)
         {
             BattleSettings = battleSettings;
@@ -1064,16 +1067,107 @@ namespace Assets.Scripts.Battle
             MakeRequest(BattleRequestState.Move);
         }
 
-        private void MakeRequest(BattleRequestState? type = null)
+        public void MakeRequest(BattleRequestState? type = null)
         {
-            if(type != null)
+            if (type != null)
             {
                 RequestState = type.Value;
-                foreach(var side in Participants)
+                foreach (var side in Participants)
                 {
                     side.ClearChoice();
                 }
             }
+            else
+            {
+                type = RequestState;
+            }
+
+            foreach (var side in Participants)
+            {
+                side.ActiveRequest = null;
+            }
+
+            var requests = GetRequests(type);
+            for (var i = 0; i < Participants.Count; i++)
+            {
+                Participants[i].EmitRequest(requests[i]);
+            }
+
+            if (Participants.All(side => side.IsChoiceDone()))
+            {
+                throw new Exception("Choices are done immediately after a request");
+            }
+        }
+
+        public List<BattleRequest> GetRequests(BattleRequestState? type)
+        {
+            var requests = new List<BattleRequest>();
+            Participants.ForEach(p => requests.Insert(Participants.IndexOf(p), null));
+            switch (type)
+            {
+                case BattleRequestState.Switch:
+                    {
+                        for (var i = 0; i < Participants.Count; i++)
+                        {
+                            var side = Participants[i];
+                            if (side.PokemonLeft > 0) continue;
+                            var switchTable = side.ActivePokemon.Select(pokemon => pokemon.PokemonIndividualData.BattleData.SwitchFlag).ToList();
+                            if (switchTable.Any(switchFlag => switchFlag != null))
+                            {
+                                requests[i] = new BattleRequest()
+                                {
+                                    ForceSwitch = switchTable,
+                                    Side = side.GetRequestData()
+                                };
+                            }
+                        }
+                    }
+                    break;
+                case BattleRequestState.TeamPreview:
+                    {
+                        for (var i = 0; i < Participants.Count; i++)
+                        {
+                            var side = Participants[i];
+                            //TODO support team preview
+                            //var maxChosenTeamSize = 
+                        }
+                    }
+                    break;
+                default:
+                    {
+                        for (var i = 0; i < Participants.Count; i++)
+                        {
+                            var side = Participants[i];
+                            if (side.PokemonLeft > 0) continue;
+                            var activeData = side.ActivePokemon.Select(pokemon => pokemon.PokemonIndividualData.BattleData.GetMoveRequestData()).ToList();
+                            requests[i] = new BattleRequest()
+                            {
+                                Active = activeData,
+                                Side = side.GetRequestData()
+                            };
+                            if (side.AllySide != null)
+                            {
+                                requests[i].Ally = side.AllySide.GetRequestData(true);
+                            }
+                        }
+                    }
+                    break;
+            }
+
+            var multipleRequestsExist = requests.Where(request => request != null).ToList().Count >= 2;
+            for (var i = 0; i < Participants.Count; i++)
+            {
+                if (requests[i] != null)
+                {
+                    if (!SupportCancel || !multipleRequestsExist) requests[i].NoCancel = true;
+                } 
+                else
+                {
+                    requests[i] = new BattleRequest() { Wait = true, Side = Participants[i].GetRequestData() };
+                }
+            }
+
+            return requests;
         }
 
         public bool SwapPosition(PokemonIndividualData pokemon, int newPosition, bool isSilent = true)

@@ -12,6 +12,8 @@ namespace Assets.Scripts.Battle
 {
     public abstract class BattleController : BattleSide
     {
+        public string Name;
+        public string Id;
         public List<PokemonNpc> ActivePokemon;
         public bool FinishedTurn = false;
         public List<PokemonIndividualData> ParticipatingPokemon;
@@ -23,6 +25,9 @@ namespace Assets.Scripts.Battle
         public PokemonIndividualData FaintedThisTurn;
         public int TotalFainted => ParticipatingPokemon.Where(pokemon => pokemon.CurrentHp <= 0).Count();
         public int PokemonLeft => ParticipatingPokemon.Where(pokemon => pokemon.CurrentHp >= 1).Count();
+
+        public object ActiveRequest;
+
         public abstract void SelectMove(PokemonIndividualData pokemonToMove, ActiveMove move, List<Target> targets);
         public BattleChoice Choice;
         public abstract bool SelectParticipatingPokemon(int numberAllowed = 0);
@@ -110,6 +115,22 @@ namespace Assets.Scripts.Battle
                 forcedPassesLeft = forcedPasses,
                 SwitchIns = new List<PokemonIndividualData>()
             };
+        }
+
+        public BattleRequestData GetRequestData(bool? forAlly = false)
+        {
+            var data = new BattleRequestData()
+            {
+                Name = Name,
+                Id = Id,
+                Pokemon = new()
+            };
+            foreach(var pokemon in ParticipatingPokemon) 
+            {
+                data.Pokemon.Add(pokemon.BattleData.GetSwitchRequestData(forAlly));
+            }
+
+            return data;
         }
     }
 }
