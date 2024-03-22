@@ -1,29 +1,23 @@
 using Assets.Scripts.Battle;
-using Assets.Scripts.Battle.Conditions;
-using Assets.Scripts.Battle.Effects;
-using Assets.Scripts.Pokemon.Data.Conditions;
-using Assets.Scripts.Pokemon.Data.Moves;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
-using static Assets.Scripts.Battle.ActiveMove;
 
 [Serializable]
-public abstract class Move : Effect, HitEffect, TypeHaver
+public abstract class Move
 {
     public enum SelfDestructStates
     {
         Always, IfHit, True, False
     };
+
+    public string Id;
+    public string Name;
     public string MoveType;
     public Target.TargettingType MoveTarget;
     public int BasePower;
     public int Accuracy;
     public double? CritRatio;
     public string BaseMoveType;
-    public SecondaryEffect Secondary;
-    public List<SecondaryEffect> Secondaries;
     public bool HasSheerForce = false;
     public int Priority = 0;
     public string MoveCategory;
@@ -42,7 +36,6 @@ public abstract class Move : Effect, HitEffect, TypeHaver
     public bool IsMax = false;
     public List<string> MoveFlags = new();
     public string MaxMoveRecipient = null;
-    public SelfSwitchStates SelfSwitch = SelfSwitchStates.False;
     public Target.TargettingType? PressureTarge;
     public Target.TargettingType? NonGhostTarget;
     public bool IgnoreAbility = false;
@@ -54,10 +47,8 @@ public abstract class Move : Effect, HitEffect, TypeHaver
     public double Stab = 1.5;
     public string VolatileStatus;
 
-    public ConditionData Condition;
     public string RealMove;
     public string ContestType;
-    public ZMove Zmove;
     public int? MaxMoveBasePower;
     public bool? OneHitKO;
     public string OneHitKOType;
@@ -73,7 +64,6 @@ public abstract class Move : Effect, HitEffect, TypeHaver
     public bool? MindBlownRecoil;
     public bool? StealsBoosts;
     public bool? StruggleRecoil;
-    public SecondaryEffect SecondaryOnSelf;
     public double? BasePowerModifer;
     public double? CritModifier;
     public enum OverridePokemonOptions { Target, Source}
@@ -100,7 +90,6 @@ public abstract class Move : Effect, HitEffect, TypeHaver
 
     public Move(string moveId, string moveName, string moveType, string category, int pP, Target.TargettingType targettingType, int accuracy)
     {
-        EffectType = EffectType.Move;
         Id = moveId;
         Name = moveName;
         MoveType = moveType;
@@ -113,16 +102,6 @@ public abstract class Move : Effect, HitEffect, TypeHaver
         BaseMoveType = moveType;
     }
 
-    public void InitializeAtRegistry()
-    {
-        HasSheerForce = (HasSheerForce && Secondaries.Count < 1);
-
-    }
-
-    public OnHitEvent OnHit() 
-    {
-        return OnHit;
-    }
     public Dictionary<PokemonStats.StatTypes, int> GetBoosts() => BoostsOnTarget;
     public string GetStatus() => null;
     public string GetVolatileStatus() => null;
@@ -131,14 +110,4 @@ public abstract class Move : Effect, HitEffect, TypeHaver
     public string GetPseudoWeather() => null;
     public string GetTerrain() => null;
     public string GetWeather() => null;
-
-    public Move DeepCopy()
-    {
-        throw new NotImplementedException();
-    }
-
-    string[] TypeHaver.GetTypes()
-    {
-        return new string[] { MoveType };
-    }
 }

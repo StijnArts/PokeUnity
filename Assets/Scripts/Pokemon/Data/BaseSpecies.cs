@@ -1,5 +1,4 @@
 ﻿using Assets.Scripts.Battle;
-using Assets.Scripts.Battle.Effects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,8 +7,9 @@ using System.Threading.Tasks;
 
 namespace Assets.Scripts.Pokemon.Data
 {
-    public class BaseSpecies : Effect
+    public class BaseSpecies
     {
+        public string Id;
         public string[] Types = new string[Settings.MaxTypes];
         public List<string> Abilities = new List<string>();
         public string HiddenAbility;

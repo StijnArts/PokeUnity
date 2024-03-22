@@ -13,10 +13,23 @@ namespace Assets.Scripts.Pokemon.Data.Moves
         public string Move;
         public int PP;
         public int MaxPP;
-        public Target.TargettingType? target;
+        public Target.TargettingType target;
         public bool Disabled = false;
-        public string DisabledSource;
-        public bool Used;
-        public bool? Virtual;
+
+        public MoveSlot(string move)
+        {
+            this.Move = move;
+            //TODO fetch move stats from the register
+        }
+
+        public MoveSlot(Move move)
+        {
+            this.Move = move.Id;
+            this.PP = move.PP;
+            this.MaxPP = move.PP;
+            this.target = move.MoveTarget;
+
+            //TODO fetch move stats from the register
+        }
     }
 }

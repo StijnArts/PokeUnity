@@ -5,9 +5,10 @@ using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using UnityEngine;
-public class Ability : Effect
+public class Ability
 {
     public string AbilityName;
+    public string Id;
     public List<PokemonIdentifier> ReceiverPokemonIds;
     public List<PokemonIdentifier> HiddenReceiverPokemonIds;
     //should register observables on the pokemon when the pokemon is instantiated, and on the battle when the pokemon holding the ability enters the battle.

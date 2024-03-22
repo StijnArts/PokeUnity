@@ -81,18 +81,5 @@ namespace Assets.Scripts.Registries
             }
             return true;
         }
-
-        public static ActiveMove GetActiveMove(string moveId)
-        {
-            var move = GetMove(moveId);
-            var moveCopy = new ActiveMove(move.DeepCopy());
-            moveCopy.Hit = 0;
-            return moveCopy;
-        }
-
-        public static ActiveMove GetActiveMove(Move move)
-        {
-            return new ActiveMove(move);
-        }
     }
 }

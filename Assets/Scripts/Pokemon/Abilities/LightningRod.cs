@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class LightningRod : @string
+public class LightningRod : Ability
 {
     public LightningRod() : base(
         "lightning_rod", "Lightning Rod",

@@ -8,10 +8,9 @@ namespace Assets.Scripts.Battle
 {
     public class BattleQueue
     {
-        public Battle Battle;
-        public List<BattleAction> Actions = new();
+        public BattleEngine Battle;
 
-        public BattleQueue(Battle battle)
+        public BattleQueue(BattleEngine battle)
         {
             this.Battle = battle;
         }

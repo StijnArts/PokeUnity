@@ -25,7 +25,7 @@ namespace Assets.Scripts.UI
             _healthBar.title = _hpCounter;
 
             SetName(battler.GetName());
-            SetMaxHealth(battler.Stats.Hp);
+            SetMaxHealth(battler.Stats.GetStat(PokemonStats.StatTypes.Hp));
             SetCurrentHealth(battler.CurrentHp);
         }
 

@@ -1,4 +1,5 @@
 using Assets.Scripts.Pokemon;
+using Assets.Scripts.Pokemon.Data.Moves;
 using Assets.Scripts.Registries;
 using System;
 using System.Collections;
@@ -27,11 +28,6 @@ public class PokemonCreator
         if(pokemonSpawnEntry.formId == "")
         {
             pokemonIndividualData.PokemonName = pokemonSpecies.PokemonName;
-            pokemonIndividualData.PrimaryType = PokemonTypeRegistry.GetType(pokemonSpecies.PrimaryType);
-            if (pokemonSpecies.SecondaryType != null)
-            {
-                pokemonIndividualData.SecondaryType = PokemonTypeRegistry.GetType(pokemonSpecies.SecondaryType);
-            }
         }
         //TODO fill with form information if it overrides base info
         pokemonIndividualData.Nature = (Nature.Natures)DetermineNature();
@@ -42,10 +38,9 @@ public class PokemonCreator
             pokemonIndividualData.Ability = GenerateAbility(pokemonSpecies, conditions);
         } else
         {
-            pokemonIndividualData.Ability = AbilityRegistry.GetAbility(pokemonSpawnEntry.AbilityId);
+            pokemonIndividualData.Ability = AbilityRegistry.GetAbility(pokemonSpawnEntry.AbilityId).AbilityName;
         }
 
-        pokemonIndividualData.AbilityData = pokemonIndividualData.Ability.Id;
         pokemonIndividualData.IVs = GenerateIVs();
         pokemonIndividualData.gender = DetermineGender(pokemonSpecies.MaleRatio);
         pokemonIndividualData.Friendship = pokemonSpecies.BaseFriendship;
@@ -74,7 +69,7 @@ public class PokemonCreator
         return learnableMoves;
     }
 
-    private static ActiveMove[] DetermineMoves(PokemonSpawnEntry pokemonSpawnEntry, PokemonSpecies pokemonSpecies, int level)
+    private static MoveSlot[] DetermineMoves(PokemonSpawnEntry pokemonSpawnEntry, PokemonSpecies pokemonSpecies, int level)
     {
         //TODO make movepool size adhere to global setting
         Move[] moves = new Move[4];
@@ -103,7 +98,7 @@ public class PokemonCreator
             }
             moveCursor++;
         }
-        return moves.Where(move => move != null).Select(move => new ActiveMove(move)).ToArray();
+        return moves.Where(move => move != null).Select(move => new MoveSlot(move)).ToArray();
     }
 
     private static PokemonNpc.PokemonGender DetermineGender(double maleRatio)
@@ -139,9 +134,9 @@ public class PokemonCreator
             UnityEngine.Random.Range(0, 32));
     }
 
-    private static @string GenerateAbility(PokemonSpecies pokemonSpecies, SpawnConditions conditions)
+    private static string GenerateAbility(PokemonSpecies pokemonSpecies, SpawnConditions conditions)
     {
-        var abilityPool = new List<@string>(pokemonSpecies.Abilities);
+        var abilityPool = new List<string>(pokemonSpecies.Abilities);
         if(conditions.canHaveHiddenAbility == true)
         {
             abilityPool.Add(pokemonSpecies.HiddenAbility);

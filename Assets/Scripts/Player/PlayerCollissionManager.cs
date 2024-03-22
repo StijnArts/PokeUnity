@@ -1,3 +1,5 @@
+using Assets.Scripts.Battle;
+using Assets.Scripts.Battle.Controllers;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -19,11 +21,13 @@ public class PlayerCollisionManager : MonoBehaviour
         if(other.gameObject.GetComponent<PokemonNpc>() != null)
         {
             var pokemon = other.gameObject.GetComponent<PokemonNpc>();
-            if (pokemon.IsWild && GameStateManager.CurrentGameState.Value == GameStateManager.GameStates.ROAMING && 
+            if (pokemon.IsWild && GameStateManager.CurrentGameState.Value == GameStateManager.GameStates.ROAMING &&
                 _player.Party.GetSelectedPokemon() != null)
             {
                 //Start Battle in battle manager
-                ServiceLocator.Instance.BattleManager.StartBattle(_player.SelectPokemon(), new List<List<PokemonIndividualData>>() { new List<PokemonIndividualData>() { pokemon.PokemonIndividualData } });
+                /*ServiceLocator.Instance.BattleManager.StartBattle(_player.SelectPokemon(), new List<List<PokemonIndividualData>>() { new List<PokemonIndividualData>() { pokemon.PokemonIndividualData } });*/
+                ServiceLocator.Instance.BattleManager.StartBattle(new PlayerBattleController(_player.SelectPokemon()), new List<BattleController>() { 
+                    new NpcBattleController(new List<PokemonIndividualData>{ pokemon.PokemonIndividualData })});
             }
         }
     }

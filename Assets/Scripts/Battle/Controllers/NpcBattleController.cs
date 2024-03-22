@@ -4,18 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Assets.Scripts.Battle
+namespace Assets.Scripts.Battle.Controllers
 {
     public class NpcBattleController : BattleController
     {
-
-        public override bool SelectParticipatingPokemon(int numberAllowed = 0)
+        public NpcBattleController(List<PokemonIndividualData> participatingPokemon) : base(participatingPokemon)
         {
-            if (numberAllowed == 0)
-            {
-                numberAllowed = Settings.MaxPartySize;
-            }
-
         }
     }
 }

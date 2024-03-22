@@ -4,29 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Assets.Scripts.Battle
+namespace Assets.Scripts.Battle.Controllers
 {
     public class PlayerBattleController : BattleController
     {
-        public PlayerController PlayerController;
-
-        public PlayerBattleController(PlayerController playerController)
+        public PlayerBattleController(List<PokemonIndividualData> participatingPokemon) : base(participatingPokemon)
         {
-            PlayerController = playerController;
-        }
-
-        public override bool CreateActivePokemon()
-        {
-            throw new NotImplementedException();
-        }
-
-        public override bool SelectParticipatingPokemon(int numberAllowed = 0)
-        {
-            if(numberAllowed == 0)
-            {
-                numberAllowed = Settings.MaxPartySize;
-            }
-
         }
     }
 }

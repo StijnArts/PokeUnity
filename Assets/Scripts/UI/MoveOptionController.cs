@@ -1,4 +1,5 @@
 ﻿using Assets.Scripts.Pokemon;
+using Assets.Scripts.Pokemon.Data.Moves;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,7 +15,7 @@ namespace Assets.Scripts.UI
     {
         public enum BattleOption { Battle, Pokemon, Bag, Run }
         private PlayerController _playerController => GameObject.Find("Player").GetComponentInChildren<PlayerController>();
-        public List<ActiveMove> Moves => _playerController.Party.GetSelectedPokemon().Moves.ToList();
+        public List<MoveSlot> Moves => _playerController.Party.GetSelectedPokemon().Moves.ToList();
         public float OptionsEntryHeight = 55;
         private ListView _movesView;
         private VisualTreeAsset _movesEntry;
@@ -59,8 +60,8 @@ namespace Assets.Scripts.UI
                     ServiceLocator.Instance.BattleManager.SelectMove(move);
                 }
                 button.RegisterCallback<ClickEvent>(SelectMove);
-                moveNameLabel.text = move.Move.MoveName.ToLower().FirstCharacterToUpper();
-                powerPointsLabel.text = move.RemainingPowerPoints + "/" + move.Move.PowerPoints;
+                moveNameLabel.text = move.Move.ToLower().FirstCharacterToUpper();
+                powerPointsLabel.text = move.PP + "/" + move.MaxPP;
 
             };
 
