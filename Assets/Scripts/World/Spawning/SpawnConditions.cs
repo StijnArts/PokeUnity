@@ -10,7 +10,7 @@ public class SpawnConditions : ScriptableObject
     public bool canHaveHiddenAbility = false;
     public bool canBeShiny = true;
     public int perfectIVs = 0;
-    public Pokemon.Stats[] perfectIvs = new Pokemon.Stats[0];
+    public PokemonNpc.Stats[] perfectIvs = new PokemonNpc.Stats[0];
     public bool hasSetIvs = false;
     public PokemonIVs setIvs = new PokemonIVs();
 }

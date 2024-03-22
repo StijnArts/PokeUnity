@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Assets.Scripts.Battle;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,11 +9,10 @@ namespace Assets.Scripts.Pokemon.Data
 {
     public class BaseSpecies
     {
-        public string PokemonId;
-        public string PrimaryType;
-        public string SecondaryType;
-        public List<Ability> Abilities = new List<Ability>();
-        public Ability HiddenAbility;
+        public string Id;
+        public string[] Types = new string[Settings.MaxTypes];
+        public List<string> Abilities = new List<string>();
+        public string HiddenAbility;
         public BaseStats BaseStats;
         public int CatchRate;
         public double MaleRatio;
@@ -20,7 +20,7 @@ namespace Assets.Scripts.Pokemon.Data
         public string ExperienceGroup;
         public int EggCycles;
         public List<string> EggGroups;
-        public List<MoveSet> MoveSets;
+        public List<MoveSet> MoveSets = new List<MoveSet>();
         public PokemonIdentifier PreEvolution;
         public List<Evolution> Evolutions = new List<Evolution>();
         public int BaseFriendship;
@@ -29,10 +29,13 @@ namespace Assets.Scripts.Pokemon.Data
         public double WeightInKilos;
         public bool CannotDynamax;
         public bool HasGenderDifferences;
+        public int SpriteWidth;
+        public int SpriteResolution;
+        public int SpriteAnimationSpeed;
 
         public BaseSpecies(
         string pokemonId,
-        string primaryType,
+        string[] types,
         BaseStats baseStats,
         int catchRate,
         double maleRatio,
@@ -44,11 +47,14 @@ namespace Assets.Scripts.Pokemon.Data
         EvYield evYield,
         double heightInCm,
         double weightInGrams,
+        int spriteWidth,
+        int spriteResolution,
+        int spriteAnimationSpeed,
         bool hasGenderDifferences = false,
         bool cannotDynamax = false)
         {
-            PokemonId = pokemonId;
-            PrimaryType = primaryType;
+            Id = pokemonId;
+            Types = types;
             BaseStats = baseStats;
             CatchRate = catchRate;
             MaleRatio = maleRatio;
@@ -62,28 +68,9 @@ namespace Assets.Scripts.Pokemon.Data
             WeightInKilos = weightInGrams;
             CannotDynamax = cannotDynamax;
             HasGenderDifferences = hasGenderDifferences;
-        }
-
-        public BaseSpecies(
-            string pokemonId,
-            string primaryType,
-            string secondaryType,
-            BaseStats baseStats,
-            int catchRate,
-            double maleRatio,
-            int baseExperienceYield,
-            string experienceGroup,
-            int eggCycles,
-            List<string> eggGroups,
-            int baseFriendship,
-            EvYield evYield,
-            double heightInCm,
-            double weightInGrams,
-            bool hasGenderDifferences = false,
-            bool cannotDynamax = false) :
-                this(pokemonId, primaryType, baseStats, catchRate, maleRatio, baseExperienceYield, experienceGroup, eggCycles, eggGroups, baseFriendship, evYield, heightInCm, weightInGrams, cannotDynamax, hasGenderDifferences)
-        {
-            SecondaryType = secondaryType;
+            SpriteWidth = spriteWidth;
+            SpriteResolution = spriteResolution;
+            SpriteAnimationSpeed = spriteAnimationSpeed;
         }
     }
 }

@@ -23,7 +23,7 @@ public class PokemonJsonReader : ScriptableObject
 
     
 
-    public static Pokemon loadFromSaveData()
+    public static PokemonNpc loadFromSaveData()
     {
         //Should read the save data and load the pokemon accordingly
         return null;

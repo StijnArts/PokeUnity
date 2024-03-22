@@ -1,53 +1,107 @@
+using Assets.Scripts.Battle;
+using Assets.Scripts.Pokemon;
 using Assets.Scripts.Pokemon.Data;
+using Assets.Scripts.Pokemon.Data.Moves;
+using Assets.Scripts.Pokemon.PokemonTypes;
+using Assets.Scripts.Registries;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
+using UnityEditorInternal.Profiling.Memory.Experimental;
 using UnityEngine;
+using static UnityEditor.Progress;
 
 [Serializable]
 public class PokemonIndividualData
 {
-    [HideInInspector]
-    public string PokemonName;
     public string PokemonId;
-    public ObservableClasses.ObservableInteger level = new ObservableClasses.ObservableInteger() { Value = 1 };//TODO make move learning and evolutions subscribe to the level observable
-    public string nickname = null;
+    public string PokemonName;
+    [HideInInspector]
+    public PokemonSpecies BaseSpecies;
+    public ObservableClasses.ObservableInteger Level = new ObservableClasses.ObservableInteger() { Value = 1 };//TODO make move learning and evolutions subscribe to the level observable
+    public string Nickname = null;
     [HideInInspector]
     public int CurrentHp;
     public string FormId = "";
-    public Move[] Moves = new Move[4];
-    public string AbilityData;
+    public MoveSlot[] Moves = new MoveSlot[Settings.MaxMoveSlots];
+    public string Ability;
     [HideInInspector]
-    public Ability Ability;
     public Nature.Natures Nature = global::Nature.Natures.Adamant;
     [HideInInspector]
     public Nature NatureData;
-    public PokemonType PrimaryType;
-    public PokemonType SecondaryType = null;
     [HideInInspector]
-    public float hitboxHeight;
+    public float HitboxHeight;
     [HideInInspector]
-    public float hitboxWidth;
-    public bool isShiny = false;
-    public Pokemon.PokemonGender gender = Pokemon.PokemonGender.MALE;
+    public float HitboxWidth;
+    public bool IsShiny = false;
+    public PokemonNpc.PokemonGender gender = PokemonNpc.PokemonGender.MALE;
     [HideInInspector]
-    public PokemonStats stats = new PokemonStats(1, 1, 1, 1, 1, 1);
+    public PokemonStats Stats = new PokemonStats(1, 1, 1, 1, 1, 1);
     [HideInInspector]
-    public PokemonStats baseStats = new PokemonStats(1, 1, 1, 1, 1, 1);
+    public PokemonStats BaseStats = new PokemonStats(1, 1, 1, 1, 1, 1);
     public PokemonEVs EVs = new PokemonEVs();
     public PokemonIVs IVs = new PokemonIVs();
-    public PokemonItem heldItem = null;
+    public string Item;
     [HideInInspector]
-    public bool isValid = false;
-    public int currentExperience = 0;
-    public int friendship = 0;
-    public List<Move> learnableMoves = new List<Move>();
-    public bool isSavedPokemon = false;
+    public bool IsValid = false;
+    public int CurrentExperience = 0;
+    public int Friendship = 0;
+    public List<Move> LearnableMoves = new List<Move>();
+    public bool IsSavedPokemon = false;
+    [HideInInspector]
+    public PokemonBattleData BattleData;
+    public string Status;
+    public bool Fainted => CurrentHp >= 0;
+
+    public string TeraType;
+
+    public string PokeBall;
+
+    //TODO check hiddenpower values when initializing
+    public string HiddenPowerType;
+    public int HiddenPowerPower;
+
+    public string GetSpriteSuffix()
+    {
+        string suffix = "";
+        if (pokemonHasForm(BaseSpecies, FormId))
+        {
+            suffix += "_" + FormId;
+        }
+        if (pokemonOrFormHasGenderDifferences(BaseSpecies, FormId) && gender == PokemonNpc.PokemonGender.FEMALE)
+        {
+            suffix += "_female";
+        }
+        if (IsShiny)
+        {
+            suffix += "_shiny";
+        }
+        return suffix;
+    }
+
+    private bool pokemonOrFormHasGenderDifferences(PokemonSpecies pokemonSpecies, string formId)
+    {
+        if (pokemonHasForm(pokemonSpecies, formId))
+        {
+            return pokemonSpecies.Forms[formId].HasGenderDifferences;
+        }
+        else
+        {
+            return pokemonSpecies.HasGenderDifferences;
+        }
+    }
+
+    private static bool pokemonHasForm(PokemonSpecies pokemonSpecies, string formId)
+    {
+        return pokemonSpecies.Forms.ContainsKey(formId);
+    }
 
     private PokemonStats CalculateStats(int level, PokemonEVs pokemonEVs, PokemonIVs pokemonIVs, Nature nature)
     {
-        BaseStats baseStats = PokemonRegistry.GetPokemonSpecies(PokemonId).BaseStats;
+        BaseStats baseStats = BaseSpecies.BaseStats;
+
         int hp = PokemonStats.CalculateHp(level, baseStats.Hp, pokemonEVs.hpEVs, pokemonIVs.hpIVs);
         int attack = PokemonStats.CalculateOtherStat(level, baseStats.Attack, pokemonEVs.attackEVs,
             pokemonIVs.attackIVs, nature, global::Nature.AffectedStats.ATTACK);
@@ -65,17 +119,17 @@ public class PokemonIndividualData
 
     private PokemonStats CalculateStats()
     {
-        BaseStats baseStats = PokemonRegistry.GetPokemonSpecies(PokemonId).BaseStats;
-        int hp = PokemonStats.CalculateHp(level.Value, baseStats.Hp, EVs.hpEVs, IVs.hpIVs);
-        int attack = PokemonStats.CalculateOtherStat(level.Value, baseStats.Attack, EVs.attackEVs,
+        BaseStats baseStats = BaseSpecies.BaseStats;
+        int hp = PokemonStats.CalculateHp(Level.Value, baseStats.Hp, EVs.hpEVs, IVs.hpIVs);
+        int attack = PokemonStats.CalculateOtherStat(Level.Value, baseStats.Attack, EVs.attackEVs,
             IVs.attackIVs, NatureData, global::Nature.AffectedStats.ATTACK);
-        int defence = PokemonStats.CalculateOtherStat(level.Value, baseStats.Defence, EVs.defenceEVs,
+        int defence = PokemonStats.CalculateOtherStat(Level.Value, baseStats.Defence, EVs.defenceEVs,
             IVs.defenceIVs, NatureData, global::Nature.AffectedStats.DEFENCE);
-        int specialAttack = PokemonStats.CalculateOtherStat(level.Value, baseStats.SpecialAttack, EVs.specialAttackEVs,
+        int specialAttack = PokemonStats.CalculateOtherStat(Level.Value, baseStats.SpecialAttack, EVs.specialAttackEVs,
             IVs.specialAttackIVs, NatureData, global::Nature.AffectedStats.SPECIAL_ATTACK);
-        int specialdefence = PokemonStats.CalculateOtherStat(level.Value, baseStats.SpecialDefence, EVs.specialdefenceEVs,
+        int specialdefence = PokemonStats.CalculateOtherStat(Level.Value, baseStats.SpecialDefence, EVs.specialdefenceEVs,
             IVs.specialdefenceIVs, NatureData, global::Nature.AffectedStats.SPECIAL_DEFENCE);
-        int speed = PokemonStats.CalculateOtherStat(level.Value, baseStats.Speed, EVs.speedEVs,
+        int speed = PokemonStats.CalculateOtherStat(Level.Value, baseStats.Speed, EVs.speedEVs,
             IVs.speedIVs, NatureData, global::Nature.AffectedStats.SPEED);
 
         return new PokemonStats(hp, attack, defence, specialAttack, specialdefence, speed);
@@ -85,18 +139,33 @@ public class PokemonIndividualData
     {
         NatureData = PokemonNatureRegistry.GetNature((int)Nature);
 
-        var species = PokemonRegistry.GetPokemonSpecies(new PokemonIdentifier(PokemonId, FormId));
-        Ability = AbilityRegistry.GetAbility(AbilityData);
-        PrimaryType = PokemonTypeRegistry.GetType(species.PrimaryType);
-        stats = CalculateStats();
-        if (species.SecondaryType != null)
-        {
-            SecondaryType = PokemonTypeRegistry.GetType(species.SecondaryType);
-        }
+        BaseSpecies = PokemonRegistry.GetPokemonSpecies(new PokemonIdentifier(PokemonId, FormId));
+        
+        Stats = CalculateStats();
 
-        if (!string.IsNullOrEmpty(FormId) && species.Forms.ContainsKey(FormId))
+        if (!string.IsNullOrEmpty(FormId) && BaseSpecies.Forms.ContainsKey(FormId))
         {
             //TODO overwrite species data where form data is not null
         }
+    }
+
+    public int GetSpriteWidth()
+    {
+        return PokemonRegistry.GetPokemonSpecies(new PokemonIdentifier(PokemonId, FormId)).SpriteWidth;
+    }
+
+    public int GetSpriteResolution()
+    {
+        return PokemonRegistry.GetPokemonSpecies(new PokemonIdentifier(PokemonId, FormId)).SpriteResolution;
+    }
+
+    public int GetSpriteAnimationSpeed()
+    {
+        return PokemonRegistry.GetPokemonSpecies(new PokemonIdentifier(PokemonId, FormId)).SpriteAnimationSpeed;
+    }
+
+    public string GetName()
+    {
+        return string.IsNullOrEmpty(Nickname) ? PokemonName : Nickname;
     }
 }

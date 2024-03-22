@@ -8,6 +8,7 @@ public class DialogManager : MonoBehaviour
     private DialogUIManager dialogUIManager;
     private Dialog previousDialog;
     private bool isGiftingPokemon;
+    private PlayerController _playerController => GameObject.Find("Player").GetComponentInChildren<PlayerController>();
     // Start is called before the first frame update
     void Start()
     {
@@ -36,7 +37,7 @@ public class DialogManager : MonoBehaviour
     private void CleanDialog()
     {
         dialogQueue.Clear();
-        dialogUIManager.setDialogText("");
+        dialogUIManager.SetDialogText("");
     }
 
     public void DisplayNextDialog()
@@ -62,7 +63,7 @@ public class DialogManager : MonoBehaviour
         }
 
         Dialog dialog = dialogQueue.Dequeue();
-        dialogUIManager.setDialogText(dialog.Text);
+        dialogUIManager.SetDialogText(dialog.Text);
         dialogUIManager.ShowDialogBox();
         Debug.Log(dialog.DialogTitle + ": " + dialog.Text);
         if (previousDialog != null)
@@ -89,10 +90,10 @@ public class DialogManager : MonoBehaviour
             flavorText = pokemonGiftEntry.CustomFlavorText;
         }
         Debug.Log("System: " + flavorText);
-        dialogUIManager.hideTitleAndPortrait();
-        dialogUIManager.setDialogText(flavorText);
+        dialogUIManager.HideTitleAndPortrait();
+        dialogUIManager.SetDialogText(flavorText);
         dialogUIManager.ShowDialogBox();
-        PlayerController.Party.AddPokemonToParty(PokemonCreator.InstantiatePokemonForSpawn(pokemonGiftEntry, pokemonGiftEntry.spawnConditions));
+        _playerController.Party.AddPokemonToParty(PokemonCreator.InstantiatePokemonForSpawn(pokemonGiftEntry, pokemonGiftEntry.spawnConditions));
     }
 
     private void executeDialogAction(Dialog dialog)

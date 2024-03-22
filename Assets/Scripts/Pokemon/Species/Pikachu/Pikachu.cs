@@ -14,7 +14,7 @@ namespace Assets.Scripts.Pokemon.Species.Pikachu
                  "Pikachu",                                 //Name
                  Identifier.SpeciesId,                                 //Pokemon Id
                  25,                                        //National Pokedex Number
-                 Electric.TypeName,                         //Primary Type passed by type id
+                 new string[] { Electric.TypeName },                         //Primary Type passed by type id
                                                             //Secondary Type (leave empty if none)
                  new BaseStats(35, 55, 40, 50, 50, 90),     //Base Stats
                  190,                                       //Catchrate
@@ -26,7 +26,10 @@ namespace Assets.Scripts.Pokemon.Species.Pikachu
                  50,                                        //Base Friendship
                  new EvYield() { Speed = 2 },               //Ev Yield
                  40,                                        //Height in Centimetres
-                 6.0                                        //Weight in Kilograms
+                 6.0,                                       //Weight in Kilograms
+                 48,
+                 48,
+                 25
            )
         {
 

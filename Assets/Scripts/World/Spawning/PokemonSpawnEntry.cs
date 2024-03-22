@@ -13,11 +13,12 @@ public class PokemonSpawnEntry
     public int minLevel = 0;
     public int maxLevel = 0;
     public float spawnWeight = 0;
-    public Move moveOne;
-    public Move moveTwo;
-    public Move moveThree;
-    public Move moveFour;
+    public Move MoveOne;
+    public Move MoveTwo;
+    public Move MoveThree;
+    public Move MoveFour;
     public string AbilityId;
+    public string Nickname;
     public PokemonSpawnEntry(float spawnWeight, string pokemonId, string formId, int minLevel, int maxLevel) : this(spawnWeight, pokemonId, minLevel, maxLevel)
     {
         this.formId = formId;
@@ -28,5 +29,10 @@ public class PokemonSpawnEntry
         this.minLevel = minLevel;
         this.maxLevel = maxLevel;
         this.spawnWeight = spawnWeight;
+    }
+
+    public Move[] GetMoves()
+    {
+        return new Move[] { MoveOne, MoveTwo, MoveThree, MoveFour };
     }
 }

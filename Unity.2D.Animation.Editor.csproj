@@ -182,8 +182,8 @@
     <Compile Include="Library\PackageCache\com.unity.2d.animation@9.0.3\Editor\SkinningModule\UI\WeightInspectorIMGUIPanel.cs" />
     <Compile Include="Library\PackageCache\com.unity.2d.animation@9.0.3\Editor\SkinningModule\SpriteBoneInfluence\InfluenceWindow.cs" />
     <Compile Include="Library\PackageCache\com.unity.2d.animation@9.0.3\Editor\SkinningModule\IMGUI\ISpriteMeshView.cs" />
-    <Compile Include="Library\PackageCache\com.unity.2d.animation@9.0.3\Editor\UpgradeTools\SpriteLibUpgrader.cs" />
     <Compile Include="Library\PackageCache\com.unity.2d.animation@9.0.3\Editor\SkinningModule\SkeletonTool\SkeletonToolWrapper.cs" />
+    <Compile Include="Library\PackageCache\com.unity.2d.animation@9.0.3\Editor\UpgradeTools\SpriteLibUpgrader.cs" />
     <Compile Include="Library\PackageCache\com.unity.2d.animation@9.0.3\Editor\AssemblyInfo.cs" />
     <Compile Include="Library\PackageCache\com.unity.2d.animation@9.0.3\Editor\SkinningModule\Selectors\CircleVertexSelector.cs" />
     <Compile Include="Library\PackageCache\com.unity.2d.animation@9.0.3\Editor\SkinningModule\SkinningCache\SkinningCachePersistentState.cs" />

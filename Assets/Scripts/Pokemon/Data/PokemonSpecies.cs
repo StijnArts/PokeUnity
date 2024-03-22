@@ -3,6 +3,7 @@
 using Assets.Scripts.Pokemon;
 using Assets.Scripts.Pokemon.Data;
 using Assets.Scripts.Pokemon.Pokedex;
+using Assets.Scripts.Registries;
 using System;
 using System.Collections.Generic;
 
@@ -16,7 +17,7 @@ public abstract class PokemonSpecies : BaseSpecies
     internal PokemonSpecies(
         string pokemonName,
         string pokemonId,
-        string primaryType,
+        string[] types,
         BaseStats baseStats,
         int catchRate,
         double maleRatio,
@@ -28,9 +29,12 @@ public abstract class PokemonSpecies : BaseSpecies
         EvYield evYield,
         double heightInCm,
         double weightInGrams,
+        int spriteWidth,
+        int spriteResolution,
+        int spriteAnimationSpeed,
         bool hasGenderDifferences = false,
         bool cannotDynamax = false) :
-            base(pokemonId, primaryType, baseStats, catchRate, maleRatio, baseExperienceYield, experienceGroup, eggCycles, eggGroups, baseFriendship, evYield, heightInCm, weightInGrams, cannotDynamax, hasGenderDifferences)
+            base(pokemonId, types, baseStats, catchRate, maleRatio, baseExperienceYield, experienceGroup, eggCycles, eggGroups, baseFriendship, evYield, heightInCm, weightInGrams, spriteWidth, spriteResolution, spriteAnimationSpeed, cannotDynamax, hasGenderDifferences)
     {
         PokemonName = pokemonName;
     }
@@ -39,7 +43,7 @@ public abstract class PokemonSpecies : BaseSpecies
         string pokemonName,
         string pokemonId,
         int nationalPokedexNumber,
-        string primaryType,
+        string[] types,
         BaseStats baseStats,
         int catchRate,
         double maleRatio,
@@ -51,56 +55,12 @@ public abstract class PokemonSpecies : BaseSpecies
         EvYield evYield,
         double heightInCm,
         double weightInGrams,
+        int spriteWidth,
+        int spriteResolution,
+        int spriteAnimationSpeed,
         bool hasGenderDifferences = false,
         bool cannotDynamax = false) :
-            this(pokemonName, pokemonId, primaryType, baseStats, catchRate, maleRatio, baseExperienceYield, experienceGroup, eggCycles, eggGroups, baseFriendship, evYield, heightInCm, weightInGrams, cannotDynamax, hasGenderDifferences)
-    {
-        NationalPokedexNumber = nationalPokedexNumber;
-    }
-
-    public PokemonSpecies(
-        string pokemonName,
-        string pokemonId,
-        string primaryType,
-        string secondaryType,
-        BaseStats baseStats,
-        int catchRate,
-        double maleRatio,
-        int baseExperienceYield,
-        string experienceGroup,
-        int eggCycles,
-        List<string> eggGroups,
-        int baseFriendship,
-        EvYield evYield,
-        double heightInCm,
-        double weightInGrams,
-        bool hasGenderDifferences = false,
-        bool cannotDynamax = false) :
-            this(pokemonName, pokemonId, primaryType, baseStats, catchRate, maleRatio, baseExperienceYield, experienceGroup, eggCycles, eggGroups, baseFriendship, evYield, heightInCm, weightInGrams, cannotDynamax, hasGenderDifferences)
-    {
-        SecondaryType = secondaryType;
-    }
-
-    internal PokemonSpecies(
-        string pokemonName,
-        string pokemonId,
-        int nationalPokedexNumber,
-        string primaryType,
-        string secondaryType,
-        BaseStats baseStats,
-        int catchRate,
-        double maleRatio,
-        int baseExperienceYield,
-        string experienceGroup,
-        int eggCycles,
-        List<string> eggGroups,
-        int baseFriendship,
-        EvYield evYield,
-        double heightInCm,
-        double weightInGrams,
-        bool hasGenderDifferences = false,
-        bool cannotDynamax = false) :
-            this(pokemonName, pokemonId, primaryType, secondaryType, baseStats, catchRate, maleRatio, baseExperienceYield, experienceGroup, eggCycles, eggGroups, baseFriendship, evYield, heightInCm, weightInGrams, cannotDynamax, hasGenderDifferences)
+            this(pokemonName, pokemonId, types, baseStats, catchRate, maleRatio, baseExperienceYield, experienceGroup, eggCycles, eggGroups, baseFriendship, evYield, heightInCm, weightInGrams, spriteWidth, spriteResolution, spriteAnimationSpeed, cannotDynamax, hasGenderDifferences)
     {
         NationalPokedexNumber = nationalPokedexNumber;
     }
@@ -110,15 +70,16 @@ public abstract class PokemonSpecies : BaseSpecies
         string stringOfData = "{" +
             "\npokemonName: " + PokemonName + ",";
         stringOfData += "\nnationalPokedexNumber:" + NationalPokedexNumber + ",";
-        stringOfData += "\nprimaryType:" + PrimaryType + ",";
-        stringOfData += "\nsecondaryType:" + SecondaryType + ",";
+        stringOfData += "\nprimaryType:" + Types[0] + ",";
+
+        if (Types.Length > 1) stringOfData += "\nsecondaryType:" + Types[1] + ",";
         stringOfData += "\nabilities: [";
         foreach (var ability in Abilities)
         {
-            stringOfData += "\n" + ability.AbilityName;
+            stringOfData += "\n" + ability;
         }
         stringOfData += "\n]," +
-            "\nhiddenAbility:" + HiddenAbility.AbilityName + ",";
+            "\nhiddenAbility:" + HiddenAbility + ",";
         stringOfData += "\nbaseStats: {" +
         "\nhp:" + BaseStats.Hp + ",";
         stringOfData += "\nattack:" + BaseStats.Attack + ",";
@@ -155,7 +116,7 @@ public abstract class PokemonSpecies : BaseSpecies
         stringOfData += "\n]," +
           "\nbaseFriendship:" + 50 + "," +
           "\nevYield: {" +
-          "\n   hp:" + EvYield.Hp + "," +
+          "\n   Hp:" + EvYield.Hp + "," +
           "\n   attack:" + EvYield.Attack + "," +
           "\n   defence:" + EvYield.Defence + "," +
           "\n   specialAttack:" + EvYield.SpecialAttack + "," +
@@ -167,6 +128,37 @@ public abstract class PokemonSpecies : BaseSpecies
           "\ncannotDynamax:" + CannotDynamax +
             "\n}";
         return stringOfData;
+    }
+
+    public Move[] FindLatestLevelUpMoves(int level)
+    {
+        var moveset = MoveSets[0].LevelUpMoves;
+        var latestLevelUpMoves = new Move[Settings.MaxMoveSlots];
+        var foundMoveCounter = 0;
+        for (int i = level; i >= 0; i--)
+        {
+            if(foundMoveCounter >= Settings.MaxMoveSlots)
+            {
+                break;
+            } else if(foundMoveCounter >= MoveSets[0].LevelUpMoves.Count)
+            {
+                break;
+            }
+            if (moveset.ContainsKey(i))
+            {
+                latestLevelUpMoves[foundMoveCounter] = MoveRegistry.GetMove(moveset[i]);
+                foundMoveCounter++;
+            }
+        }
+        return latestLevelUpMoves;
+    }
+
+    public List<string> GetPossibleAbilities()
+    {
+        var list = new List<string>();
+        list.AddRange(Abilities);
+        list.Add(HiddenAbility);
+        return list;
     }
 }
 [Serializable]

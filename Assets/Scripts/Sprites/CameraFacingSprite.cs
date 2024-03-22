@@ -21,24 +21,39 @@ public class CameraFacingSprite : MonoBehaviour
     public int PixelsPerUnit = 16;
     [HideInInspector]
     public int CurrentFrame = 0;
-    private float LastFrameUpdateTimeStamp = 0;
+    protected float LastFrameUpdateTimeStamp = 0;
     public Direction.Directions Facing = Direction.Directions.South;
     private Direction.Directions _lastFacing = (Direction.Directions)1000;
     public SpriteType TypeOfSprite;
     [HideInInspector]
-    public string TextureLocation;
+    public string TextureLocation => GetTextureLocation();
 
-    void Start()
+    private string GetTextureLocation()
+    {
+        var textureLocation = "Sprites/" + Enum.GetName(typeof(SpriteType), TypeOfSprite) + "/" + SpriteGroup + "/" + SpriteGroup;
+        if (!string.IsNullOrWhiteSpace(SpriteSuffix))
+        {
+            textureLocation += SpriteSuffix;
+        }
+        return textureLocation;
+    }
+
+    void Awake()
+    {
+        InitializeSprite();
+    }
+
+    protected void InitializeSprite()
     {
         gameObject.transform.localScale = new Vector3(1, 1, 0.00001f);
-        SpriteSheet = new CameraFacingSpriteSheet(SpriteWidth);
+        SpriteSheet = new CameraFacingSpriteSheet(ref SpriteWidth);
         SpriteRenderer = GetComponent<SpriteRenderer>();
-        DetermineTextireLocation();
-        if(SpriteRenderer == null)
+        DetermineTextureLocation();
+        if (SpriteRenderer == null)
         {
             SpriteRenderer = gameObject.AddComponent<SpriteRenderer>();
         }
-        SpriteRenderer.sprite = SpriteSheet.GetFrame(0, Facing);
+        SpriteRenderer.sprite = SpriteSheet.GetFrame(0, PixelsPerUnit, Facing);
         SpriteRenderer.transform.rotation = Quaternion.Euler(0f, Camera.main.transform.rotation.eulerAngles.y, 0f);
         SpriteRenderer.transform.localPosition = new Vector3(0, 0 + yOffset, 0);
         LastFrameUpdateTimeStamp = 0;
@@ -47,6 +62,7 @@ public class CameraFacingSprite : MonoBehaviour
 
         var material = Resources.Load<Material>("Materials/ShadowCastingSpriteMaterial");
         SpriteRenderer.material = material;
+        this.enabled = true;
     }
 
     // Update is called once per frame
@@ -66,8 +82,6 @@ public class CameraFacingSprite : MonoBehaviour
         {
             UpdateDirection();
         }
-
-
     }
 
     private void UpdateDirection()
@@ -79,16 +93,20 @@ public class CameraFacingSprite : MonoBehaviour
         }
     }
 
-    private void DetermineTextireLocation()
+    protected void DetermineTextureLocation()
     {
-        SetNewSpriteLocation(SpriteGroup, SpriteGroup);
+        SetNewSpriteLocation(SpriteGroup);
     }
 
-    public void SetNewSpriteLocation(string spriteGroup, string spriteSuffix)
+    public void SetNewSpriteLocation(string spriteGroup, string spriteSuffix = "")
     {
-        TextureLocation = "Sprites/" + Enum.GetName(typeof(SpriteType), TypeOfSprite) + "/" + spriteGroup + "/" + 
-            spriteSuffix;
+        SpriteGroup = spriteGroup;
+        SpriteSuffix = spriteSuffix;
         CurrentFrame = 0;
+        if (SpriteSheet == null)
+        {
+            InitializeSprite();
+        }
         SpriteSheet.LoadTexture(TextureLocation);
     }
 

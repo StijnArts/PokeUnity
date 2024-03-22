@@ -1,0 +1,15 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Assets.Scripts.Battle.Controllers
+{
+    public class NpcBattleController : BattleController
+    {
+        public NpcBattleController(List<PokemonIndividualData> participatingPokemon) : base(participatingPokemon)
+        {
+        }
+    }
+}

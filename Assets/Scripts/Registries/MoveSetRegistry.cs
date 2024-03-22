@@ -1,10 +1,9 @@
-﻿using Assets.Scripts.Pokemon.Data;
+﻿using Assets.Scripts.Battle;
+using Assets.Scripts.Pokemon.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UnityEngine;
+using Unity.VisualScripting;
 
 namespace Assets.Scripts.Registries
 {
@@ -18,9 +17,9 @@ namespace Assets.Scripts.Registries
             MovesDictionary.Add(id, ability);
         }
 
-        public static List<string> GetAbilityIds() => MovesDictionary.Values.Select(move => move.MoveId).ToList();
+        public static List<string> GetMoveIds() => MovesDictionary.Values.Select(move => move.Id).ToList();
 
-        public static Move GetAbility(string id)
+        public static Move GetMove(string id)
         {
             Move value;
             MovesDictionary.TryGetValue(id, out value);
@@ -36,24 +35,18 @@ namespace Assets.Scripts.Registries
             var moves = SubTypeReflector<Move>.FindSubTypeClasses();
             foreach (Move move in moves)
             {
-                MovesDictionary.Add(move.MoveId, move);
+                MovesDictionary.Add(move.Id, move);
             }
         }
-        
+
         public static void RegisterMoveSets()
         {
             var moveSets = SubTypeReflector<MoveSet>.FindSubTypeClasses();
             Dictionary<PokemonIdentifier, List<MoveSet>> moveSetsPerIdentifier = new Dictionary<PokemonIdentifier, List<MoveSet>>();
-                moveSets.Select(moveset => {
-                    if(moveSetsPerIdentifier[moveset.PokemonIdentifier] == null)
-                    {
-                        moveSetsPerIdentifier.Add(moveset.PokemonIdentifier, new List<MoveSet>() { moveset });
-                    } else
-                    {
-                        moveSetsPerIdentifier[moveset.PokemonIdentifier].Add(moveset);
-                    }
-                    return true;
-                });
+            foreach(var moveset in moveSets)
+            {
+                AddByIdentifier(moveset, moveSetsPerIdentifier);
+            }
             foreach (PokemonIdentifier identifier in moveSetsPerIdentifier.Keys)
             {
                 var targetPokemonSpecies = PokemonRegistry.GetPokemonSpecies(identifier.SpeciesId);
@@ -72,8 +65,21 @@ namespace Assets.Scripts.Registries
                         targetPokemonSpecies.MoveSets.Add(moveSet);
                     }
                 }
-                
+
             }
+        }
+
+        private static bool AddByIdentifier(MoveSet moveset, Dictionary<PokemonIdentifier, List<MoveSet>> moveSetsPerIdentifier)
+        {
+            if (!moveSetsPerIdentifier.ContainsKey(moveset.PokemonIdentifier))
+            {
+                moveSetsPerIdentifier.Add(moveset.PokemonIdentifier, new List<MoveSet>() { moveset });
+            }
+            else
+            {
+                moveSetsPerIdentifier[moveset.PokemonIdentifier].Add(moveset);
+            }
+            return true;
         }
     }
 }

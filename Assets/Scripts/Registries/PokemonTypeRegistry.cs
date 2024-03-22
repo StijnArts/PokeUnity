@@ -29,11 +29,11 @@ public static class PokemonTypeRegistry
         foreach (string id in PokemonTypes.Keys)
         {
             list += "\n" + id;
-            if (PokemonTypes[id].interactions.Count > 0)
+            if (PokemonTypes[id].Interactions.Count > 0)
             {
                 list += "\n\tsuper effective on: { ";
-                foreach (string weakness in PokemonTypes[id].interactions.Keys.Where(
-                    key => PokemonTypes[id].interactions[key] == PokemonType.TypeInteraction.STRONG_AGAINST)
+                foreach (string weakness in PokemonTypes[id].Interactions.Keys.Where(
+                    key => PokemonTypes[id].Interactions[key] == PokemonType.TypeInteraction.STRONG_AGAINST)
                     )
                 {
                     list += "\n\t\t" + weakness + ",";
@@ -42,8 +42,8 @@ public static class PokemonTypeRegistry
             
             
                 list += "\n\tresisted by: { ";
-                foreach (string resistance in PokemonTypes[id].interactions.Keys.Where(
-                    key => PokemonTypes[id].interactions[key] == PokemonType.TypeInteraction.RESISTED_BY)
+                foreach (string resistance in PokemonTypes[id].Interactions.Keys.Where(
+                    key => PokemonTypes[id].Interactions[key] == PokemonType.TypeInteraction.RESISTED_BY)
                     )
                 {
                     list += "\n\t\t" + resistance + ",";
@@ -51,8 +51,8 @@ public static class PokemonTypeRegistry
                 list += "\n\t},";
             
                 list += "\n\ttypes with immunity: { ";
-                foreach (string immunity in PokemonTypes[id].interactions.Keys.Where(
-                    key => PokemonTypes[id].interactions[key] == PokemonType.TypeInteraction.HAS_IMMUNITY)
+                foreach (string immunity in PokemonTypes[id].Interactions.Keys.Where(
+                    key => PokemonTypes[id].Interactions[key] == PokemonType.TypeInteraction.HAS_IMMUNITY)
                     )
                 { 
                     list += "\n\t\t" + immunity + ",";
